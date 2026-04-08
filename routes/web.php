@@ -6,6 +6,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+// Optional POST route for login submission
+Route::post('/login', function () {
+    // Handle login logic here or redirect to Laravel's auth controller
+    return redirect('/dashboard');
+});

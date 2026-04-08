@@ -152,7 +152,7 @@
             </div>
 
             <div class="hidden md:flex items-center gap-6">
-                <a href="#" class="inline-flex items-center justify-center gap-2 bg-[#1A875A] hover:bg-[#146b47] px-7 py-3 rounded-full transition-all duration-300 shadow-lg shadow-[#1A875A]/30 hover:-translate-y-1 hover:shadow-xl w-fit group">
+                <a href="{{ route('login')  }}" class="inline-flex items-center justify-center gap-2 bg-[#1A875A] hover:bg-[#146b47] px-7 py-3 rounded-full transition-all duration-300 shadow-lg shadow-[#1A875A]/30 hover:-translate-y-1 hover:shadow-xl w-fit group">
                     <span class="text-[16px] font-bold text-white leading-tight">Masuk</span>
                     <i class="ph-bold ph-arrow-right text-white opacity-70 group-hover:translate-x-1 transition-transform"></i>
                 </a>
