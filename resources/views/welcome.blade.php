@@ -732,9 +732,9 @@
         </div>
     </section>
 
-    <footer class="bg-[#142D22] pt-20 pb-10 relative overflow-hidden font-sans border-t-[8px] border-[#10b981]">
+    <footer class="bg-slate-900 pt-20 pb-10 relative overflow-hidden font-sans border-t-[8px] border-emerald-500">
         <div
-            class="absolute top-0 right-0 w-96 h-96 bg-[#10b981]/10 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2">
+            class="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2">
         </div>
         <div
             class="absolute bottom-0 left-0 w-96 h-96 bg-emerald-900/40 rounded-full blur-[100px] pointer-events-none translate-y-1/2 -translate-x-1/2">
@@ -746,11 +746,11 @@
                 <div class="lg:col-span-4">
                     <a href="#" class="flex items-center gap-3 mb-6 group">
                         <div
-                            class="w-12 h-12 bg-[#10b981] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition duration-300">
-                            <i class="ph-bold ph-barn text-2xl"></i>
+                            class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition duration-300">
+                            <i class="ph-fill ph-leaf text-2xl"></i>
                         </div>
-                        <span class="text-3xl font-black text-white tracking-tight">Domba<span
-                                class="text-[#10b981]">Ku.</span></span>
+                        <span class="text-3xl font-black text-white tracking-tight">Go<span
+                                class="text-emerald-500">Sheep.</span></span>
                     </a>
                     <p class="text-slate-400 text-[15px] leading-relaxed mb-8 max-w-sm">
                         Platform ekosistem cerdas berbasis <span class="text-slate-300 font-bold">Machine
@@ -759,15 +759,15 @@
                     </p>
                     <div class="flex space-x-4">
                         <a href="#"
-                            class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-[#10b981] hover:text-white hover:border-[#10b981] transition-all transform hover:-translate-y-1">
+                            class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all transform hover:-translate-y-1">
                             <i class="ph-fill ph-instagram-logo text-lg"></i>
                         </a>
                         <a href="#"
-                            class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-[#10b981] hover:text-white hover:border-[#10b981] transition-all transform hover:-translate-y-1">
+                            class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all transform hover:-translate-y-1">
                             <i class="ph-fill ph-github-logo text-lg"></i>
                         </a>
                         <a href="#"
-                            class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-[#10b981] hover:text-white hover:border-[#10b981] transition-all transform hover:-translate-y-1">
+                            class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all transform hover:-translate-y-1">
                             <i class="ph-fill ph-youtube-logo text-lg"></i>
                         </a>
                     </div>
@@ -779,14 +779,14 @@
                     </h4>
                     <ul class="space-y-4 text-slate-400 text-[15px]">
                         <li>
-                            <a href="#cara-mulai" class="hover:text-[#10b981] transition flex items-center gap-2 group">
+                            <a href="#cara-mulai" class="hover:text-emerald-500 transition flex items-center gap-2 group">
                                 <i
                                     class="ph-bold ph-caret-right text-xs group-hover:translate-x-1 transition-transform"></i>
                                 Cara Memulai
                             </a>
                         </li>
                         <li>
-                            <a href="#layanan" class="hover:text-[#10b981] transition flex items-center gap-2 group">
+                            <a href="#layanan" class="hover:text-emerald-500 transition flex items-center gap-2 group">
                                 <i
                                     class="ph-bold ph-caret-right text-xs group-hover:translate-x-1 transition-transform"></i>
                                 Layanan Kami
@@ -794,14 +794,14 @@
                         </li>
                         <li>
                             <a href="#aplikasi-mobile"
-                                class="hover:text-[#10b981] transition flex items-center gap-2 group">
+                                class="hover:text-emerald-500 transition flex items-center gap-2 group">
                                 <i
                                     class="ph-bold ph-caret-right text-xs group-hover:translate-x-1 transition-transform"></i>
                                 Aplikasi Mobile
                             </a>
                         </li>
                         <li>
-                            <a href="#galeri" class="hover:text-[#10b981] transition flex items-center gap-2 group">
+                            <a href="#galeri" class="hover:text-emerald-500 transition flex items-center gap-2 group">
                                 <i
                                     class="ph-bold ph-caret-right text-xs group-hover:translate-x-1 transition-transform"></i>
                                 Galeri Peternakan
@@ -812,14 +812,14 @@
 
                 <div class="lg:col-span-4">
                     <h4 class="font-bold text-white mb-6 uppercase text-sm tracking-widest flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-[#10b981]"></span> Hubungi Kami
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Hubungi Kami
                     </h4>
 
                     <div class="bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
                         <ul class="space-y-5 text-slate-400 text-sm">
                             <li class="flex items-start gap-4">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[#10b981] flex-shrink-0">
+                                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-emerald-500 flex-shrink-0">
                                     <i class="ph-fill ph-student text-xl"></i>
                                 </div>
                                 <div>
@@ -844,8 +844,8 @@
                                 </div>
                                 <div>
                                     <p class="text-white font-bold mb-0.5">Email</p>
-                                    <a href="mailto:halo@dombaku.id"
-                                        class="hover:text-[#10b981] transition">halo@dombaku.id</a>
+                                    <a href="mailto:halo@gosheep.id"
+                                        class="hover:text-emerald-500 transition">halo@gosheep.id</a>
                                 </div>
                             </li>
                         </ul>
@@ -856,7 +856,7 @@
 
             <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-slate-500 text-sm font-medium text-center md:text-left">
-                    &copy; 2026 DombaKu (PBL TRPL-605). Hak Cipta Dilindungi.
+                    &copy; 2026 GoSheep (PBL TRPL-605). Hak Cipta Dilindungi.
                 </p>
                 <p class="text-slate-500 text-sm font-medium flex items-center gap-1.5">
                     Dibuat dengan <i class="ph-fill ph-heart text-red-500 animate-pulse"></i> menggunakan Laravel &
