@@ -49,4 +49,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function healthRecords()
+    {
+        return $this->hasMany(HealthRecord::class, 'recorded_by');
+    }
+
+    public function weightRecords()
+    {
+        return $this->hasMany(WeightRecord::class, 'recorded_by');
+    }
 }

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sheep_id')->constrained('sheep')->cascadeOnDelete();
             $table->decimal('weight', 5, 2);
-            $table->enum('source', ['manual', 'iot']);
-            $table->timestamp('recorded_at');
+            $table->string('recorded_by');
             $table->timestamps();
         });
     }

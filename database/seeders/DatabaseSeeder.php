@@ -17,8 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
+            BreedSeeder::class,
+            CageSeeder::class,
+            SheepSeeder::class,
         ]);
-        
+
         // You can leave or remove the Test User
         // User::factory()->create([
         //     'name' => 'Test User',

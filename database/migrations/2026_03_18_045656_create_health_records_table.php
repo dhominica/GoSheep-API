@@ -13,10 +13,18 @@ return new class extends Migration
     {
         Schema::create('health_records', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('sheep_id')->constrained('sheep')->cascadeOnDelete();
             $table->foreignId('recorded_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('condition'); // healthy, sick, injured, pregnant
+
+            $table->string('category'); // health, reproduction, environment
+            $table->string('condition'); // heat_stress_risk, pregnant, sick, etc
+            $table->string('severity'); // normal, warning, critical
+
+            $table->string('source'); // manual, iot
+
             $table->text('notes')->nullable();
+
             $table->timestamps();
         });
     }
