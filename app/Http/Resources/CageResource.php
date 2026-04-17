@@ -16,14 +16,19 @@ class CageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nama_kandang' => $this->name,
-            'kapasitas_maksimal' => $this->max_capacity,
-            'jumlah_terisi' => $this->current_capacity,
-            'status_label' => $this->current_capacity > 0 ? 'Terisi' : 'Kosong',
-            
-            'domba_didalam' => $this->sheep->map(function ($sheep) {
+            'name' => $this->name,
+            'current_capacity' => $this->current_capacity,
+            'max_capacity' => $this->max_capacity,
+            'status_label' => match (true) {
+                $this->current_capacity == 0 => 'Kosong',
+                $this->current_capacity >= $this->max_capacity => 'Penuh',
+                default => 'Terisi',
+            },
+            'created_at' => $this->created_at,
+
+            'sheep' => $this->sheep->map(function ($sheep) {
                 return [
-                    'id_domba' => $sheep->id,
+                    'id' => $sheep->id,
                     'eartag' => $sheep->eartag,
                 ];
             }),

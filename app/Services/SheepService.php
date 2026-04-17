@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Sheep;
+use Illuminate\Support\Facades\DB;
 
 class SheepService
 {
@@ -38,10 +39,46 @@ class SheepService
         ];
     }
 
+    public function healthStatusStats()
+    {
+        $sheep = Sheep::with('latestHealth')->get();
+
+        $healthy = 0;
+        $atRisk = 0;
+        $sick = 0;
+
+        foreach ($sheep as $item) {
+        $status = $this->mapStatusUi($item->latestHealth);
+
+            if ($status === 'sehat') {
+                $healthy++;
+            } elseif ($status === 'at_risk') {
+                $atRisk++;
+            } elseif ($status === 'sakit') {
+                $sick++;
+            }
+        }
+
+        return [
+            'healthy_total' => $healthy,
+            'at_risk_total' => $atRisk,
+            'sick_total' => $sick,
+        ];
+    }
+
     public function deleteSheep($id)
     {
-        $sheep = Sheep::findOrFail($id);
-        $sheep->delete();
+        return DB::transaction(function () use ($id) {
+            $sheep = Sheep::findOrFail($id);
+
+            if ($sheep->cage_id) {
+                $sheep->cage()->decrement('current_capacity');
+            }
+
+            $sheep->delete();
+
+            return true;
+        });
     }
 
     private function mapStatusUi($health)

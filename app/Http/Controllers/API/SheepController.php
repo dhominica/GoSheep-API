@@ -30,6 +30,13 @@ class SheepController extends BaseController
         );
     }
 
+    public function healthStatusStats(SheepService $service)
+    {
+        $data = $service->healthStatusStats();
+
+        return $this->success($data, 'Statistik kesehatan domba berhasil diambil');
+    }
+
     public function deleteSheep($id)
     {
         $this->sheepService->deleteSheep($id);
