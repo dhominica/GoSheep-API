@@ -20,6 +20,16 @@ class Sheep extends Model
         'status',
     ];
 
+    public function latestWeight()
+    {
+        return $this->hasOne(WeightRecord::class)->latestOfMany('created_at');
+    }
+
+    public function latestHealth()
+    {
+        return $this->hasOne(HealthRecord::class)->latestOfMany('created_at');
+    }
+
     public function weightRecords()
     {
         return $this->hasMany(WeightRecord::class);

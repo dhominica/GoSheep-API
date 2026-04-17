@@ -15,11 +15,6 @@ class WeightRecord extends Model
         'recorded_at',
     ];
 
-    public function latestWeight()
-    {
-        return $this->hasOne(WeightRecord::class)->latestOfMany('created_at');
-    }
-
     public function sheep()
     {
         return $this->belongsTo(Sheep::class);

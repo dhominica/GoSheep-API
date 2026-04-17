@@ -14,29 +14,16 @@ class SheepResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $latestWeight = $this->latestWeight();
-
-        $latestHealth = $this->latestHealth();
-
-        $statusUi = 'sehat';
-
-        if ($latestHealth) {
-            if ($latestHealth->severity === 'warning') {
-                $statusUi = 'at_risk';
-            } elseif ($latestHealth->severity === 'critical') {
-                $statusUi = 'sakit';
-            }
-        }
+        $latestWeight = $this->latestWeight;
 
         return [
             'id' => $this->id,
-            'earTag' => $this->eartag,
+            'ear_tag' => $this->eartag,
+            'ear_tag_color' => $this->eartag_color,
             'gender' => $this->gender,
-            'breed' => $this->breed->name ?? null,
-
-            'weight' => $latestWeight->weight,
-
-            'status_ui' => $statusUi,
+            'breed' => $this->breed->name,
+            'weight' => (float) $latestWeight->weight,
+            'status_ui' => $this->status_ui,
         ];
     }
 }

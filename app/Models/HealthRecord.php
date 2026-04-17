@@ -18,11 +18,6 @@ class HealthRecord extends Model
         'notes',
     ];
 
-    public function latestHealth()
-    {
-        return $this->hasOne(HealthRecord::class)->latestOfMany('created_at');
-    }
-
     public function sheep()
     {
         return $this->belongsTo(Sheep::class);
