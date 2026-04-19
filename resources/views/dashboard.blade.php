@@ -17,7 +17,7 @@
                 <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">Halo, {{ explode(' ', Auth::user()->name)[0] }}! 👋</h2>
                 <p class="text-green-50 max-w-xl text-xs md:text-sm leading-relaxed font-medium">Selamat datang di panel administrasi GoSheep. Saat ini ada <span class="bg-white/20 px-1.5 py-0.5 rounded font-bold">14 aktivitas</span> baru yang perlu diperiksa hari ini.</p>
             </div>
-            
+
             <div class="hidden md:block">
                 <button class="bg-white text-green-700 hover:bg-green-50 px-4 py-2.5 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-sm border border-green-100">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
@@ -27,12 +27,50 @@
         </div>
     </div>
 
+   <!-- Speech to Text (Demo - TEMP FEATURE) -->
+    <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Card Control -->
+        <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="mic" class="w-4 h-4 text-emerald-500"></i>
+                <h3 class="font-bold text-sm text-slate-800">Voice Input</h3>
+            </div>
+
+            <p class="text-xs text-slate-500 mb-4">
+                Klik tombol lalu mulai berbicara menggunakan bahasa Indonesia
+            </p>
+
+            <button
+                onclick="startSpeechRecognition()"
+                class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
+            >
+                <i data-lucide="mic" class="w-4 h-4"></i>
+                Mulai Bicara
+            </button>
+        </div>
+
+        <!-- Result Card -->
+        <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+                <h3 class="font-bold text-sm text-slate-800">Hasil Speech</h3>
+            </div>
+
+            <div id="speechCard"
+                class="text-sm text-slate-600 min-h-[60px] flex items-center">
+                <span class="text-slate-400 italic">Belum ada input suara...</span>
+            </div>
+        </div>
+
+    </div>
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-        <x-stat-card 
-            title="Total Peternak" 
-            value="1,248" 
-            icon="users" 
+        <x-stat-card
+            title="Total Peternak"
+            value="1,248"
+            icon="users"
             color="blue">
             <x-slot:trend>
                 <span class="text-emerald-600 font-bold inline-flex items-center gap-1 bg-emerald-50 px-1.5 py-0.5 rounded-md text-[10px]">
@@ -42,10 +80,10 @@
             </x-slot:trend>
         </x-stat-card>
 
-        <x-stat-card 
-            title="Kandang Aktif" 
-            value="342" 
-            icon="tent" 
+        <x-stat-card
+            title="Kandang Aktif"
+            value="342"
+            icon="tent"
             color="emerald">
             <x-slot:trend>
                 <span class="text-emerald-600 font-bold inline-flex items-center gap-1 bg-emerald-50 px-1.5 py-0.5 rounded-md text-[10px]">
@@ -54,11 +92,11 @@
                 <span class="text-slate-400 font-semibold ml-1.5 text-[10px]">Penambahan baru</span>
             </x-slot:trend>
         </x-stat-card>
-        
-        <x-stat-card 
-            title="Total Domba" 
-            value="14" 
-            icon="users" 
+
+        <x-stat-card
+            title="Total Domba"
+            value="14"
+            icon="users"
             color="green">
             <x-slot:trend>
                 <span class="text-amber-600 font-bold inline-flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md text-[10px]">
@@ -67,11 +105,11 @@
                 <span class="text-slate-400 font-semibold ml-1.5 text-[10px]">Status terpantau normal</span>
             </x-slot:trend>
         </x-stat-card>
-        
-        <x-stat-card 
-            title="Status Domba" 
-            value="Sehat" 
-            icon="heart" 
+
+        <x-stat-card
+            title="Status Domba"
+            value="Sehat"
+            icon="heart"
             color="blue">
             <x-slot:trend>
                 <span class="text-purple-600 font-bold inline-flex items-center gap-1 bg-purple-50 px-1.5 py-0.5 rounded-md text-[10px]">
@@ -84,7 +122,7 @@
 
     <!-- Main Content Area -->
     <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
-        
+
         <!-- Activity List -->
         <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
             <div class="flex items-center justify-between mb-5">
@@ -94,7 +132,7 @@
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                 </button>
             </div>
-            
+
             <div class="space-y-3">
                 <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-green-200 hover:bg-white hover:shadow-sm transition-all duration-200">
                     <div class="flex items-center gap-3.5">
@@ -154,7 +192,7 @@
                     <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i>
                     Statistik Peternakan
                 </h3>
-                
+
                 <div class="space-y-4">
                     <div>
                         <div class="flex justify-between text-xs mb-1.5 font-bold">
@@ -165,7 +203,7 @@
                             <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-1.5 rounded-full w-[78%]"></div>
                         </div>
                     </div>
-                    
+
                     <div>
                         <div class="flex justify-between text-xs mb-1.5 font-bold">
                             <span class="text-slate-500">Kesehatan Ternak (Prima)</span>
@@ -181,7 +219,7 @@
             <!-- Widget: Aksi Cepat / Shortcut -->
             <div class="bg-slate-900 border border-slate-800 text-white rounded-2xl shadow-lg p-6 relative overflow-hidden group">
                 <div class="absolute -right-8 -top-8 w-32 h-32 bg-green-500/10 rounded-full blur-2xl group-hover:bg-green-500/20 transition-colors"></div>
-                
+
                 <div class="relative z-10 flex items-center gap-3 mb-4">
                     <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/5">
                         <i data-lucide="zap" class="w-5 h-5 text-green-400"></i>
@@ -191,7 +229,7 @@
                         <p class="text-slate-400 text-xs font-semibold">Pencatatan Harian</p>
                     </div>
                 </div>
-                
+
                 <div class="pt-4 border-t border-white/10 space-y-2.5">
                     <button class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition-all shadow-sm border border-emerald-500 flex items-center justify-center gap-2">
                         <i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i>
@@ -211,3 +249,37 @@
 
     </div>
 </x-layouts.admin>
+
+<script>
+function startSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Browser tidak support Speech Recognition. Gunakan Google Chrome.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "id-ID";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript;
+
+        document.getElementById("speechCard").innerHTML = `
+            <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
+                <p class="text-slate-800 font-medium">${text}</p>
+            </div>
+        `;
+    };
+
+    recognition.onerror = function(err) {
+        console.log(err);
+        document.getElementById("speechCard").innerHTML = `
+            <span class="text-red-500 text-sm">Error saat menangkap suara</span>
+        `;
+    };
+}
+</script>
