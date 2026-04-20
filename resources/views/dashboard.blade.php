@@ -3,9 +3,9 @@
     <x-slot:header>Dashboard</x-slot:header>
 
     <!-- Welcome Hero Banner -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-green-600 to-teal-500 p-6 md:p-8 text-white shadow-lg shadow-green-600/10 border border-green-400/20 group">
+    <div class="relative overflow-hidden rounded-2xl bg-linear-to-r from-emerald-600 via-green-600 to-teal-500 p-6 md:p-8 text-white shadow-lg shadow-green-600/10 border border-green-400/20 group">
         <!-- Abstract Patterns inside Banner -->
-        <div class="absolute inset-0 opacity-[0.07] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=')] bg-[length:32px_32px] transition-transform duration-[15s] ease-linear group-hover:-translate-y-4 group-hover:translate-x-4"></div>
+        <div class="absolute inset-0 opacity-[0.07] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=')] bg-size-[32px_32px] transition-transform duration-[15s] ease-linear group-hover:-translate-y-4 group-hover:translate-x-4"></div>
         <div class="absolute -top-32 -right-32 w-64 h-64 bg-white/20 blur-[50px] rounded-full pointer-events-none"></div>
 
         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
@@ -51,7 +51,7 @@
         </div>
 
         <!-- Result Card -->
-        <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
+        <div class="bg-linear-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
                 <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
                 <h3 class="font-bold text-sm text-slate-800">Hasil Speech</h3>
@@ -136,7 +136,7 @@
             <div class="space-y-3">
                 <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-green-200 hover:bg-white hover:shadow-sm transition-all duration-200">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                        <div class="w-10 h-10 rounded-lg bg-linear-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
                             <i data-lucide="user-plus" class="w-4 h-4"></i>
                         </div>
                         <div>
@@ -152,7 +152,7 @@
 
                 <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-amber-200 hover:bg-white hover:shadow-sm transition-all duration-200">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                        <div class="w-10 h-10 rounded-lg bg-linear-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
                             <i data-lucide="alert-triangle" class="w-4 h-4"></i>
                         </div>
                         <div>
@@ -168,7 +168,7 @@
 
                 <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-emerald-200 hover:bg-white hover:shadow-sm transition-all duration-200">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                        <div class="w-10 h-10 rounded-lg bg-linear-to-r from-emerald-400 to-teal-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
                             <i data-lucide="check-circle-2" class="w-4 h-4"></i>
                         </div>
                         <div>
@@ -200,7 +200,7 @@
                             <span class="text-slate-700">78%</span>
                         </div>
                         <div class="w-full bg-slate-100 rounded-full h-1.5">
-                            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-1.5 rounded-full w-[78%]"></div>
+                            <div class="bg-linear-to-r from-emerald-400 to-teal-500 h-1.5 rounded-full w-[78%]"></div>
                         </div>
                     </div>
 
@@ -210,7 +210,7 @@
                             <span class="text-slate-700">92%</span>
                         </div>
                         <div class="w-full bg-slate-100 rounded-full h-1.5">
-                            <div class="bg-gradient-to-r from-blue-400 to-indigo-500 h-1.5 rounded-full w-[92%]"></div>
+                            <div class="bg-linear-to-r from-blue-400 to-indigo-500 h-1.5 rounded-full w-[92%]"></div>
                         </div>
                     </div>
                 </div>

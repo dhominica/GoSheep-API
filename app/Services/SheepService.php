@@ -39,6 +39,24 @@ class SheepService
         ];
     }
 
+    public function getSheepDetails($id)
+    {
+        $sheep = Sheep::with([
+            'breed',
+            'cage',
+            'sire:id,eartag',
+            'dam:id,eartag',
+            'latestWeight',
+            'latestHealth',
+        ])->findOrFail($id);
+
+        // mapping status_ui (biar konsisten dengan list)
+        $sheep->status_ui = $this->mapStatusUi($sheep->latestHealth);
+
+        return $sheep;
+    }
+
+
     public function healthStatusStats()
     {
         $sheep = Sheep::with('latestHealth')->get();

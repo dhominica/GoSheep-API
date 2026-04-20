@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Resources\SheepDetailResource;
 use App\Http\Resources\SheepResource;
 use App\Services\SheepService;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class SheepController extends BaseController
         $this->sheepService = $sheepService;
     }
 
-    public function getSheep(Request $request)
+    public function index(Request $request)
     {
         $lastId = $request->input('last_id');
         $limit = $request->input('limit', 10);
@@ -28,6 +29,13 @@ class SheepController extends BaseController
             $result['next_cursor'],
             'Data domba berhasil diambil'
         );
+    }
+
+    public function show($id)
+    {
+        $sheep = $this->sheepService->getSheepDetails($id);
+
+        return $this->success(new SheepDetailResource($sheep), 'Detail domba berhasil diambil');
     }
 
     public function healthStatusStats(SheepService $service)

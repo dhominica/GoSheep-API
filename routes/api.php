@@ -13,6 +13,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/sheep/health-stats', [SheepController::class, 'healthStatusStats']);
-Route::get('/sheep', [SheepController::class, 'getSheep']);
+Route::get('/sheep', [SheepController::class, 'index']);
+Route::get('/sheep/{id}', [SheepController::class, 'show']);
 Route::delete('/sheep/{id}', [SheepController::class, 'deleteSheep']);
 Route::get('/cages', [CageController::class, 'index']);

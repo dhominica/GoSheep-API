@@ -30,6 +30,16 @@ class Sheep extends Model
         return $this->hasOne(HealthRecord::class)->latestOfMany('created_at');
     }
 
+    public function sire()
+    {
+        return $this->belongsTo(Sheep::class, 'sire_id');
+    }
+
+    public function dam()
+    {
+        return $this->belongsTo(Sheep::class, 'dam_id');
+    }
+
     public function weightRecords()
     {
         return $this->hasMany(WeightRecord::class);

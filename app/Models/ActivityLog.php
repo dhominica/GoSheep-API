@@ -12,10 +12,25 @@ class ActivityLog extends Model
 
     protected $fillable = [
         'user_id',
-        'sheep_id',
-        'category',
-        'old_data',
-        'new_data',
+        'loggable_id',
+        'loggable_type',
+        'action',
+        'entity',
         'description',
+        'properties',
     ];
+
+    protected $casts = [
+        'properties' => 'array',
+    ];
+
+    public function loggable()
+    {
+        return $this->morphTo();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

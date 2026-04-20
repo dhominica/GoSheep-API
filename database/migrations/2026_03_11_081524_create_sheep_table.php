@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('breed_id')->nullable()->constrained('breeds')->nullOnDelete();
             $table->foreignId('sire_id')->nullable()->constrained('sheep')->nullOnDelete();
             $table->foreignId('dam_id')->nullable()->constrained('sheep')->nullOnDelete();
-            $table->foreignId('cage_id')->constrained('cages')->cascadeOnDelete();
+            $table->foreignId('cage_id')->nullable()->constrained('cages')->nullOnDelete();
             $table->string('status'); // active, sold, dead
             $table->timestamps();
         });
