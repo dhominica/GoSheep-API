@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\ActivityLog;
 use App\Models\Sheep;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SheepService
@@ -108,5 +110,48 @@ class SheepService
             'critical' => 'sakit',
             default => 'sehat',
         };
+    }
+
+    public function createSheep(array $data)
+    {
+        return DB::transaction(function () use ($data){
+            $sheep = Sheep::create([
+                'eartag' => $data['eartag'],
+                'gender' => $data['gender'],
+                'birth_date' => $data['birth_date'],
+                'eartag_color' => $data['eartag_color'],
+                'breed_id' => $data['breed_id'] ?? null,
+                'sire_id' => $data['sire_id'] ?? null,
+                'dam_id' => $data['dam_id'] ?? null,
+                'cage_id' => $data['cage_id'] ?? null,
+                'status'=> $data['status'] ?? 'active',
+            ]);
+
+            if ($sheep->cage_id) {
+                $sheep->cage()->increment('current_capacity');
+            }
+
+            $sheep->weightRecords()->create([
+                'weight' => $data['initial_weight'],
+                'recorded_by' => Auth::id(),
+                'recorded_at' => now(),
+            ]);
+
+            ActivityLog::create([
+                'user_id' => Auth::id(),
+                'loggable_id' => $sheep->id,
+                'loggable_type' => Sheep::class,
+                'action' => 'created',
+                'entity' => 'sheep',
+                'description' => "Menambahkan domba baru dengan eartag {$sheep->eartag}",
+                'properties' => [
+                    'initial_weight' => $data['initial_weight'],
+                    'health_status' => $data['health_status'] ?? 'sehat'
+                ],
+            ]);
+            
+            return $sheep->load(['breed', 'cage', 'latestWeight']);
+
+        });
     }
 }
