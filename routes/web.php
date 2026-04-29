@@ -22,9 +22,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     
-    // Role: Owner & Staff can access Peternak
+    // Role: Owner & Staff can access Peternak, Sheep, and Cage
     Route::middleware('role:owner,staff')->group(function() {
         Route::resource('peternak', PeternakController::class)->except(['show']);
+        Route::resource('sheep', App\Http\Controllers\SheepController::class)->except(['show']);
+        Route::resource('cage', App\Http\Controllers\CageController::class)->except(['show']);
     });
 
     // Role: Only Owner can access Admin Users (Staff/Owner)

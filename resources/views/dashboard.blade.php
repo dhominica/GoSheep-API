@@ -3,7 +3,7 @@
     <x-slot:header>Dashboard</x-slot:header>
 
     <!-- Welcome Hero Banner -->
-    <div class="relative overflow-hidden rounded-2xl bg-linear-to-r from-emerald-600 via-green-600 to-teal-500 p-6 md:p-8 text-white shadow-lg shadow-green-600/10 border border-green-400/20 group">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-green-600 to-teal-500 p-6 md:p-8 text-white shadow-lg shadow-green-600/10 border border-green-400/20 group">
         <!-- Abstract Patterns inside Banner -->
         <div class="absolute inset-0 opacity-[0.07] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=')] bg-size-[32px_32px] transition-transform duration-[15s] ease-linear group-hover:-translate-y-4 group-hover:translate-x-4"></div>
         <div class="absolute -top-32 -right-32 w-64 h-64 bg-white/20 blur-[50px] rounded-full pointer-events-none"></div>
@@ -15,7 +15,7 @@
                     Sistem Berjalan Baik
                 </div>
                 <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">Halo, {{ explode(' ', Auth::user()->name)[0] }}! 👋</h2>
-                <p class="text-green-50 max-w-xl text-xs md:text-sm leading-relaxed font-medium">Selamat datang di panel administrasi GoSheep. Saat ini ada <span class="bg-white/20 px-1.5 py-0.5 rounded font-bold">14 aktivitas</span> baru yang perlu diperiksa hari ini.</p>
+                <p class="text-green-50 max-w-xl text-xs md:text-sm leading-relaxed font-medium">Selamat datang di panel administrasi GoSheep. Saat ini sistem memantau <span class="bg-white/20 px-1.5 py-0.5 rounded font-bold">{{ number_format($totalDomba) }} domba aktif</span> di seluruh kandang.</p>
             </div>
 
             <div class="hidden md:block">
@@ -51,7 +51,7 @@
         </div>
 
         <!-- Result Card -->
-        <div class="bg-linear-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
+        <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
                 <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
                 <h3 class="font-bold text-sm text-slate-800">Hasil Speech</h3>
@@ -69,7 +69,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         <x-stat-card
             title="Total Peternak"
-            value="1,248"
+            value="{{ number_format($totalPeternak) }}"
             icon="users"
             color="blue">
             <x-slot:trend>
@@ -82,7 +82,7 @@
 
         <x-stat-card
             title="Kandang Aktif"
-            value="342"
+            value="{{ number_format($totalKandang) }}"
             icon="tent"
             color="emerald">
             <x-slot:trend>
@@ -95,7 +95,7 @@
 
         <x-stat-card
             title="Total Domba"
-            value="14"
+            value="{{ number_format($totalDomba) }}"
             icon="users"
             color="green">
             <x-slot:trend>
@@ -134,53 +134,56 @@
             </div>
 
             <div class="space-y-3">
-                <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-green-200 hover:bg-white hover:shadow-sm transition-all duration-200">
-                    <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-lg bg-linear-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-                            <i data-lucide="user-plus" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm text-slate-800">Pendaftaran Peternak Baru</p>
-                            <p class="text-xs text-slate-500 font-medium">Budi Raharjo, Jawa Tengah</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="block text-[11px] font-bold text-slate-400">10 Menit lalu</span>
-                        <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-slate-100 text-slate-500 text-[9px] uppercase font-bold rounded">Proses</span>
-                    </div>
-                </div>
+                @forelse($activities as $activity)
+                    @php
+                        // Tentukan icon dan warna berdasarkan tipe aksi atau entitas
+                        $icon = 'activity';
+                        $colorClass = 'blue';
+                        $bgClass = 'bg-gradient-to-br from-blue-400 to-indigo-500';
+                        $statusBadge = 'Sistem';
+                        $statusColor = 'slate';
 
-                <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-amber-200 hover:bg-white hover:shadow-sm transition-all duration-200">
-                    <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-lg bg-linear-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-                            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                        if (str_contains(strtolower($activity->action), 'create') || str_contains(strtolower($activity->action), 'tambah')) {
+                            $icon = 'plus-circle';
+                            $colorClass = 'emerald';
+                            $bgClass = 'bg-gradient-to-r from-emerald-400 to-teal-500';
+                            $statusBadge = 'Baru';
+                            $statusColor = 'emerald';
+                        } elseif (str_contains(strtolower($activity->action), 'update') || str_contains(strtolower($activity->action), 'ubah')) {
+                            $icon = 'edit';
+                            $colorClass = 'amber';
+                            $bgClass = 'bg-gradient-to-br from-amber-400 to-orange-500';
+                            $statusBadge = 'Update';
+                            $statusColor = 'amber';
+                        } elseif (str_contains(strtolower($activity->action), 'delete') || str_contains(strtolower($activity->action), 'hapus')) {
+                            $icon = 'trash';
+                            $colorClass = 'rose';
+                            $bgClass = 'bg-gradient-to-br from-rose-400 to-red-500';
+                            $statusBadge = 'Hapus';
+                            $statusColor = 'rose';
+                        }
+                    @endphp
+                    <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-{{ $colorClass }}-200 hover:bg-white hover:shadow-sm transition-all duration-200">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-lg {{ $bgClass }} flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+                                <i data-lucide="{{ $icon }}" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">{{ $activity->action }} {{ ucfirst($activity->entity) }}</p>
+                                <p class="text-xs text-slate-500 font-medium">{{ $activity->description }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="font-bold text-sm text-slate-800">Peringatan: Stok Konsentrat</p>
-                            <p class="text-xs text-slate-500 font-medium">Kandang Utama A - Sisa 10 Kg</p>
+                        <div class="text-right">
+                            <span class="block text-[11px] font-bold text-slate-400">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</span>
+                            <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-{{ $statusColor }}-100 text-{{ $statusColor }}-700 text-[9px] uppercase font-bold rounded">{{ $activity->user ? $activity->user->name : 'Sistem' }}</span>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <span class="block text-[11px] font-bold text-slate-400">1 Jam lalu</span>
-                        <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[9px] uppercase font-bold rounded">Sistem</span>
+                @empty
+                    <div class="text-center py-6">
+                        <i data-lucide="inbox" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i>
+                        <p class="text-xs font-bold text-slate-500">Belum ada aktivitas terbaru.</p>
                     </div>
-                </div>
-
-                <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-emerald-200 hover:bg-white hover:shadow-sm transition-all duration-200">
-                    <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-lg bg-linear-to-r from-emerald-400 to-teal-500 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-                            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm text-slate-800">Laporan Panen Tersimpan</p>
-                            <p class="text-xs text-slate-500 font-medium">Laporan domba Q1 diunggah</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="block text-[11px] font-bold text-slate-400">3 Jam lalu</span>
-                        <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-emerald-100 text-emerald-700 text-[9px] uppercase font-bold rounded">Selesai</span>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
 
@@ -197,20 +200,20 @@
                     <div>
                         <div class="flex justify-between text-xs mb-1.5 font-bold">
                             <span class="text-slate-500">Kapasitas Kandang Terisi</span>
-                            <span class="text-slate-700">78%</span>
+                            <span class="text-slate-700">{{ $capacityPercentage }}%</span>
                         </div>
                         <div class="w-full bg-slate-100 rounded-full h-1.5">
-                            <div class="bg-linear-to-r from-emerald-400 to-teal-500 h-1.5 rounded-full w-[78%]"></div>
+                            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-1.5 rounded-full" style="width: {{ $capacityPercentage }}%"></div>
                         </div>
                     </div>
 
                     <div>
                         <div class="flex justify-between text-xs mb-1.5 font-bold">
                             <span class="text-slate-500">Kesehatan Ternak (Prima)</span>
-                            <span class="text-slate-700">92%</span>
+                            <span class="text-slate-700">{{ $healthyPercentage }}%</span>
                         </div>
                         <div class="w-full bg-slate-100 rounded-full h-1.5">
-                            <div class="bg-linear-to-r from-blue-400 to-indigo-500 h-1.5 rounded-full w-[92%]"></div>
+                            <div class="bg-gradient-to-r from-blue-400 to-indigo-500 h-1.5 rounded-full" style="width: {{ $healthyPercentage }}%"></div>
                         </div>
                     </div>
                 </div>

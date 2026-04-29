@@ -70,11 +70,11 @@
             
             <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Master Data</p>
             
-            <x-sidebar-link href="#" icon="tent" :active="request()->is('kandang*')">
+            <x-sidebar-link href="{{ route('cage.index') }}" icon="tent" :active="request()->is('cage*')">
                 Kandang
             </x-sidebar-link>
 
-            <x-sidebar-link href="#" icon="logo" :active="request()->is('domba*')">
+            <x-sidebar-link href="{{ route('sheep.index') }}" icon="logo" :active="request()->is('sheep*')">
                 Ternak Domba
             </x-sidebar-link>
             
@@ -167,10 +167,16 @@
                     <input type="text" placeholder="Cari data..." class="bg-transparent border-none outline-none text-xs ml-2 w-40 text-slate-700 placeholder-slate-400">
                 </div>
 
+                @php
+                    // Cek apakah ada aktivitas baru dalam 24 jam terakhir
+                    $hasNewActivity = \App\Models\ActivityLog::where('created_at', '>=', now()->subHours(24))->exists();
+                @endphp
                 <div class="flex space-x-2">
                     <button class="p-2 text-slate-400 hover:text-green-600 bg-slate-50 hover:bg-green-50 rounded-lg transition-all shadow-sm border border-slate-100 relative group overflow-hidden">
                         <i data-lucide="bell" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
-                        <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white animate-pulse"></span>
+                        @if($hasNewActivity)
+                            <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white animate-pulse"></span>
+                        @endif
                     </button>
                 </div>
                 
@@ -186,10 +192,25 @@
         </header>
 
         <!-- Page Content -->
-        <div class="flex-1 overflow-y-auto px-4 md:px-6 pb-8 pt-4 md:pt-6 scroll-smooth">
-            <div class="max-w-[1300px] mx-auto space-y-5">
+        <div class="flex-1 flex flex-col overflow-y-auto px-4 md:px-6 pb-6 pt-4 md:pt-6 scroll-smooth">
+            <div class="max-w-[1300px] w-full mx-auto space-y-5 flex-1">
                 {{ $slot }}
             </div>
+
+            <!-- Footer -->
+            <footer class="max-w-[1300px] w-full mx-auto mt-8 border-t border-slate-200/60 pt-6 pb-2">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-xs font-medium text-slate-500 text-center md:text-left">
+                        &copy; {{ date('Y') }} <span class="font-bold text-green-600">GoSheep</span>. Hak Cipta Dilindungi.
+                    </p>
+                    <div class="flex items-center gap-4 text-xs font-medium text-slate-400">
+                        <a href="#" class="hover:text-green-600 transition-colors">Pusat Bantuan</a>
+                        <a href="#" class="hover:text-green-600 transition-colors">Kebijakan Privasi</a>
+                        <span class="text-slate-300">|</span>
+                        <span class="flex items-center gap-1">Developed by <span class="font-bold text-slate-600">PBL 404</span> <i data-lucide="rocket" class="w-3.5 h-3.5 text-emerald-500 ml-0.5"></i></span>
+                    </div>
+                </div>
+            </footer>
         </div>
     </main>
 
