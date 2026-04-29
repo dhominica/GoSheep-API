@@ -9,25 +9,28 @@ class ActivityLogService
 {
   public function log(
     int $userId,
-    ?int $sheepId = null,
-    string $category,
-    ?array $oldData = null,
-    ?array $newData = null,
-    string $description
-  ): ActivityLog {
-      $newData = $newData ?? [];
-      $newData['ip'] = Request::ip();
-      $newData['user_agent'] = Request::userAgent();
+    $model,
+    string $action,
+    string $entity,
+    string $description,
+    ?array $properties = null
 
-      $description = $description ?? ucfirst($category) . ' activity by user ID ' . $userId;
+  ): ActivityLog {
+      $extraData = [
+        'ip' => request()->ip(),
+        'user_agent' => request()->userAgent(),
+      ];
+
+      $finalProperties = array_merge($extraData, $properties ?? []);
 
       return ActivityLog::create([
           'user_id' => $userId,
-          'sheep_id' => $sheepId ? $sheepId : null,
-          'category' => $category,
-          'old_data' => $oldData ? json_encode($oldData) : null,
-          'new_data' => $newData ? json_encode($newData) : null,
+          'loggable_id' => $model->id,
+          'loggable_type' => get_class($model),
+          'action' => $action,
+          'entity' => $entity,
           'description' => $description,
+          'properties' => $finalProperties,
       ]);
   }
 }

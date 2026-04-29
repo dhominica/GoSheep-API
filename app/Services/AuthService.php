@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -15,33 +16,26 @@ class AuthService
 
     public function login(array $data)
     {
-        if (Auth::attempt($data)) {
+      $user = User::where ('email', $data['email'])->first();
 
-            $user = Auth::user();
-
-            if (is_null($user->email_verified_at)) {
-              Auth::logout();
-
-              return null;
-            }
-
-            $token = $user->createToken('api-token')->plainTextToken;
-
-            $this->activityLogService->log(
-              $user->id,
-              null,
-              'login_success',
-              null,
-              ['token' => $token],
-              'User berhasil login',
-            );
-
-            return [
-              'user' => $user,
-              'token' => $token,
-            ];
-        }
-
+      if (!$user || !Hash::check($data['password'], $user->password)) {
         return null;
+      }
+
+      $token = $user->createToken('auth_token')->plainTextToken;
+
+      $this->activityLogService->log(
+        $user->id,
+        $user,
+        'login',
+        'users',
+        'User berhasil  login ke sistem Go Sheep'
+      );
+
+      return [
+        'user' => $user,
+        'token' => $token,
+      ];
+
     }
 }
