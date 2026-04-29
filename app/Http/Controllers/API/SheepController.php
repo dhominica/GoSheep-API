@@ -31,6 +31,26 @@ class SheepController extends BaseController
         );
     }
 
+    public function store (Request $request)
+    {
+        $validated = $request->validate([
+            'eartag'         => 'required|unique:sheep,eartag',
+            'gender'         => 'required|in:male,female',
+            'birth_date'     => 'required|date',
+            'eartag_color'   => 'required|string',
+            'initial_weight' => 'required|numeric',
+            'breed_id'       => 'nullable|exists:breeds,id',
+            'cage_id'        => 'nullable|exists:cages,id',
+            'sire_id'        => 'nullable|exists:sheep,id',
+            'dam_id'         => 'nullable|exists:sheep,id',
+            'health_status'  => 'nullable|string',
+        ]);
+
+        $sheep = $this->sheepService->createSheep($validated);
+        
+        return $this->created(new SheepDetailResource($sheep), 'Berhasil!');
+    }
+
     public function show($id)
     {
         $sheep = $this->sheepService->getSheepDetails($id);
