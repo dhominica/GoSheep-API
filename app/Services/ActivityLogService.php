@@ -3,34 +3,38 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
-use Illuminate\Support\Facades\Request;
 
 class ActivityLogService
 {
-  public function log(
-    int $userId,
-    $model,
-    string $action,
-    string $entity,
-    string $description,
-    ?array $properties = null
+    public function log(
+        int $userId,
+        $model,
+        string $action,
+        string $entity,
+        string $description,
+        ?array $properties = null
+    ): ActivityLog {
 
-  ): ActivityLog {
-      $extraData = [
-        'ip' => request()->ip(),
-        'user_agent' => request()->userAgent(),
-      ];
+        if (!$model || !isset($model->id)) {
+            throw new \InvalidArgumentException('Model tidak valid untuk logging');
+        }
 
-      $finalProperties = array_merge($extraData, $properties ?? []);
+        $finalProperties = array_merge(
+            $properties ?? [],
+            [
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]
+        );
 
-      return ActivityLog::create([
-          'user_id' => $userId,
-          'loggable_id' => $model->id,
-          'loggable_type' => get_class($model),
-          'action' => $action,
-          'entity' => $entity,
-          'description' => $description,
-          'properties' => $finalProperties,
-      ]);
-  }
+        return ActivityLog::create([
+            'user_id' => $userId,
+            'loggable_id' => $model->id,
+            'loggable_type' => $model->getMorphClass(),
+            'action' => $action,
+            'entity' => $entity,
+            'description' => $description,
+            'properties' => $finalProperties,
+        ]);
+    }
 }

@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sheep_id')->constrained('sheep')->cascadeOnDelete();
             $table->decimal('weight', 5, 2);
-            $table->string('recorded_by');
+            $table->foreignId('recorded_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('recorded_at')->useCurrent();
             $table->timestamps();
         });
     }

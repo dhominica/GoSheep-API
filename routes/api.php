@@ -12,9 +12,12 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/sheep/health-stats', [SheepController::class, 'healthStatusStats']);
-Route::get('/sheep', [SheepController::class, 'index']);
-Route::post('/sheep', [SheepController::class, 'store']);
-Route::get('/sheep/{id}', [SheepController::class, 'show']);
-Route::delete('/sheep/{id}', [SheepController::class, 'deleteSheep']);
-Route::get('/cages', [CageController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/sheep/health-stats', [SheepController::class, 'healthStatusStats']);
+    Route::get('/sheep', [SheepController::class, 'index']);
+    Route::post('/sheep', [SheepController::class, 'store']);
+    Route::get('/sheep/{id}', [SheepController::class, 'show']);
+    Route::delete('/sheep/{id}', [SheepController::class, 'deleteSheep']);
+
+    Route::get('/cages', [CageController::class, 'index']);
+});

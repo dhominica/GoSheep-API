@@ -2,13 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\ActivityLog;
 use App\Models\Sheep;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SheepService
 {
+
+    protected ActivityLogService $activityLogService;
+
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
+
     public function getSheep($lastId = null, $limit = 10)
     {
         $query = Sheep::with([
@@ -52,7 +60,6 @@ class SheepService
             'latestHealth',
         ])->findOrFail($id);
 
-        // mapping status_ui (biar konsisten dengan list)
         $sheep->status_ui = $this->mapStatusUi($sheep->latestHealth);
 
         return $sheep;
@@ -112,9 +119,40 @@ class SheepService
         };
     }
 
-    public function createSheep(array $data)
-    {
-        return DB::transaction(function () use ($data){
+   public function createSheep(array $data)
+   {
+       return DB::transaction(function () use ($data) {
+
+         if (!empty($data['sire_id'])) {
+            $sire = Sheep::find($data['sire_id']);
+
+            if (!$sire) {
+                throw new \Exception('Sire tidak ditemukan');
+            }
+
+            if ($sire->gender !== 'male') {
+                throw new \Exception('Sire harus berjenis kelamin jantan');
+            }
+         }
+
+            if (!empty($data['dam_id'])) {
+                $dam = Sheep::find($data['dam_id']);
+
+                if (!$dam) {
+                    throw new \Exception('Dam tidak ditemukan');
+                }
+
+                if ($dam->gender !== 'female') {
+                    throw new \Exception('Dam harus berjenis kelamin betina');
+                }
+            }
+
+            if (!empty($data['sire_id']) && !empty($data['dam_id'])) {
+                if ($data['sire_id'] == $data['dam_id']) {
+                    throw new \Exception('Sire dan Dam tidak boleh sama');
+                }
+            }
+
             $sheep = Sheep::create([
                 'eartag' => $data['eartag'],
                 'gender' => $data['gender'],
@@ -124,34 +162,58 @@ class SheepService
                 'sire_id' => $data['sire_id'] ?? null,
                 'dam_id' => $data['dam_id'] ?? null,
                 'cage_id' => $data['cage_id'] ?? null,
-                'status'=> $data['status'] ?? 'active',
+                'status' => $data['status'] ?? 'active',
             ]);
 
             if ($sheep->cage_id) {
-                $sheep->cage()->increment('current_capacity');
+                $cage = $sheep->cage;
+
+                if ($cage->current_capacity >= $cage->max_capacity) {
+                    throw new \Exception('Kandang sudah penuh');
+                }
+
+                $cage->increment('current_capacity');
             }
 
             $sheep->weightRecords()->create([
-                'weight' => $data['initial_weight'],
+                'sheep_id' => $sheep->id,
+                'weight' => $data['weight'],
                 'recorded_by' => Auth::id(),
                 'recorded_at' => now(),
             ]);
 
-            ActivityLog::create([
-                'user_id' => Auth::id(),
-                'loggable_id' => $sheep->id,
-                'loggable_type' => Sheep::class,
-                'action' => 'created',
-                'entity' => 'sheep',
-                'description' => "Menambahkan domba baru dengan eartag {$sheep->eartag}",
-                'properties' => [
-                    'initial_weight' => $data['initial_weight'],
-                    'health_status' => $data['health_status'] ?? 'sehat'
-                ],
+            $sheep->healthRecords()->create([
+                'sheep_id' => $sheep->id,
+                'recorded_by' => Auth::id(),
+                'recorded_at' => now(),
+                'category' => $data['category'],
+                'condition' => $data['condition'],
+                'severity' => $data['severity'] ?? 'normal',
+                'source' => 'manual',
+                'notes' => $data['notes'] ?? null,
             ]);
-            
-            return $sheep->load(['breed', 'cage', 'latestWeight']);
 
+            $sheep->load([
+                'breed',
+                'latestWeight',
+                'latestHealth',
+            ]);
+
+            $sheep->status_ui = $this->mapStatusUi($sheep->latestHealth);
+
+            $this->activityLogService->log(
+                Auth::id(),
+                $sheep,
+                'created',
+                'sheep',
+                "Menambahkan domba baru dengan eartag {$sheep->eartag}",
+                [
+                    'weight' => $data['weight'],
+                    'health_status' => $sheep->latestHealth->condition ?? 'normal',
+                ]
+            );
+
+            return $sheep;
         });
     }
 }

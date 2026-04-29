@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->foreignId('sheep_id')->constrained('sheep')->cascadeOnDelete();
             $table->foreignId('recorded_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('recorded_at')->useCurrent();
 
             $table->string('category'); // health, reproduction, environment
             $table->string('condition'); // heat_stress_risk, pregnant, sick, etc

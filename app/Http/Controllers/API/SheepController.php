@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Requests\StoreSheepRequest;
 use App\Http\Resources\SheepDetailResource;
 use App\Http\Resources\SheepResource;
 use App\Services\SheepService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class SheepController extends BaseController
 {
-    protected $sheepService;
+    protected SheepService $sheepService;
 
     public function __construct(SheepService $sheepService)
     {
@@ -31,25 +33,22 @@ class SheepController extends BaseController
         );
     }
 
-    public function store (Request $request)
-    {
-        $validated = $request->validate([
-            'eartag'         => 'required|unique:sheep,eartag',
-            'gender'         => 'required|in:male,female',
-            'birth_date'     => 'required|date',
-            'eartag_color'   => 'required|string',
-            'initial_weight' => 'required|numeric',
-            'breed_id'       => 'nullable|exists:breeds,id',
-            'cage_id'        => 'nullable|exists:cages,id',
-            'sire_id'        => 'nullable|exists:sheep,id',
-            'dam_id'         => 'nullable|exists:sheep,id',
-            'health_status'  => 'nullable|string',
-        ]);
+     public function store(StoreSheepRequest $request)
+     {
+        try {
+            $sheep = $this->sheepService->createSheep(
+                $request->validated()
+            );
 
-        $sheep = $this->sheepService->createSheep($validated);
-        
-        return $this->created(new SheepDetailResource($sheep), 'Berhasil!');
-    }
+            return $this->created(
+                new SheepResource($sheep),
+                'Domba berhasil ditambahkan'
+            );
+
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 400);
+        }
+     }
 
     public function show($id)
     {
