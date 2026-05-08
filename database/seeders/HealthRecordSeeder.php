@@ -43,11 +43,17 @@ class HealthRecordSeeder extends Seeder
                 'sheep_id' => $sheepId,
                 'recorded_by' => $adminId,
                 'recorded_at' => $recordedAt,
-                'category' => 'reproduction',
-                'condition' => $sheepId % 2 == 0 ? 'pregnant' : 'healthy',
-                'severity' => $sheepId % 2 == 0 ? 'warning' : 'normal',
+                'category' => 'nutrition',
+                'condition' => $sheepId % 2 == 0
+                    ? 'low_appetite'
+                    : 'normal_feed_intake',
+                'severity' => $sheepId % 2 == 0
+                    ? 'ringan'
+                    : 'normal',
                 'source' => 'manual',
-                'notes' => $sheepId % 2 == 0 ? 'Domba dalam kondisi bunting.' : 'Domba siap untuk reproduksi.',
+                'notes' => $sheepId % 2 == 0
+                    ? 'Nafsu makan menurun dalam 2 hari terakhir.'
+                    : 'Konsumsi pakan normal.',
                 'created_at' => $recordedAt,
                 'updated_at' => $recordedAt,
             ];
@@ -61,7 +67,7 @@ class HealthRecordSeeder extends Seeder
                     'recorded_at' => $recordedAt,
                     'category' => 'environment',
                     'condition' => 'heat_stress_risk',
-                    'severity' => 'warning',
+                    'severity' => 'ringan',
                     'source' => 'iot',
                     'notes' => 'Risiko heat stress terdeteksi berdasarkan sensor suhu kandang.',
                     'created_at' => $recordedAt,

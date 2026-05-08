@@ -17,22 +17,34 @@ class SheepService
         $this->activityLogService = $activityLogService;
     }
 
-    public function getSheep($lastId = null, $limit = 10)
+    public function getSheep(
+    $lastId = null,
+    $limit = 10,
+    $search = null
+    )
     {
         $query = Sheep::with([
             'breed',
             'latestWeight',
             'latestHealth'
-        ])
-        ->orderBy('id', 'desc');
+        ])->orderBy('id', 'desc');
 
         if ($lastId !== null) {
             $query->where('id', '<', $lastId);
         }
 
+        if ($search) {
+            $query->where(
+                'eartag',
+                'like',
+                "%{$search}%"
+            );
+        }
+
         $sheep = $query->limit($limit + 1)->get();
 
         $hasMore = $sheep->count() > $limit;
+
         if ($hasMore) {
             $sheep = $sheep->take($limit);
         }
@@ -45,7 +57,10 @@ class SheepService
         return [
             'data' => $sheep->values(),
             'has_more' => $hasMore,
-            'next_cursor' => $hasMore && $sheep->count() > 0 ? $sheep->last()->id : null,
+            'next_cursor' =>
+                $hasMore && $sheep->count() > 0
+                    ? $sheep->last()->id
+                    : null,
         ];
     }
 
@@ -113,8 +128,8 @@ class SheepService
         if (!$health) return 'sehat';
 
         return match ($health->severity) {
-            'warning' => 'at_risk',
-            'critical' => 'sakit',
+            'ringan' => 'at_risk',
+            'sedang', 'berat' => 'sakit',
             default => 'sehat',
         };
     }

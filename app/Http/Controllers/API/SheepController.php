@@ -20,10 +20,11 @@ class SheepController extends BaseController
 
     public function index(Request $request)
     {
-        $lastId = $request->input('last_id');
-        $limit = $request->input('limit', 10);
-
-        $result = $this->sheepService->getSheep($lastId, $limit);
+        $result = $this->sheepService->getSheep(
+            $request->input('last_id'),
+            $request->input('limit', 10),
+            $request->input('search')
+        );
 
         return $this->successCursorPaginated(
             SheepResource::collection($result['data']),
