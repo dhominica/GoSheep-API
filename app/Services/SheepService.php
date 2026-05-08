@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Cage;
 use App\Models\Sheep;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
@@ -180,14 +181,16 @@ class SheepService
                 'status' => $data['status'] ?? 'active',
             ]);
 
-            if ($sheep->cage_id) {
-                $cage = $sheep->cage;
+            if (!empty($data['cage_id'])) {
+                $cage = Cage::find($data['cage_id']);
+
+                if (!$cage) {
+                    throw new \Exception('Kandang tidak ditemukan');
+                }
 
                 if ($cage->current_capacity >= $cage->max_capacity) {
                     throw new \Exception('Kandang sudah penuh');
                 }
-
-                $cage->increment('current_capacity');
             }
 
             $sheep->weightRecords()->create([

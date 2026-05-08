@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\CageController;
+use App\Http\Controllers\API\SheepController;
+use App\Http\Controllers\API\SheepFormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,11 +14,20 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/sheep/health-stats', [SheepController::class, 'healthStatusStats']);
-    Route::get('/sheep', [SheepController::class, 'index']);
-    Route::post('/sheep', [SheepController::class, 'store']);
-    Route::get('/sheep/{id}', [SheepController::class, 'show']);
-    Route::delete('/sheep/{id}', [SheepController::class, 'deleteSheep']);
+    Route::prefix('sheep')->group(function () {
+        Route::get('/health-stats', [SheepController::class, 'healthStatusStats']);
+        Route::get('/', [SheepController::class, 'index']);
+        Route::post('/', [SheepController::class, 'store']);
+        Route::get('/{id}', [SheepController::class, 'show']);
+        Route::delete('/{id}', [SheepController::class, 'deleteSheep']);
+    });
 
     Route::get('/cages', [CageController::class, 'index']);
+
+    Route::prefix('sheep-form')->group(function () {
+        Route::get('/breeds', [SheepFormController::class, 'breeds']);
+        Route::get('/cages', [SheepFormController::class, 'cages']);
+        Route::get('/sires', [SheepFormController::class, 'sires']);
+        Route::get('/dams', [SheepFormController::class, 'dams']);
+    });
 });

@@ -7,7 +7,6 @@ use App\Http\Resources\SheepDetailResource;
 use App\Http\Resources\SheepResource;
 use App\Services\SheepService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class SheepController extends BaseController
 {

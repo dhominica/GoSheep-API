@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends BaseController
 {
-    protected $authService;
+    protected AuthService $authService;
 
     public function __construct(AuthService $authService)
     {

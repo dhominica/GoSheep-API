@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Override;
 
 class LoginRequest extends FormRequest
 {
@@ -38,5 +39,15 @@ class LoginRequest extends FormRequest
                 'errors' => $validator->errors(),
             ], 422)
         );
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'password.required' => 'Password wajib diisi',
+            'password.min' => 'Password minimal 8 karakter',
+        ];
     }
 }

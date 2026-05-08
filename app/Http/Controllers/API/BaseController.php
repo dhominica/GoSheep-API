@@ -15,14 +15,6 @@ class BaseController extends Controller
         ], $code);
     }
 
-    public function successPaginated($resource, $message = 'Berhasil', int $code = 200)
-    {
-        return $resource->additional([
-            'success' => true,
-            'message' => $message,
-        ], $code);
-    }
-
     public function successCursorPaginated($data, $hasMore, $nextCursor = null, string $message = 'Berhasil', int $code = 200)
     {
         return response()->json([
