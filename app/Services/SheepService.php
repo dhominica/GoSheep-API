@@ -169,18 +169,6 @@ class SheepService
                 }
             }
 
-            $sheep = Sheep::create([
-                'eartag' => $data['eartag'],
-                'gender' => $data['gender'],
-                'birth_date' => $data['birth_date'],
-                'eartag_color' => $data['eartag_color'],
-                'breed_id' => $data['breed_id'] ?? null,
-                'sire_id' => $data['sire_id'] ?? null,
-                'dam_id' => $data['dam_id'] ?? null,
-                'cage_id' => $data['cage_id'] ?? null,
-                'status' => $data['status'] ?? 'active',
-            ]);
-
             if (!empty($data['cage_id'])) {
                 $cage = Cage::find($data['cage_id']);
 
@@ -192,6 +180,18 @@ class SheepService
                     throw new \Exception('Kandang sudah penuh');
                 }
             }
+
+            $sheep = Sheep::create([
+                'eartag' => $data['eartag'],
+                'gender' => $data['gender'],
+                'birth_date' => $data['birth_date'],
+                'eartag_color' => $data['eartag_color'],
+                'breed_id' => $data['breed_id'] ?? null,
+                'sire_id' => $data['sire_id'] ?? null,
+                'dam_id' => $data['dam_id'] ?? null,
+                'cage_id' => $data['cage_id'] ?? null,
+                'status' => $data['status'] ?? 'active',
+            ]);
 
             $sheep->weightRecords()->create([
                 'sheep_id' => $sheep->id,

@@ -38,8 +38,8 @@ class SheepFormController extends BaseController
     public function sires(Request $request)
     {
         $result = $this->sheepFormService->getSires(
-            lastId: $request->next_cursor,
-            limit: 10,
+            lastId: $request->last_id,
+            limit: $request->limit ?? 10,
             search: $request->search
         );
 
@@ -54,8 +54,8 @@ class SheepFormController extends BaseController
     public function dams(Request $request)
     {
         $result = $this->sheepFormService->getDams(
-            lastId: $request->next_cursor,
-            limit: 10,
+            lastId: $request->last_id,
+            limit: $request->limit ?? 10,
             search: $request->search
         );
 

@@ -34,9 +34,9 @@ class StoreSheepRequest extends FormRequest
 
             'weight' => 'required|numeric|min:0',
 
-            'category' => 'required|string',
+            'category' => 'required|in:health,environment,nutrition,maintenance',
             'condition' => 'required|string',
-            'severity' => 'required|in:normal,warning,critical',
+            'severity' => 'required|in:normal,ringan,berat',
 
             'notes' => 'nullable|string',
         ];
@@ -53,8 +53,10 @@ class StoreSheepRequest extends FormRequest
             'gender.required' => 'Gender wajib dipilih',
             'gender.in' => 'Gender harus male atau female',
 
+            'birth_date.required' => 'Tanggal lahir wajib diisi',
             'birth_date.date' => 'Tanggal lahir tidak valid',
 
+            'eartag_color.required' => 'Warna tag wajib diisi',
             'eartag_color.string' => 'Warna tag harus berupa teks',
 
             'breed_id.exists' => 'Breed tidak ditemukan',
@@ -67,12 +69,13 @@ class StoreSheepRequest extends FormRequest
             'weight.min' => 'Berat tidak boleh kurang dari 0',
 
             'category.required' => 'Kategori kesehatan wajib dipilih',
-            'category.string' => 'Kategori tidak valid',
+            'category.in' => 'Kategori harus health, environment, nutrition, atau maintenance',
 
-            'condition.required' => 'Kondisi wajib dipilih',
+            'condition.required' => 'Kondisi wajib diisi',
             'condition.string' => 'Kondisi tidak valid',
 
-            'severity.in' => 'Severity harus normal, warning, atau critical',
+            'severity.required' => 'Severity wajib dipilih',
+            'severity.in' => 'Severity harus normal, ringan, atau berat',
 
             'notes.string' => 'Catatan harus berupa teks',
         ];
