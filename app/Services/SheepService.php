@@ -7,6 +7,7 @@ use App\Models\Sheep;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SheepService
 {
@@ -77,6 +78,32 @@ class SheepService
         ])->findOrFail($id);
 
         $sheep->status_ui = $this->mapStatusUi($sheep->latestHealth);
+
+        return $sheep;
+    }
+
+    public function scanSheep(string $earTag)
+    {
+        $sheep = Sheep::with([
+            'breed',
+            'cage',
+            'sire:id,eartag',
+            'dam:id,eartag',
+            'latestWeight',
+            'latestHealth',
+        ])
+        ->where('eartag', $earTag)
+        ->first();
+
+        if (!$sheep) {
+            throw new NotFoundHttpException(
+            'Domba tidak ditemukan'
+            );
+        }
+
+        $sheep->status_ui = $this->mapStatusUi(
+            $sheep->latestHealth
+        );
 
         return $sheep;
     }

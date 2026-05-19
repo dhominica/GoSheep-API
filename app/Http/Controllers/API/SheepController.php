@@ -70,4 +70,14 @@ class SheepController extends BaseController
 
         return $this->deleted('Domba berhasil dihapus');
     }
+
+    public function scan(string $earTag)
+    {
+        $sheep = $this->sheepService->scanSheep($earTag);
+
+        return $this->success(
+            new SheepDetailResource($sheep),
+            'Domba berhasil ditemukan'
+        );
+    }
 }

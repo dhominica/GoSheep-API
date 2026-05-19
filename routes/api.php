@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [SheepController::class, 'store']);
         Route::get('/{id}', [SheepController::class, 'show']);
         Route::delete('/{id}', [SheepController::class, 'deleteSheep']);
+        Route::get('scan/{earTag}', [SheepController::class, 'scan']);
     });
 
     Route::get('/cages', [CageController::class, 'index']);
