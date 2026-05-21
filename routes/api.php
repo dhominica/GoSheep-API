@@ -31,4 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/sires', [SheepFormController::class, 'sires']);
         Route::get('/dams', [SheepFormController::class, 'dams']);
     });
+
+    Route::prefix('mating-records')->group(function () {
+        Route::get('/', [\App\Http\Controllers\API\MatingRecordController::class, 'getMatingHistory']);
+        Route::post('/check', [\App\Http\Controllers\API\MatingRecordController::class, 'storeCheck']);
+    });
 });

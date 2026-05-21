@@ -19,10 +19,10 @@ class SheepResource extends JsonResource
         return [
             'id' => $this->id,
             'ear_tag' => $this->eartag,
-            'ear_tag_color' => $this->eartag_color,
+            'eartag_color' => $this->eartag_color,
             'gender' => $this->gender,
             'breed' => $this->breed?->name,
-            'weight' => (float) $latestWeight->weight,
+            'initial_weight' => (float) $latestWeight->weight,
             'status_ui' => $this->status_ui,
         ];
     }
