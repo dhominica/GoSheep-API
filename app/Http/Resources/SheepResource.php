@@ -14,15 +14,13 @@ class SheepResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $latestWeight = $this->latestWeight;
-
         return [
             'id' => $this->id,
             'ear_tag' => $this->eartag,
-            'eartag_color' => $this->eartag_color,
+            'ear_tag_color' => $this->eartag_color,
             'gender' => $this->gender,
             'breed' => $this->breed?->name,
-            'initial_weight' => (float) $latestWeight->weight,
+            'weight' => (float) ($this->latestWeight?->weight ?? 0),
             'status_ui' => $this->status_ui,
         ];
     }

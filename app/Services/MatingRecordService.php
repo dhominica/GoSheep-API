@@ -42,30 +42,36 @@ class MatingRecordService
         ];
     }
 
+    public function getStats(): array
+    {
+        return [
+            'total_riwayat' => MatingRecord::count(),
+            'total_bunting' => MatingRecord::where('result', 'pregnant')->count(),
+            'total_proses'  => MatingRecord::where('result', 'unknown')->count(),
+            'total_gagal'   => MatingRecord::whereIn('result', ['not_pregnant', 'failed'])->count(),
+        ];
+    }
+
     public function addMatingCheck(array $data)
     {
-
-        $matingRecord = MatingRecord::find($data['mating_record_id']);
-        if ($matingRecord) {
-            $matingRecord->update([
-            'result'   => $data['result'],
-            'end_date' => $data['check_date'] // Ini yang bikin end_date otomatis berubah mengikuti tanggal cek terakhir!
-            ]);
-        }
-        
         return DB::transaction(function () use ($data) {
+            $record = MatingRecord::findOrFail($data['mating_record_id']);
+
             $check = MatingCheck::create([
-                'mating_record_id' => $data['mating_record_id'],
+                'mating_record_id' => $record->id,
                 'check_date' => $data['check_date'],
             ]);
 
-            if (isset($data['result']) && $data['result'] !== 'unknown') {
-                $record = MatingRecord::findOrFail($data['mating_record_id']);
-                $record->update([
-                    'result' => $data['result'],
-                    'actual_result_date' => $data['check_date'], 
-                ]);
+            $updates = [
+                'result' => $data['result'],
+                'end_date' => $data['check_date'],
+            ];
+
+            if ($data['result'] !== 'unknown') {
+                $updates['actual_result_date'] = $data['check_date'];
             }
+
+            $record->update($updates);
 
             return $check;
         });

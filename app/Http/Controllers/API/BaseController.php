@@ -15,15 +15,15 @@ class BaseController extends Controller
         ], $code);
     }
 
-    public function successCursorPaginated($data, $hasMore, $nextCursor = null, string $message = 'Berhasil', int $code = 200)
+    public function successCursorPaginated($data, $hasMore, $nextCursor = null, string $message = 'Berhasil', int $code = 200, array $extra = [])
     {
-        return response()->json([
+        return response()->json(array_merge([
             'success' => true,
             'message' => $message,
             'data' => $data,
             'has_more' => $hasMore,
             'next_cursor' => $nextCursor,
-        ], $code);
+        ], $extra), $code);
     }
 
     public function error(string $message = 'Kesalahan', int $code = 400, $errors = null)

@@ -57,9 +57,9 @@ class SheepController extends BaseController
         return $this->success(new SheepDetailResource($sheep), 'Detail domba berhasil diambil');
     }
 
-    public function healthStatusStats(SheepService $service)
+    public function healthStatusStats()
     {
-        $data = $service->healthStatusStats();
+        $data = $this->sheepService->healthStatusStats();
 
         return $this->success($data, 'Statistik kesehatan domba berhasil diambil');
     }
