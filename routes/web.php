@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('peternak', PeternakController::class)->except(['show']);
         Route::resource('sheep', App\Http\Controllers\SheepController::class)->except(['show']);
         Route::resource('cage', App\Http\Controllers\CageController::class)->except(['show']);
+        Route::resource('health-records', App\Http\Controllers\HealthRecordController::class)->only(['index', 'destroy']);
     });
 
     // Role: Only Owner can access Admin Users (Staff/Owner)

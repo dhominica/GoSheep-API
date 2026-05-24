@@ -6,23 +6,32 @@
         <x-alert type="success" message="{{ session('success') }}" />
     @endif
 
+    <!-- Page Header Section (Exactly like your screenshot) -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Akun Peternak</h2>
+            <p class="text-xs font-semibold text-slate-400 mt-1.5">Kelola akun akses aplikasi mobile untuk para peternak di lapangan dalam sistem.</p>
+        </div>
+    </div>
+
     <x-data-table 
         :data="$users" 
         createUrl="{{ route('peternak.create') }}" 
-        createText="Tambah Peternak">
+        createText="Tambah Peternak"
+        title="Daftar Akun Peternak">
         
         <x-slot name="header">
-            <th class="px-6 py-4 w-16 text-center">No.</th>
-            <th class="px-6 py-4">Nama Peternak</th>
-            <th class="px-6 py-4">Alamat Email</th>
-            <th class="px-6 py-4 text-center">Akses Mobile</th>
-            <th class="px-6 py-4 text-center">Status</th>
-            <th class="px-6 py-4 text-right">Aksi</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider w-16 text-center">NO.</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">NAMA PETERNAK</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">ALAMAT EMAIL</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">AKSES MOBILE</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">STATUS</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">AKSI</th>
         </x-slot>
 
         @foreach($users as $user)
             <tr class="hover:bg-emerald-50/40 even:bg-slate-50/30 transition-all duration-300 group">
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-slate-400">
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-400">
                     {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -31,29 +40,29 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                         <div>
-                            <div class="font-bold text-slate-800 group-hover:text-amber-700 transition-colors">{{ $user->name }}</div>
-                            <div class="text-xs text-slate-500 font-medium">Bergabung {{ $user->created_at->diffForHumans() }}</div>
+                            <div class="font-semibold text-slate-700 group-hover:text-amber-700 transition-colors">{{ $user->name }}</div>
+                            <div class="text-xs text-slate-400 font-normal">Bergabung {{ $user->created_at->diffForHumans() }}</div>
                         </div>
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-semibold text-slate-600 flex items-center gap-1.5">
+                    <div class="text-sm font-medium text-slate-600 flex items-center gap-1.5">
                         <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
                         {{ $user->email }}
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-50 text-amber-600 border border-amber-200/60 text-[10px] font-extrabold rounded-lg uppercase tracking-widest shadow-sm">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-50 text-amber-600 border border-amber-200/60 text-[10px] font-bold rounded-lg uppercase tracking-widest shadow-sm">
                         <i data-lucide="smartphone" class="w-3 h-3"></i> Tautkan Mobile
                     </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                     @if($user->status === 'active')
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold border border-emerald-100">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold border border-emerald-100">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 text-xs font-bold border border-slate-200">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 text-xs font-semibold border border-slate-200">
                             <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Nonaktif
                         </span>
                     @endif

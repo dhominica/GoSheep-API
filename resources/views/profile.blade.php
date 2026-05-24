@@ -8,97 +8,137 @@
         </x-alert>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- Sidebar Info -->
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 flex flex-col items-center text-center">
-            
-            <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-green-500 to-teal-400 flex items-center justify-center font-extrabold text-4xl text-white shadow-xl shadow-green-500/20 mb-5 relative group">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div>
-            
-            <h2 class="text-2xl font-black text-slate-800 tracking-tight">{{ Auth::user()->name }}</h2>
-            <p class="text-[11px] font-bold text-green-700 uppercase tracking-widest mt-2 bg-green-50 px-3.5 py-1.5 rounded-lg border border-green-100">{{ Auth::user()->role }} Mode</p>
+        
+        <div class="space-y-6">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center flex flex-col items-center">
+                <div class="relative w-28 h-28 mb-4">
+                    <div class="w-full h-full rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-3xl border-4 border-emerald-100/50 shadow-sm">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                </div>
 
-            <div class="w-full border-t border-slate-100 mt-8 pt-6 space-y-4 text-left">
-                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50">
-                    <span class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
-                        Status Akun
-                    </span>
-                    <span class="text-emerald-600 text-sm font-bold uppercase">{{ Auth::user()->status }}</span>
-                </div>
-                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50">
-                    <span class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="calendar" class="w-4 h-4 text-emerald-500"></i>
-                        Terdaftar Sejak
-                    </span>
-                    <span class="text-slate-700 text-sm font-extrabold">{{ Auth::user()->created_at->format('d M Y') }}</span>
+                <h3 class="text-base font-bold text-slate-800">{{ Auth::user()->name }}</h3>
+                <span class="inline-flex items-center gap-1 mt-1.5 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 border border-emerald-100/50">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i> {{ Auth::user()->role }}
+                </span>
+
+                <div class="w-full border-t border-slate-50 my-5"></div>
+
+                
+                <div class="w-full space-y-3.5 text-left">
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-slate-400 font-medium">Status Akun</span>
+                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[9px] font-black uppercase tracking-wider border border-emerald-100/50 inline-flex items-center gap-1">
+                            <span class="w-1 h-1 rounded-full bg-emerald-500"></span>
+                            {{ Auth::user()->status }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-slate-400 font-medium">Terdaftar Sejak</span>
+                        <span class="text-slate-700 font-bold">{{ Auth::user()->created_at->format('d M Y') }}</span>
+                    </div>
                 </div>
             </div>
             
+            
+            <div class="bg-gradient-to-br from-slate-900 to-emerald-950 rounded-2xl p-6 text-white shadow-sm flex flex-col justify-between min-h-[9rem]">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                        <i data-lucide="shield" class="w-5 h-5 text-emerald-300"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-extrabold text-xs tracking-wide uppercase">Keamanan Akun</h4>
+                        <p class="text-[9px] text-white/50 font-bold uppercase mt-0.5">SIAKAD Security Guard</p>
+                    </div>
+                </div>
+                <p class="text-[10px] text-emerald-100/70 leading-relaxed mt-4">
+                    Akun Anda terlindungi dengan enkripsi mutakhir. Disarankan untuk menggunakan kombinasi sandi yang kuat dan unik secara berkala.
+                </p>
+            </div>
         </div>
 
-        <!-- Layout Form Utama -->
-        <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-8 relative overflow-hidden">
-            <!-- Pola Penghias Belakang Form -->
-            <div class="absolute right-0 top-0 w-64 h-64 bg-green-500/5 rounded-full blur-[80px] pointer-events-none"></div>
-
-            <div class="mb-8 border-b border-slate-100 pb-5 relative z-10">
-                <h3 class="text-xl font-extrabold text-slate-800 flex items-center gap-2">
-                    <i data-lucide="user-cog" class="w-6 h-6 text-green-500"></i>
-                    Informasi Dasar
-                </h3>
-                <p class="text-sm text-slate-500 mt-1 font-medium">Perbarui alamat email dan detail lain dari akun Anda di sini.</p>
-            </div>
-
-            <form action="{{ route('profile.update') }}" method="POST" class="space-y-6 relative z-10">
+        <div class="lg:col-span-2 space-y-6">
+            <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
                 @csrf
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-wider mb-2 ml-1">Nama Lengkap</label>
-                        <input type="text" name="name" value="{{ old('name', Auth::user()->name) }}" required
-                            class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-green-500 focus:ring-4 focus:ring-green-500/10 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm placeholder-slate-300">
-                        @error('name') <span class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
+                
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-100 flex items-center gap-3 bg-emerald-50/10 border-l-4 border-emerald-500">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <i data-lucide="user-cog" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Informasi Pribadi</h3>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Kelola identitas utama profil Anda</p>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-wider mb-2 ml-1">Alamat Email</label>
-                        <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}" required
-                            class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-green-500 focus:ring-4 focus:ring-green-500/10 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm placeholder-slate-300">
-                        @error('email') <span class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-
-                <div class="border-t border-slate-100 pt-8 mt-4">
-                    <h4 class="text-lg font-extrabold text-slate-800 mb-1 flex items-center gap-2">
-                        <i data-lucide="lock" class="w-5 h-5 text-amber-500"></i>
-                        Ganti Kata Sandi
-                    </h4>
-                    <p class="text-xs text-slate-400 font-bold mb-6">Opsional. Kosongkan jika Anda tidak bermaksud mengganti kata sandi utama.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-wider mb-2 ml-1">Sandi Baru</label>
-                            <input type="password" name="password" placeholder="Minimal 8 karakter"
-                                class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm placeholder-slate-300">
-                            @error('password') <span class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                       
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Nama Lengkap</label>
+                            <input type="text" name="name" value="{{ old('name', Auth::user()->name) }}" required
+                                class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all outline-none">
+                            @error('name')
+                                <span class="text-rose-500 text-[10px] font-bold mt-1">{{ $message }}</span>
+                            @enderror
                         </div>
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-wider mb-2 ml-1">Konfirmasi Sandi Baru</label>
-                            <input type="password" name="password_confirmation" placeholder="Ulangi sandi baru"
-                                class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm placeholder-slate-300">
+
+                        
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Alamat Email</label>
+                            <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}" required
+                                class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all outline-none">
+                            @error('email')
+                                <span class="text-rose-500 text-[10px] font-bold mt-1">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-end pt-6 border-t border-slate-100">
-                    <button type="submit" class="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white font-extrabold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-green-500/30 active:scale-95 flex items-center gap-2 border border-green-500">
+                
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-100 flex items-center gap-3 bg-amber-50/10 border-l-4 border-amber-500">
+                        <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                            <i data-lucide="key-round" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Ubah Kata Sandi</h3>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Kosongkan jika Anda tidak ingin mengubah sandi utama</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Kata Sandi Baru</label>
+                            <input type="password" name="password" placeholder="Minimal 8 karakter"
+                                class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-50 transition-all outline-none">
+                            @error('password')
+                                <span class="text-rose-500 text-[10px] font-bold mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Ulangi Kata Sandi Baru</label>
+                            <input type="password" name="password_confirmation" placeholder="Ulangi sandi baru"
+                                class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-50 transition-all outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="flex items-center justify-end gap-3 mt-6">
+                    <button type="submit" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[10px] uppercase tracking-wider px-8 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
                         <i data-lucide="save" class="w-4 h-4"></i>
-                        Simpan Perubahan
+                        Simpan Perubahan Profil
                     </button>
                 </div>
             </form>
         </div>
+
     </div>
 </x-layouts.admin>

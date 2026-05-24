@@ -1,13 +1,14 @@
 @props(['color' => 'amber', 'href' => null, 'type' => 'button'])
 
 @php
-    $baseClasses = 'w-full sm:w-auto px-8 py-3.5 text-sm font-black rounded-xl transition-all flex items-center justify-center gap-2 relative overflow-hidden group';
+    // Unified, high-end base classes for SIAKAD-style responsive buttons
+    $baseClasses = 'w-full sm:w-auto px-8 py-3 text-sm font-extrabold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group hover:-translate-y-0.5 active:translate-y-0 active:scale-95';
 
     $colorClasses = [
-        'amber' => 'text-white bg-gradient-to-tr from-amber-500 to-orange-400 shadow-lg shadow-amber-500/30 hover:shadow-orange-500/40 hover:to-orange-500 border border-amber-400/50 hover:-translate-y-1 active:translate-y-0',
-        'indigo' => 'text-white bg-gradient-to-tr from-indigo-600 to-blue-500 shadow-lg shadow-indigo-500/30 hover:shadow-blue-500/40 hover:to-blue-400 border border-indigo-400/50 hover:-translate-y-1 active:translate-y-0',
-        'emerald' => 'text-white bg-gradient-to-tr from-emerald-600 to-green-500 shadow-lg shadow-emerald-500/30 hover:shadow-green-500/40 hover:to-green-400 border border-emerald-400/50 hover:-translate-y-1 active:translate-y-0',
-        'slate' => 'text-slate-500 bg-white border-2 border-slate-200 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300 text-center',
+        'amber' => 'text-white bg-gradient-to-tr from-amber-500 to-orange-400 shadow-md shadow-amber-500/20 hover:shadow-orange-500/30 hover:to-orange-500 border border-amber-400/50',
+        'indigo' => 'text-white bg-gradient-to-tr from-indigo-600 to-blue-500 shadow-md shadow-indigo-500/20 hover:shadow-blue-500/30 hover:to-blue-400 border border-indigo-400/50',
+        'emerald' => 'text-white bg-gradient-to-tr from-emerald-600 to-green-500 shadow-md shadow-emerald-500/20 hover:shadow-green-500/30 hover:to-green-400 border border-emerald-400/50',
+        'slate' => 'text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300 shadow-sm',
     ];
 
     $classes = $baseClasses . ' ' . ($colorClasses[$color] ?? $colorClasses['amber']);
