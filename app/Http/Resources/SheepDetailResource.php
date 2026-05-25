@@ -43,7 +43,7 @@ class SheepDetailResource extends JsonResource
             'weight' => (float) ($this->latestWeight?->weight ?? 0),
 
             'health' => [
-                'condition' => $this->latestHealth->condition,
+                'condition' => $this->latestHealth?->condition,
             ],
             'status_ui' => $this->status_ui,
         ];

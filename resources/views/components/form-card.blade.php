@@ -13,79 +13,50 @@
 @php
     $colors = [
         'emerald' => [
-            'bgFrom' => 'from-slate-900',
-            'bgVia' => 'via-slate-800',
-            'bgTo' => 'to-slate-900',
-            'border' => 'border-emerald-500',
-            'glow' => 'bg-emerald-500/20',
-            'badgeBg' => 'bg-white/10',
-            'badgeBorder' => 'border-white/20',
-            'badgeTextCol' => 'text-emerald-400',
-            'hex' => '#10b981'
+            'hex' => '#059669'
         ],
         'indigo' => [
-            'bgFrom' => 'from-indigo-950',
-            'bgVia' => 'via-slate-900',
-            'bgTo' => 'to-indigo-900',
-            'border' => 'border-indigo-500',
-            'glow' => 'bg-indigo-500/20',
-            'badgeBg' => 'bg-indigo-500/20',
-            'badgeBorder' => 'border-indigo-400/30',
-            'badgeTextCol' => 'text-indigo-300',
-            'hex' => '#6366f1'
+            'hex' => '#4f46e5'
         ]
     ];
     $t = $colors[$color] ?? $colors['emerald'];
 @endphp
 
 <div class="max-w-4xl mx-auto">
-    <!-- Premium Header Banner -->
-    <div class="relative overflow-hidden rounded-t-2xl bg-gradient-to-br {{ $t['bgFrom'] }} {{ $t['bgVia'] }} {{ $t['bgTo'] }} p-8 text-white shadow-lg border-b-4 {{ $t['border'] }} group">
-        <div class="absolute inset-0 opacity-[0.05] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=')] bg-[length:32px_32px]"></div>
-        <div class="absolute -top-32 -left-32 w-72 h-72 {{ $t['glow'] }} blur-[70px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-110"></div>
-        <div class="absolute -top-32 -right-32 w-64 h-64 {{ $t['glow'] }} blur-[60px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-110"></div>
-        
-        <div class="relative z-10 flex items-center justify-between">
-            <div>
-                @if($badgeText)
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full {{ $t['badgeBg'] }} backdrop-blur-md border {{ $t['badgeBorder'] }} text-[10px] font-black tracking-widest {{ $t['badgeTextCol'] }} uppercase mb-4 shadow-sm shadow-black/20">
-                    {{ $badgeIcon ?? '' }}
-                    {{ $badgeText }}
-                </div>
-                @endif
-                <h2 class="text-2xl md:text-3xl font-black tracking-tight mb-2 flex items-center gap-2">
-                    {{ $title }}
-                </h2>
-                <div class="text-slate-300 font-medium text-sm max-w-xl leading-relaxed">
-                    {{ $description ?? '' }}
-                </div>
+    <!-- SIAKAD style Title, Breadcrumb and Meta directly on Page Canvas -->
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            @if($badgeText)
+            <div class="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                <span>{{ $badgeText }}</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-emerald-600 font-extrabold">Formulir</span>
             </div>
-            
-            @if(isset($cornerIcon))
-            <div class="hidden md:flex w-16 h-16 rounded-full bg-white/10 border border-white/20 items-center justify-center backdrop-blur-md shadow-2xl">
-                {{ $cornerIcon }}
-            </div>
+            @endif
+            <h1 class="text-2xl font-black text-slate-800 tracking-tight">{{ $title }}</h1>
+            @if(isset($description))
+            <p class="text-xs text-slate-400 font-semibold mt-1">
+                {{ $description }}
+            </p>
             @endif
         </div>
     </div>
 
-    <!-- Form Section -->
-    <div class="bg-white rounded-b-2xl border-x border-b border-slate-200 shadow-2xl shadow-slate-200/50 p-8 md:p-10 relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-bl from-slate-50/80 to-transparent pointer-events-none"></div>
-
+    <!-- Clean SIAKAD Flat White Form Container -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-6 md:p-8">
         @php $formId = 'form-card-' . uniqid(); @endphp
-        <form action="{{ $action }}" method="POST" class="relative z-10" id="{{ $formId }}">
+        <form action="{{ $action }}" method="POST" id="{{ $formId }}" class="space-y-6">
             @csrf
             @if(in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE']))
                 @method($method)
             @endif
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{ $slot }}
             </div>
 
             @if(isset($actions))
-            <div class="pt-8 mt-10 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/50 -mx-8 -mb-8 md:-mx-10 md:-mb-10 p-6 md:p-8 rounded-b-2xl">
+            <div class="pt-6 mt-8 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/50 -mx-6 -mb-6 md:-mx-8 md:-mb-8 p-5 md:p-6">
                 {{ $actions }}
             </div>
             @endif

@@ -12,7 +12,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
         [x-cloak] { display: none !important; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -46,43 +46,43 @@
     <!-- Sidebar Layout (White Theme) -->
     <!-- We animate the width on desktop seamlessly. On mobile it uses translation -->
     <aside :class="sidebarOpen ? 'translate-x-0 w-[260px]' : '-translate-x-full md:translate-x-0 md:w-0 md:opacity-0'" 
-           class="fixed md:static inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[0_0_40px_-15px_rgba(0,0,0,0.1)] md:shadow-none overflow-hidden shrink-0 group">
+           class="fixed md:static inset-y-0 left-0 z-50 bg-emerald-950 text-emerald-100 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[4px_0_30px_rgba(2,44,27,0.15)] md:shadow-none overflow-hidden shrink-0 group">
         
-        <div class="h-[64px] flex items-center justify-between px-5 border-b border-slate-100 shrink-0 w-[260px]">
+        <!-- Logo Area Style SIAKAD -->
+        <div class="h-[64px] bg-white flex items-center justify-between px-5 border-b border-slate-100 shrink-0 w-[260px]">
             <div class="flex items-center gap-3">
-                <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-[2px] rounded-lg shadow-sm">
-                    <div class="bg-white p-1 rounded-md">
-                        <img src="{{ asset('assets/img/logo_app.png') }}" alt="GoSheep" class="w-5 h-5 object-contain">
-                    </div>
+                <img src="{{ asset('assets/img/logo_app.png') }}" alt="GoSheep" class="h-8 w-auto object-contain">
+                <div>
+                    <p class="text-[11px] font-black text-emerald-950 leading-none tracking-tighter uppercase">GOSHEEP PORTAL</p>
+                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">MANAGEMENT SYSTEM</p>
                 </div>
-                <span class="text-xl font-extrabold tracking-tight text-slate-800">GoSheep</span>
             </div>
             <!-- Close Mobile -->
-            <button @click="sidebarOpen = false" class="md:hidden p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+            <button @click="sidebarOpen = false" class="md:hidden p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-50 transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
         
-        <nav class="flex-1 overflow-y-auto py-5 px-3 space-y-1 w-[260px] overflow-x-hidden">
+        <nav class="flex-1 overflow-y-auto pt-10 pb-6 px-3 space-y-1 w-[260px] overflow-x-hidden">
             
             <x-sidebar-link href="{{ route('dashboard') }}" icon="layout-dashboard" :active="request()->routeIs('dashboard')">
                 Dashboard
             </x-sidebar-link>
             
-            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Master Data</p>
+            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-emerald-400/50 uppercase tracking-widest">Master Data</p>
             
             <x-sidebar-link href="{{ route('cage.index') }}" icon="tent" :active="request()->is('cage*')">
                 Kandang
             </x-sidebar-link>
 
-            <x-sidebar-link href="{{ route('sheep.index') }}" icon="logo" :active="request()->is('sheep*')">
+            <x-sidebar-link href="{{ route('sheep.index') }}" icon="tag" :active="request()->is('sheep*')">
                 Ternak Domba
             </x-sidebar-link>
             
-            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pencatatan</p>
+            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-emerald-400/50 uppercase tracking-widest">Pencatatan</p>
             
-            <x-sidebar-link href="#" icon="heart-pulse" :active="request()->is('kesehatan*')">
-                Kesehatan
+            <x-sidebar-link href="{{ route('health-records.index') }}" icon="heart-pulse" :active="request()->is('health-records*')">
+                Catatan Kesehatan
             </x-sidebar-link>
 
             <x-sidebar-link href="#" icon="git-merge" :active="request()->is('mating*')">
@@ -93,7 +93,7 @@
                 Riwayat Berat
             </x-sidebar-link>
 
-            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Lainnya</p>
+            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-emerald-400/50 uppercase tracking-widest">Lainnya</p>
 
             <x-sidebar-link href="{{ route('profile') }}" icon="user" :active="request()->routeIs('profile')">
                 Profil Saya
@@ -112,25 +112,6 @@
             
             <div class="h-4"></div>
         </nav>
-        
-        <div class="p-4 border-t border-slate-100 shrink-0 w-[260px] bg-slate-50/50">
-            <div class="flex items-center gap-3 px-2 py-2 mb-2">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-green-500 to-teal-400 flex items-center justify-center font-bold text-sm text-white shadow-sm">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-                <div class="overflow-hidden">
-                    <h4 class="font-bold text-sm leading-tight text-slate-800 truncate">{{ Auth::user()->name }}</h4>
-                    <p class="text-[11px] text-slate-500 capitalize truncate font-semibold mt-0.5">{{ Auth::user()->role }}</p>
-                </div>
-            </div>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="flex w-full items-center gap-2 px-3 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-200 hover:border-red-200 rounded-lg justify-center transition-all duration-200 text-xs font-bold group">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5 group-hover:scale-110 transition-transform"></i>
-                    Keluar Sistem
-                </button>
-            </form>
-        </div>
     </aside>
 
     <!-- Main Content -->
@@ -159,7 +140,7 @@
                 <button @click="sidebarOpen = !sidebarOpen" class="p-2 text-slate-400 hover:text-green-600 bg-slate-50 hover:bg-green-50 rounded-xl transition-all shadow-sm border border-slate-100">
                     <i data-lucide="sidebar" class="w-4 h-4"></i>
                 </button>
-                <h1 class="text-lg font-bold text-slate-800 tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
+                <p class="text-[10px] font-black text-emerald-600/75 uppercase tracking-[0.2em] select-none">Panel Kontrol Utama</p>
             </div>
             
             <div class="flex items-center gap-4">
@@ -183,11 +164,27 @@
                 
                 <div class="h-6 w-px bg-slate-200"></div>
 
-                <div class="flex items-center gap-3">
-                    <div class="text-right hidden lg:block">
-                        <p class="text-xs font-bold text-slate-700 leading-none">{{ Auth::user()->name }}</p>
-                        <p class="text-[10px] font-bold text-green-600 mt-1 uppercase tracking-wider">{{ Auth::user()->role }} Mode</p>
-                    </div>
+                <!-- Admin Profile & Logout Quick Access (SIAKAD Premium Style) -->
+                <div class="flex items-center gap-3.5">
+                    <a href="{{ route('profile') }}" class="flex items-center gap-2.5 group hover:opacity-90 transition-opacity">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-green-400 to-emerald-500 text-white flex items-center justify-center font-black text-xs shadow-sm group-hover:scale-105 transition-transform border border-emerald-100/50 shrink-0">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                        <div class="hidden sm:flex flex-col text-left leading-none">
+                            <p class="text-[10px] font-bold text-slate-700 tracking-tight">{{ Auth::user()->name }}</p>
+                            <p class="text-[8px] font-black text-emerald-600 uppercase tracking-wider mt-0.5">{{ Auth::user()->role }}</p>
+                        </div>
+                    </a>
+
+                    <div class="w-px h-6 bg-slate-200"></div>
+
+                    <!-- Logout Icon Button -->
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="text-slate-400 hover:text-rose-500 transition-all flex items-center gap-2 group" title="Keluar Sistem">
+                            <i data-lucide="log-out" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>

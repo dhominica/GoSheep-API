@@ -6,24 +6,33 @@
         <x-alert type="success" message="{{ session('success') }}" />
     @endif
 
+    <!-- Page Header Section (Exactly like your screenshot) -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Ternak Domba</h2>
+            <p class="text-xs font-semibold text-slate-400 mt-1.5">Kelola data ternak domba, eartag, breed, dan riwayat pertumbuhannya dalam sistem.</p>
+        </div>
+    </div>
+
     <x-data-table 
         :data="$sheeps" 
         createUrl="{{ route('sheep.create') }}" 
-        createText="Tambah Domba">
+        createText="Tambah Domba"
+        title="Daftar Ternak Domba">
         
         <x-slot name="header">
-            <th class="px-6 py-4 w-16 text-center">No.</th>
-            <th class="px-6 py-4">Eartag</th>
-            <th class="px-6 py-4">Jenis Kelamin</th>
-            <th class="px-6 py-4">Umur & Tanggal Lahir</th>
-            <th class="px-6 py-4">Breed & Kandang</th>
-            <th class="px-6 py-4 text-center">Status</th>
-            <th class="px-6 py-4 text-right">Aksi</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider w-16 text-center">NO.</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">EARTAG</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">JENIS KELAMIN</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">UMUR & TANGGAL LAHIR</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">BREED & KANDANG</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">STATUS</th>
+            <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">AKSI</th>
         </x-slot>
 
         @foreach($sheeps as $sheep)
             <tr class="hover:bg-emerald-50/40 even:bg-slate-50/30 transition-all duration-300 group">
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-slate-400">
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-400">
                     {{ ($sheeps->currentPage() - 1) * $sheeps->perPage() + $loop->iteration }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -33,8 +42,8 @@
                             <i data-lucide="tag" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <div class="font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">{{ $sheep->eartag }}</div>
-                            <div class="text-xs text-slate-500 font-medium capitalize">Warna: {{ $sheep->eartag_color }}</div>
+                            <div class="font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">{{ $sheep->eartag }}</div>
+                            <div class="text-xs text-slate-400 font-normal capitalize">Warna: {{ $sheep->eartag_color }}</div>
                         </div>
                     </div>
                 </td>
@@ -50,33 +59,33 @@
                     @endif
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-bold text-slate-700">
+                    <div class="text-sm font-semibold text-slate-700">
                         {{ \Carbon\Carbon::parse($sheep->birth_date)->age }} Bulan
                     </div>
-                    <div class="text-xs text-slate-500 font-medium">
+                    <div class="text-xs text-slate-400 font-normal">
                         {{ \Carbon\Carbon::parse($sheep->birth_date)->format('d M Y') }}
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-bold text-slate-700">
+                    <div class="text-sm font-semibold text-slate-700">
                         {{ $sheep->breed ? $sheep->breed->name : '-' }}
                     </div>
-                    <div class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+                    <div class="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
                         <i data-lucide="box" class="w-3 h-3"></i>
                         {{ $sheep->cage ? $sheep->cage->name : 'Tanpa Kandang' }}
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                     @if($sheep->status === 'active')
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold border border-emerald-100">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold border border-emerald-100">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
                         </span>
                     @elseif($sheep->status === 'sold')
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-bold border border-amber-100">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-semibold border border-amber-100">
                             <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Terjual
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 text-xs font-bold border border-rose-100">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 text-xs font-semibold border border-rose-100">
                             <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Mati
                         </span>
                     @endif
