@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} | GoSheep Admin</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo_app.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -91,6 +92,12 @@
 
             <x-sidebar-link href="#" icon="scale" :active="request()->is('berat*')">
                 Riwayat Berat
+            </x-sidebar-link>
+
+            <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-emerald-400/50 uppercase tracking-widest">IoT</p>
+
+            <x-sidebar-link href="{{ route('monitoring.index') }}" icon="thermometer" :active="request()->is('monitoring*')">
+                Monitoring Kandang
             </x-sidebar-link>
 
             <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold text-emerald-400/50 uppercase tracking-widest">Lainnya</p>

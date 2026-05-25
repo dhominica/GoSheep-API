@@ -34,4 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:owner')->group(function() {
         Route::resource('admin-users', AdminUserController::class)->except(['show', 'edit', 'update', 'destroy']);
     });
+
+    //Monitoring IoT
+    Route::get('/monitoring', [App\Http\Controllers\MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/monitoring/{cage}/history', [App\Http\Controllers\MonitoringController::class, 'history'])->name('monitoring.history');
 });
