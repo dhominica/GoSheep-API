@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cage extends Model
 {
@@ -17,5 +18,10 @@ class Cage extends Model
     public function sheep()
     {
         return $this->hasMany(Sheep::class);
+    }
+
+    public function environmentLogs(): HasMany
+    {
+        return $this->hasMany(CageEnvironmentLog::class);
     }
 }
