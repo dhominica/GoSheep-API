@@ -90,7 +90,7 @@
                 Persilangan (Mating)
             </x-sidebar-link>
 
-            <x-sidebar-link href="#" icon="scale" :active="request()->is('berat*')">
+            <x-sidebar-link href="{{ route('berat.index') }}" icon="scale" :active="request()->routeIs('berat.*')">
                 Riwayat Berat
             </x-sidebar-link>
 
