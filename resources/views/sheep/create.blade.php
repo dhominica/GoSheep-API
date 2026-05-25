@@ -115,6 +115,55 @@
             </x-form-select>
         </div>
 
+        <!-- Section Title 3 -->
+        <x-form-section title="Data Fisik & Kesehatan Awal" color="amber" :marginTop="true">
+            <i data-lucide="stethoscope" class="w-5 h-5"></i>
+        </x-form-section>
+
+        <!-- Initial Weight Component -->
+        <div class="col-span-1">
+            <x-form-input name="weight" type="number" step="0.01" label="Berat Awal (Kg)" placeholder="Cth: 25.5" :required="true" color="amber">
+                <x-slot:icon><i data-lucide="scale" class="w-5 h-5"></i></x-slot:icon>
+            </x-form-input>
+        </div>
+
+        <!-- Health Category Component -->
+        <div class="col-span-1">
+            <x-form-select name="category" label="Kategori Kesehatan" color="amber" :required="true">
+                <x-slot:icon><i data-lucide="heart-pulse" class="w-5 h-5"></i></x-slot:icon>
+                <option value="">Pilih Kategori</option>
+                <option value="Pemeriksaan Rutin" {{ old('category') == 'Pemeriksaan Rutin' ? 'selected' : '' }}>Pemeriksaan Rutin</option>
+                <option value="Sakit" {{ old('category') == 'Sakit' ? 'selected' : '' }}>Sakit</option>
+                <option value="Cedera" {{ old('category') == 'Cedera' ? 'selected' : '' }}>Cedera</option>
+                <option value="Vaksinasi" {{ old('category') == 'Vaksinasi' ? 'selected' : '' }}>Vaksinasi</option>
+            </x-form-select>
+        </div>
+
+        <!-- Health Condition Component -->
+        <div class="col-span-1">
+            <x-form-input name="condition" label="Kondisi Kesehatan" placeholder="Cth: Sehat, Nafsu makan baik" :required="true" color="amber">
+                <x-slot:icon><i data-lucide="activity" class="w-5 h-5"></i></x-slot:icon>
+            </x-form-input>
+        </div>
+
+        <!-- Severity Component -->
+        <div class="col-span-1">
+            <x-form-select name="severity" label="Tingkat Keparahan" color="amber">
+                <x-slot:icon><i data-lucide="alert-triangle" class="w-5 h-5"></i></x-slot:icon>
+                <option value="normal" {{ old('severity') == 'normal' ? 'selected' : '' }}>Normal</option>
+                <option value="low" {{ old('severity') == 'low' ? 'selected' : '' }}>Rendah</option>
+                <option value="medium" {{ old('severity') == 'medium' ? 'selected' : '' }}>Sedang</option>
+                <option value="high" {{ old('severity') == 'high' ? 'selected' : '' }}>Tinggi</option>
+            </x-form-select>
+        </div>
+
+        <!-- Notes Component -->
+        <div class="col-span-1 md:col-span-2">
+            <x-form-input name="notes" label="Catatan Tambahan (Opsional)" placeholder="Tambahkan catatan jika perlu..." color="amber">
+                <x-slot:icon><i data-lucide="file-text" class="w-5 h-5"></i></x-slot:icon>
+            </x-form-input>
+        </div>
+
         <x-slot:actions>
             <x-btn href="{{ route('sheep.index') }}" color="slate">
                 Batal

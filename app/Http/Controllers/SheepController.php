@@ -11,12 +11,12 @@ class SheepController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Sheep::with(['breed', 'cage']);
+        $query = Sheep::with(['breed', 'cage', 'latestWeight']);
 
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where('eartag', 'like', "%{$search}%")
-                  ->orWhere('eartag_color', 'like', "%{$search}%");
+                ->orWhere('eartag_color', 'like', "%{$search}%");
         }
 
         $perPage = $request->input('per_page', 10);
@@ -47,9 +47,41 @@ class SheepController extends Controller
             'dam_id' => 'nullable|exists:sheep,id',
             'cage_id' => 'nullable|exists:cages,id',
             'status' => 'required|in:active,sold,dead',
+            // New validations for initial weight and health
+            'weight' => 'required|numeric|min:0.1',
+            'category' => 'required|string',
+            'condition' => 'required|string',
+            'severity' => 'nullable|in:normal,low,medium,high',
+            'notes' => 'nullable|string',
         ]);
 
-        Sheep::create($request->all());
+        $sheep = Sheep::create($request->only([
+            'eartag',
+            'gender',
+            'birth_date',
+            'eartag_color',
+            'breed_id',
+            'sire_id',
+            'dam_id',
+            'cage_id',
+            'status'
+        ]));
+
+        $sheep->weightRecords()->create([
+            'weight' => $request->weight,
+            'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
+            'recorded_at' => now(),
+        ]);
+
+        $sheep->healthRecords()->create([
+            'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
+            'recorded_at' => now(),
+            'category' => $request->category,
+            'condition' => $request->condition,
+            'severity' => $request->severity ?? 'normal',
+            'source' => 'manual',
+            'notes' => $request->notes,
+        ]);
 
         return redirect()->route('sheep.index')->with('success', 'Data domba berhasil ditambahkan.');
     }
@@ -88,5 +120,24 @@ class SheepController extends Controller
         $sheep->delete();
 
         return redirect()->route('sheep.index')->with('success', 'Data domba berhasil dihapus.');
+    }
+
+    public function exportRequest()
+    {
+        // Dispatch the job to the queue
+        \App\Jobs\ExportSheepJob::dispatch();
+        
+        return redirect()->route('sheep.index')->with('success', 'Proses ekspor data domba sedang berjalan di background. Silakan tunggu beberapa saat, lalu klik "Download Hasil Ekspor".');
+    }
+
+    public function downloadExport()
+    {
+        $filePath = storage_path('app/public/exports/data-domba.xlsx');
+        
+        if (file_exists($filePath)) {
+            return response()->download($filePath, 'Data_Domba_' . date('Y-m-d_H-i') . '.xlsx');
+        }
+        
+        return redirect()->route('sheep.index')->with('error', 'File ekspor belum tersedia atau masih diproses. Silakan klik "Mulai Ekspor" terlebih dahulu.');
     }
 }
