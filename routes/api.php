@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CageController;
+use App\Http\Controllers\API\MatingRecordController;
 use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
 use Illuminate\Http\Request;
@@ -33,7 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('mating-records')->group(function () {
-        Route::get('/', [\App\Http\Controllers\API\MatingRecordController::class, 'getMatingHistory']);
-        Route::post('/check', [\App\Http\Controllers\API\MatingRecordController::class, 'storeCheck']);
+        Route::get('/', [MatingRecordController::class, 'getMatingHistory']);
+        Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
+        Route::post('/check', [MatingRecordController::class, 'storeCheck']);
     });
 });

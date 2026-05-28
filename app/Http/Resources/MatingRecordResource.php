@@ -8,9 +8,6 @@ class MatingRecordResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $latestCheck = $this->checks->first();
-        $tanggalSelesai = $latestCheck ? $latestCheck->check_date : '-';
-
         return [
             'id' => $this->id,
             'ewe_id' => $this->ewe_id,

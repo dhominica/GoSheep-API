@@ -28,10 +28,15 @@ class MatingRecordController extends BaseController
             MatingRecordResource::collection($result['data']),
             $result['has_more'],
             $result['next_cursor'],
-            'Data riwayat kawin dan statistik berhasil diambil',
-            200,
-            ['stats' => $this->matingService->getStats()]
+            'Data riwayat kawin berhasil diambil',
         );
+    }
+
+    public function getMatingRecStats()
+    {
+        $data = $this->matingService->getStats();
+
+        return $this->success($data, 'Statistik riwayat kawin berhasil diambil');
     }
 
     public function storeCheck(StoreMatingCheckRequest $request)
