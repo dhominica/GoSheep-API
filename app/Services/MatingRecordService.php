@@ -8,11 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class MatingRecordService
 {
-    public function getMatingRecords($lastId, $limit = 10, $search = null)
+    public function getMatingRecords($lastId = null, $limit = 10, $search = null)
     {
-        $query = MatingRecord::with(['ewe', 'ram', 'checks' => function ($q) {
-            $q->latest('check_date');
-        }]);
+        $query = MatingRecord::with(['ewe', 'ram']);
 
         if ($search) {
             $query->whereHas('ewe', function ($q) use ($search) {
@@ -22,33 +20,39 @@ class MatingRecordService
             });
         }
 
-        if ($lastId) {
+        if ($lastId !== null) {
             $query->where('id', '<', $lastId);
         }
 
-        $records = $query->orderBy('id', 'desc')->limit($limit + 1)->get();
+        $records = $query
+            ->orderBy('id', 'desc')
+            ->limit($limit + 1)
+            ->get();
+
         $hasMore = $records->count() > $limit;
 
         if ($hasMore) {
-            $records->pop();
+            $records = $records->take($limit);
         }
 
-        $nextCursor = $records->last() ? $records->last()->id : null;
-
         return [
-            'data' => $records,
+            'data' => $records->values(),
             'has_more' => $hasMore,
-            'next_cursor' => $nextCursor,
+            'next_cursor' =>
+                $hasMore && $records->count() > 0
+                    ? $records->last()->id
+                    : null
+                ,
         ];
     }
 
     public function getStats(): array
     {
         return [
-            'total_riwayat' => MatingRecord::count(),
-            'total_bunting' => MatingRecord::where('result', 'pregnant')->count(),
-            'total_proses'  => MatingRecord::where('result', 'unknown')->count(),
-            'total_gagal'   => MatingRecord::whereIn('result', ['not_pregnant', 'failed'])->count(),
+            'pregnant_total'      => MatingRecord::where('result', 'pregnant')->count(),
+            'unknown_total'       => MatingRecord::where('result', 'unknown')->count(),
+            'not_pregnant_total'  => MatingRecord::where('result', 'not_pregnant')->count(),
+            'failed_total'        => MatingRecord::where('result', 'failed')->count(),
         ];
     }
 

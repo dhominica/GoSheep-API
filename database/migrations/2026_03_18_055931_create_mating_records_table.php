@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('mating_date');
             $table->date('end_date');
             $table->date('actual_result_date')->nullable();
-            $table->enum('result', ['pregnant', 'failed', 'unknown'])->default('unknown');
+            $table->enum('result', ['pregnant', 'not_pregnant', 'failed', 'unknown'])->default('unknown');
             $table->timestamps();
         });
     }

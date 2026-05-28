@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             SheepSeeder::class,
             WeightRecordSeeder::class,
             HealthRecordSeeder::class,
+            MatingRecordSeeder::class,
+            MatingCheckSeeder::class,
         ]);
 
         // You can leave or remove the Test User

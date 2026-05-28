@@ -87,14 +87,14 @@ class HeatStressService
       if ($temperature >= 40) {
           return [
               'condition' => 'heat_stress_critical',
-              'severity' => 'berat',
+              'severity' => 'sedang',
           ];
       }
 
       if ($temperature >= 35) {
           return [
               'condition' => 'heat_stress_risk',
-              'severity' => 'sedang',
+              'severity' => 'ringan',
           ];
       }
 

@@ -18,7 +18,7 @@ class MatingRecordResource extends JsonResource
             'ewe_ear_tag' => $this->ewe ? $this->ewe->eartag : null,
             'ram_ear_tag' => $this->ram ? $this->ram->eartag : null,
             'mating_date' => $this->mating_date,
-            'end_date' => $this->latest_check_date ?? $this->end_date,
+            'end_date' => $this->end_date ?? null,
             'result' => $this->result,
         ];
     }
