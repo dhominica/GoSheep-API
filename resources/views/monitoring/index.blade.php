@@ -86,17 +86,21 @@
     </div>
 
     <script>
+        window._envChart = null;
+
         function monitoringApp() {
             return {
                 selectedCage: '',
                 currentTemp: null,
                 currentHumidity: null,
-                chart: null,
                 echoChannel: null,
 
                 init() {
                     window.Pusher = Pusher;
-                    window.Echo = new Echo.default({
+
+                    const EchoClass = window.Echo;
+
+                    window.Echo = new EchoClass({
                         broadcaster: 'pusher',
                         key: '{{ env("REVERB_APP_KEY") }}',
                         wsHost: '{{ env("REVERB_HOST", "localhost") }}',
@@ -116,12 +120,16 @@
                 onCageChange() {
                     if (this.echoChannel) {
                         window.Echo.leave(`cage.${this.echoChannel}`);
+                        this.echoChannel = null;
                     }
 
                     if (!this.selectedCage) {
                         this.currentTemp = null;
                         this.currentHumidity = null;
-                        if (this.chart) this.chart.destroy();
+                        if (window._envChart) {
+                            window._envChart.destroy();
+                            window._envChart = null;
+                        }
                         return;
                     }
 
@@ -135,12 +143,12 @@
                     const data = await response.json();
 
                     const labels = data.map(d => this.formatTime(d.recorded_at));
-                    const temps = data.map(d => parseFloat(d.temperature));
+                    const temps  = data.map(d => parseFloat(d.temperature));
                     const humids = data.map(d => parseFloat(d.humidity));
 
                     if (data.length > 0) {
                         const last = data[data.length - 1];
-                        this.currentTemp = parseFloat(last.temperature).toFixed(1);
+                        this.currentTemp     = parseFloat(last.temperature).toFixed(1);
                         this.currentHumidity = parseFloat(last.humidity).toFixed(1);
                     }
 
@@ -150,29 +158,36 @@
                 subscribeToChannel() {
                     window.Echo.private(`cage.${this.selectedCage}`)
                         .listen('.environment.updated', (e) => {
-                            this.currentTemp = parseFloat(e.temperature).toFixed(1);
+                            this.currentTemp     = parseFloat(e.temperature).toFixed(1);
                             this.currentHumidity = parseFloat(e.humidity).toFixed(1);
 
-                            const label = this.formatTime(e.recorded_at);
-                            this.chart.data.labels.push(label);
-                            this.chart.data.datasets[0].data.push(parseFloat(e.temperature));
-                            this.chart.data.datasets[1].data.push(parseFloat(e.humidity));
+                            const chart = window._envChart;
+                            if (!chart) return;
 
-                            if (this.chart.data.labels.length > 720) {
-                                this.chart.data.labels.shift();
-                                this.chart.data.datasets[0].data.shift();
-                                this.chart.data.datasets[1].data.shift();
+                            const label = this.formatTime(e.recorded_at);
+                            chart.data.labels.push(label);
+                            chart.data.datasets[0].data.push(parseFloat(e.temperature));
+                            chart.data.datasets[1].data.push(parseFloat(e.humidity));
+
+                            if (chart.data.labels.length > 720) {
+                                chart.data.labels.shift();
+                                chart.data.datasets[0].data.shift();
+                                chart.data.datasets[1].data.shift();
                             }
 
-                            this.chart.update('none');
+                            chart.update('none');
                         });
                 },
 
                 renderChart(labels, temps, humids) {
-                    if (this.chart) this.chart.destroy();
+                    if (window._envChart) {
+                        window._envChart.destroy();
+                        window._envChart = null;
+                    }
 
                     const ctx = document.getElementById('environmentChart').getContext('2d');
-                    this.chart = new Chart(ctx, {
+
+                    window._envChart = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: labels,
