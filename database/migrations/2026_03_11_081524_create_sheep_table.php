@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
             $table->string('eartag_color');
+            $table->string('current_environment_condition')->nullable();
             $table->foreignId('breed_id')->nullable()->constrained('breeds')->nullOnDelete();
             $table->foreignId('sire_id')->nullable()->constrained('sheep')->nullOnDelete();
             $table->foreignId('dam_id')->nullable()->constrained('sheep')->nullOnDelete();

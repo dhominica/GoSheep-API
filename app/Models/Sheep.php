@@ -27,7 +27,12 @@ class Sheep extends Model
 
     public function latestHealth()
     {
-        return $this->hasOne(HealthRecord::class)->latestOfMany('created_at');
+        return $this->hasOne(HealthRecord::class)
+            ->whereNotIn('condition', [
+                'heat_stress_risk',
+                'heat_stress_critical',
+            ])
+            ->latestOfMany('created_at');
     }
 
     public function sire()

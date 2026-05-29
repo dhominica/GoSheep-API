@@ -20,6 +20,7 @@ class SheepResource extends JsonResource
             'ear_tag_color' => $this->eartag_color,
             'gender' => $this->gender,
             'breed' => $this->breed?->name,
+            'current_environment_condition' => $this->current_environment_condition,
             'weight' => (float) ($this->latestWeight?->weight ?? 0),
             'status_ui' => $this->status_ui,
         ];

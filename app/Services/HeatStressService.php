@@ -40,28 +40,42 @@ class HeatStressService
                 $avgHumidity
             );
 
-        if ($condition === null) {
-            return;
-        }
-
         foreach ($cage->sheep as $sheep) {
 
-          $lastRecord = $sheep
-          ->healthRecords()
-          ->where('source', 'iot')
-          ->latest('recorded_at')
-          ->first();
+            if ($condition === null) {
 
-          if (
-              $lastRecord &&
-              $lastRecord->condition === $condition['condition'] &&
-              $lastRecord->severity === $condition['severity']
-          ) {
-              continue;
-          }
+                if (
+                    $sheep->current_environment_condition !== null
+                ) {
+                    $sheep->update([
+                        'current_environment_condition' => null,
+                    ]);
+                }
+
+                continue;
+            }
+
+            $lastRecord = $sheep
+                ->healthRecords()
+                ->where('source', 'iot')
+                ->latest('recorded_at')
+                ->first();
+
+            if (
+                $lastRecord &&
+                $lastRecord->condition === $condition['condition'] &&
+                $lastRecord->severity === $condition['severity']
+            ) {
+                continue;
+            }
+
+            $sheep->update([
+                'current_environment_condition' => $condition['condition'],
+            ]);
 
             HealthRecord::create([
                 'sheep_id' => $sheep->id,
+
                 'recorded_at' => now(),
 
                 'category' => 'environment',
@@ -74,30 +88,30 @@ class HeatStressService
 
                 'notes' =>
                     "Suhu kandang: {$avgTemperature}°C, "
-                    ."Kelembapan kandang: {$avgHumidity}%"
+                    . "Kelembapan kandang: {$avgHumidity}%"
             ]);
         }
     }
 
     private function detectCondition(
-    float $temperature,
-    float $humidity
-  ): ?array
-  {
-      if ($temperature >= 40) {
-          return [
-              'condition' => 'heat_stress_critical',
-              'severity' => 'sedang',
-          ];
-      }
+        float $temperature,
+        float $humidity
+    ): ?array
+    {
+        if ($temperature >= 40) {
+            return [
+                'condition' => 'heat_stress_critical',
+                'severity' => 'sedang',
+            ];
+        }
 
-      if ($temperature >= 35) {
-          return [
-              'condition' => 'heat_stress_risk',
-              'severity' => 'ringan',
-          ];
-      }
+        if ($temperature >= 35) {
+            return [
+                'condition' => 'heat_stress_risk',
+                'severity' => 'ringan',
+            ];
+        }
 
-      return null;
-  }
+        return null;
+    }
 }

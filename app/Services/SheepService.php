@@ -153,12 +153,19 @@ class SheepService
 
     private function mapStatusUi($health)
     {
-        if (!$health) return 'sehat';
+        if (!$health) {
+            return 'sehat';
+        }
 
         return match ($health->severity) {
-            'ringan' => 'at_risk',
-            'sedang', 'berat' => 'sakit',
-            default => 'sehat',
+
+            'ringan',
+            'sedang',
+            'berat'
+                => 'sakit',
+
+            default
+                => 'sehat',
         };
     }
 

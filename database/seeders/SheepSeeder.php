@@ -26,9 +26,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => null,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET002',
                 'gender' => 'female',
@@ -39,9 +41,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => null,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET003',
                 'gender' => 'male',
@@ -52,9 +56,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 2,
                 'cage_id' => 2,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_risk',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET004',
                 'gender' => 'female',
@@ -65,9 +71,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 2,
                 'cage_id' => 2,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_risk',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET005',
                 'gender' => 'male',
@@ -78,9 +86,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 2,
                 'cage_id' => 3,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET006',
                 'gender' => 'female',
@@ -91,9 +101,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 2,
                 'cage_id' => 3,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET007',
                 'gender' => 'male',
@@ -104,9 +116,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 4,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET008',
                 'gender' => 'female',
@@ -117,9 +131,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 4,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET009',
                 'gender' => 'male',
@@ -130,9 +146,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 4,
                 'cage_id' => 2,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_critical',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET010',
                 'gender' => 'female',
@@ -143,9 +161,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 4,
                 'cage_id' => 2,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_critical',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET011',
                 'gender' => 'male',
@@ -156,9 +176,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 6,
                 'cage_id' => 3,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET012',
                 'gender' => 'female',
@@ -169,9 +191,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 6,
                 'cage_id' => 3,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET013',
                 'gender' => 'male',
@@ -182,9 +206,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 6,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET014',
                 'gender' => 'female',
@@ -195,9 +221,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 6,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET015',
                 'gender' => 'male',
@@ -208,9 +236,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 8,
                 'cage_id' => 2,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_risk',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET016',
                 'gender' => 'female',
@@ -221,9 +251,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 8,
                 'cage_id' => 2,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_risk',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET017',
                 'gender' => 'male',
@@ -234,9 +266,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 8,
                 'cage_id' => 3,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET018',
                 'gender' => 'female',
@@ -247,9 +281,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 8,
                 'cage_id' => 3,
                 'status' => 'active',
+                'current_environment_condition' => null,
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET019',
                 'gender' => 'male',
@@ -260,9 +296,11 @@ class SheepSeeder extends Seeder
                 'dam_id' => 10,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_critical',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
+
             [
                 'eartag' => 'ET020',
                 'gender' => 'female',
@@ -273,6 +311,7 @@ class SheepSeeder extends Seeder
                 'dam_id' => 10,
                 'cage_id' => 1,
                 'status' => 'active',
+                'current_environment_condition' => 'heat_stress_critical',
                 'created_at' => '2026-03-19 11:51:50',
                 'updated_at' => '2026-03-19 11:51:50',
             ],
