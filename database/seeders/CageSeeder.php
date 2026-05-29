@@ -18,22 +18,22 @@ class CageSeeder extends Seeder
         DB::table('cages')->insert([
             [
                 'name' => 'Kandang A',
-                'current_capacity' => 5,
-                'max_capacity' => 10,
+                'current_capacity' => 8,
+                'max_capacity' => 15,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Kandang B',
-                'current_capacity' => 5,
-                'max_capacity' => 10,
+                'current_capacity' => 6,
+                'max_capacity' => 12,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Kandang C',
-                'current_capacity' => 5,
-                'max_capacity' => 10,
+                'current_capacity' => 6,
+                'max_capacity' => 12,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

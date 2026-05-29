@@ -31,7 +31,7 @@ class MatingRecordSeeder extends Seeder
         $matingRecords = [];
 
         if (!empty($ewes) && !empty($rams)) {
-            for ($i = 0; $i < 10; $i++) {
+            for ($i = 0; $i < 40; $i++) {
                 $eweId = $ewes[array_rand($ewes)];
                 $ramId = $rams[array_rand($rams)];
 
@@ -39,13 +39,27 @@ class MatingRecordSeeder extends Seeder
                     $ramId = $rams[array_rand($rams)];
                 }
 
-                $matingDate = date('Y-m-d', strtotime("-" . (30 - $i) . " days"));
+                $daysAgo = rand(5, 120);
+                $matingDate = date('Y-m-d', strtotime("-{$daysAgo} days"));
                 $endDate = date('Y-m-d', strtotime($matingDate . " + 21 days"));
-                $result = $results[array_rand($results)];
+
+                $rand = rand(1, 100);
+                if ($rand <= 50) {
+                    $result = 'pregnant';
+                } elseif ($rand <= 80) {
+                    $result = 'failed';
+                } else {
+                    $result = 'unknown';
+                }
 
                 $actualResultDate = null;
                 if ($result !== 'unknown') {
-                    $actualResultDate = date('Y-m-d', strtotime($matingDate . " + " . rand(14, 28) . " days"));
+                    if ($result === 'pregnant') {
+                        $daysToAdd = rand(14, 21);
+                    } else {
+                        $daysToAdd = rand(1, 21);
+                    }
+                    $actualResultDate = date('Y-m-d', strtotime($matingDate . " + {$daysToAdd} days"));
                 }
 
                 $matingRecords[] = [

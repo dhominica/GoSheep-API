@@ -18,18 +18,33 @@ class HealthRecordSeeder extends Seeder
         $healthRecords = [];
         $adminId = DB::table('users')->where('email', 'admin@gosheep.test')->value('id');
 
-        $conditions = ['heat_stress_risk', 'pregnant', 'sick', 'injured', 'healthy', 'vaccinated'];
+        // Exclude heat stress conditions from the random conditions for general health records
+        $conditions = ['pregnant', 'sick', 'injured', 'healthy', 'vaccinated'];
+
+        // Sheep that have heat stress risk or critical conditions in the model
+        $heatStressSheep = [
+            3 => 'heat_stress_risk',
+            4 => 'heat_stress_risk',
+            9 => 'heat_stress_critical',
+            10 => 'heat_stress_critical',
+            15 => 'heat_stress_risk',
+            16 => 'heat_stress_risk',
+            19 => 'heat_stress_critical',
+            20 => 'heat_stress_critical',
+        ];
 
         // Buat health records untuk setiap sheep (2-3 records per sheep)
         for ($sheepId = 1; $sheepId <= 20; $sheepId++) {
-            // Record pertama - kesehatan umum
+            // Record pertama - kesehatan umum (selalu bukan heat stress untuk konsistensi)
             $recordedAt = '2026-01-10 08:00:00';
+            $generalCondition = in_array($sheepId, array_keys($heatStressSheep)) ? 'healthy' : $conditions[array_rand($conditions)];
+
             $healthRecords[] = [
                 'sheep_id' => $sheepId,
                 'recorded_by' => $adminId,
                 'recorded_at' => $recordedAt,
                 'category' => 'health',
-                'condition' => $conditions[array_rand($conditions)],
+                'condition' => $generalCondition,
                 'severity' => 'normal',
                 'source' => 'manual',
                 'notes' => 'Kondisi kesehatan umum domba baik.',
@@ -37,7 +52,7 @@ class HealthRecordSeeder extends Seeder
                 'updated_at' => $recordedAt,
             ];
 
-            // Record kedua - reproduksi
+            // Record kedua - nutrisi
             $recordedAt = '2026-02-20 09:30:00';
             $healthRecords[] = [
                 'sheep_id' => $sheepId,
@@ -58,18 +73,35 @@ class HealthRecordSeeder extends Seeder
                 'updated_at' => $recordedAt,
             ];
 
-            // Record ketiga - lingkungan (random)
-            if ($sheepId % 3 == 0) {
+            // Record khusus untuk sheep dengan heat stress - tambahkan record heat stress
+            if (isset($heatStressSheep[$sheepId])) {
                 $recordedAt = '2026-03-10 14:00:00';
                 $healthRecords[] = [
                     'sheep_id' => $sheepId,
                     'recorded_by' => $adminId,
                     'recorded_at' => $recordedAt,
                     'category' => 'environment',
-                    'condition' => 'heat_stress_risk',
-                    'severity' => 'ringan',
+                    'condition' => $heatStressSheep[$sheepId],
+                    'severity' => $heatStressSheep[$sheepId] === 'heat_stress_critical' ? 'tinggi' : 'ringan',
                     'source' => 'iot',
-                    'notes' => 'Risiko heat stress terdeteksi berdasarkan sensor suhu kandang.',
+                    'notes' => $heatStressSheep[$sheepId] === 'heat_stress_critical'
+                        ? 'Heat stress kritis terdeteksi berdasarkan sensor suhu kandang.'
+                        : 'Risiko heat stress terdeteksi berdasarkan sensor suhu kandang.',
+                    'created_at' => $recordedAt,
+                    'updated_at' => $recordedAt,
+                ];
+            } elseif ($sheepId % 3 == 0) {
+                // Record ketiga - lingkungan (untuk sheep lainnya)
+                $recordedAt = '2026-03-10 14:00:00';
+                $healthRecords[] = [
+                    'sheep_id' => $sheepId,
+                    'recorded_by' => $adminId,
+                    'recorded_at' => $recordedAt,
+                    'category' => 'environment',
+                    'condition' => 'normal_environment',
+                    'severity' => 'normal',
+                    'source' => 'iot',
+                    'notes' => 'Kondisi lingkungan kandang normal.',
                     'created_at' => $recordedAt,
                     'updated_at' => $recordedAt,
                 ];

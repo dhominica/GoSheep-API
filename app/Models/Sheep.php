@@ -32,7 +32,8 @@ class Sheep extends Model
                 'heat_stress_risk',
                 'heat_stress_critical',
             ])
-            ->latestOfMany('created_at');
+            ->orderByDesc('created_at')
+            ->limit(1);
     }
 
     public function sire()
