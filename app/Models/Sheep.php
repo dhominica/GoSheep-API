@@ -65,4 +65,15 @@ class Sheep extends Model
     {
         return $this->belongsTo(Cage::class);
     }
+
+    public function pregnancies()
+    {
+        return $this->hasMany(Pregnancy::class, 'ewe_id');
+    }
+
+    public function currentPregnancy()
+    {
+        return $this->hasOne(Pregnancy::class, 'ewe_id')
+            ->where('status', 'ongoing');
+    }
 }

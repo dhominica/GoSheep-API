@@ -35,4 +35,9 @@ class MatingRecord extends Model
     {
         return $this->hasMany(MatingCheck::class, 'mating_record_id');
     }
+
+    public function pregnancy()
+    {
+        return $this->hasOne(Pregnancy::class);
+    }
 }

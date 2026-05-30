@@ -5,6 +5,7 @@ use App\Http\Controllers\API\CageController;
 use App\Http\Controllers\API\MatingRecordController;
 use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
+use App\Http\Controllers\API\StatisticController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [MatingRecordController::class, 'getMatingHistory']);
         Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
         Route::post('/check', [MatingRecordController::class, 'storeCheck']);
+    });
+
+    Route::prefix('statistics')->group(function () {
+        Route::get('/overview', [StatisticController::class, 'overview']);
     });
 });

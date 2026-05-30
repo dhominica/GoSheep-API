@@ -26,6 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ], 404);
     });
 
+        $exceptions->render(function (NotFoundHttpException $e, $request) {
+        return response()->json([
+            'message' => 'Endpoint tidak ditemukan.'
+        ], 404);
+    });
+
     $exceptions->render(function (NotFoundHttpException $e, $request) {
         return response()->json([
             'message' => 'Data tidak ditemukan atau sudah dihapus.'
