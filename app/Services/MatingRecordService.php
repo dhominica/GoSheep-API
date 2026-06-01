@@ -35,14 +35,13 @@ class MatingRecordService
             $records = $records->take($limit);
         }
 
+        $nextCursor = $hasMore && $records->count() > 0
+                    ? $records->last()->id
+                    : null;
         return [
             'data' => $records->values(),
             'has_more' => $hasMore,
-            'next_cursor' =>
-                $hasMore && $records->count() > 0
-                    ? $records->last()->id
-                    : null
-                ,
+            'next_cursor' => $nextCursor,
         ];
     }
 

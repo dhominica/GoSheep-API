@@ -56,17 +56,18 @@ class SheepService
             return $item;
         });
 
+        $nextCursor = $hasMore && $sheep->count() > 0
+                    ? $sheep->last()->id
+                    : null;
+
         return [
             'data' => $sheep->values(),
             'has_more' => $hasMore,
-            'next_cursor' =>
-                $hasMore && $sheep->count() > 0
-                    ? $sheep->last()->id
-                    : null,
+            'next_cursor' => $nextCursor,
         ];
     }
 
-    public function getSheepDetails($id)
+    public function getSheepDetails(int $id)
     {
         $sheep = Sheep::with([
             'breed',
@@ -136,7 +137,7 @@ class SheepService
         ];
     }
 
-    public function deleteSheep($id)
+    public function deleteSheep(int $id)
     {
         return DB::transaction(function () use ($id) {
             $sheep = Sheep::findOrFail($id);

@@ -50,7 +50,7 @@ class SheepController extends BaseController
         }
      }
 
-    public function show($id)
+    public function show(int $id)
     {
         $sheep = $this->sheepService->getSheepDetails($id);
 
@@ -64,7 +64,7 @@ class SheepController extends BaseController
         return $this->success($data, 'Statistik kesehatan domba berhasil diambil');
     }
 
-    public function deleteSheep($id)
+    public function deleteSheep(int $id)
     {
         $this->sheepService->deleteSheep($id);
 

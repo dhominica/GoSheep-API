@@ -6,6 +6,7 @@ use App\Http\Controllers\API\MatingRecordController;
 use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
 use App\Http\Controllers\API\StatisticController;
+use App\Http\Controllers\API\HealthRecordsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [MatingRecordController::class, 'getMatingHistory']);
         Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
         Route::post('/check', [MatingRecordController::class, 'storeCheck']);
+    });
+
+    Route::prefix('health-records')->group(function () {
+        Route::get('/', [HealthRecordsController::class, 'getHealthRecord']);
+        Route::get('/statistics', [HealthRecordsController::class, 'getStatistics']);
     });
 
     Route::prefix('statistics')->group(function () {

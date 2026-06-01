@@ -18,9 +18,9 @@ return new class extends Migration
             $table->foreignId('recorded_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('recorded_at')->useCurrent();
 
-            $table->string('category'); // health, environment, nutrition, maintenance
+            $table->enum('category', ['health', 'environment', 'nutrition', 'maintenance']); // health, environment, nutrition, maintenance
             $table->string('condition'); // heat_stress_risk, sick, etc
-            $table->string('severity'); // normal, ringan, sedang, berat
+            $table->enum('severity', ['normal', 'ringan', 'sedang', 'berat']); // normal, ringan, sedang, berat
 
             $table->string('source'); // manual, iot
 

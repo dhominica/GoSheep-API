@@ -63,7 +63,7 @@ class HealthRecordSeeder extends Seeder
                     ? 'low_appetite'
                     : 'normal_feed_intake',
                 'severity' => $sheepId % 2 == 0
-                    ? 'ringan'
+                    ? 'sedang'
                     : 'normal',
                 'source' => 'manual',
                 'notes' => $sheepId % 2 == 0
@@ -82,7 +82,7 @@ class HealthRecordSeeder extends Seeder
                     'recorded_at' => $recordedAt,
                     'category' => 'environment',
                     'condition' => $heatStressSheep[$sheepId],
-                    'severity' => $heatStressSheep[$sheepId] === 'heat_stress_critical' ? 'tinggi' : 'ringan',
+                    'severity' => $heatStressSheep[$sheepId] === 'heat_stress_critical' ? 'berat' : 'ringan',
                     'source' => 'iot',
                     'notes' => $heatStressSheep[$sheepId] === 'heat_stress_critical'
                         ? 'Heat stress kritis terdeteksi berdasarkan sensor suhu kandang.'

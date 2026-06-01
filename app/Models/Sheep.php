@@ -32,7 +32,7 @@ class Sheep extends Model
                 'heat_stress_risk',
                 'heat_stress_critical',
             ])
-            ->orderByDesc('created_at')
+            ->orderByDesc('recorded_at')
             ->limit(1);
     }
 

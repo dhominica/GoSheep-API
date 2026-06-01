@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class HealthResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+         return [
+            'id' => $this->id,
+            'sheep_id' => $this->sheep_id,
+
+            'recorded_by' => $this->whenLoaded('recordedBy')
+                ? [
+                    'id' => $this->recordedBy->id,
+                    'name' => $this->recordedBy->name,
+                ]
+                : null,
+
+            'recorded_at' => $this->recorded_at,
+            'category' => $this->category,
+            'condition' => $this->condition,
+            'severity' => $this->severity,
+            'source' => $this->source,
+            'notes' => $this->notes,
+        ];
+    }
+}
