@@ -16,8 +16,6 @@ class HealthResource extends JsonResource
     {
          return [
             'id' => $this->id,
-            'sheep_id' => $this->sheep_id,
-
             'recorded_by' => $this->whenLoaded('recordedBy')
                 ? [
                     'id' => $this->recordedBy->id,

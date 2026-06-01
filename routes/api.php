@@ -43,8 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('health-records')->group(function () {
         Route::get('/', [HealthRecordsController::class, 'getHealthRecord']);
+        Route::post('/', [HealthRecordsController::class, 'store']);
         Route::get('/statistics', [HealthRecordsController::class, 'getStatistics']);
+        Route::get('/{sheep}', [HealthRecordsController::class, 'getHealthRecordDetail']);
     });
+
 
     Route::prefix('statistics')->group(function () {
         Route::get('/overview', [StatisticController::class, 'overview']);

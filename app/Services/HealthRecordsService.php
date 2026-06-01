@@ -61,6 +61,56 @@ class HealthRecordsService
         ];
     }
 
+   public function getHealthRecordDetail(int $sheepId, $lastId = null, $limit = 10): array
+   {
+        $query = HealthRecord::query()
+            ->where('sheep_id', $sheepId)
+            ->with('recordedBy:id,name')
+            ->orderByDesc('recorded_at')
+            ->orderByDesc('id');
+
+        if ($lastId !== null) {
+            $query->where('id', '<', $lastId);
+        }
+
+        $records = $query->limit($limit + 1)->get();
+
+        $hasMore = $records->count() > $limit;
+
+        if ($hasMore) {
+            $records = $records->take($limit);
+        }
+
+        $nextCursor = $hasMore && $records->count() > 0
+            ? $records->last()->id
+            : null;
+
+        $sheep = Sheep::findOrFail($sheepId);
+        $sheep->setRelation('healthRecords', $records);
+
+        return [
+            'has_more'    => $hasMore,
+            'next_cursor' => $nextCursor,
+            'data'        => $sheep,
+        ];
+    }
+
+    public function store(array $data): HealthRecord
+    {
+        $record = HealthRecord::create([
+            'sheep_id'    => $data['sheep_id'],
+            'recorded_by' => auth()->id(),
+            'category'    => $data['category'],
+            'condition'   => $data['condition'],
+            'severity'    => $data['severity'],
+            'recorded_at' => now(),
+            'source'      => 'manual',
+            'notes'       => $data['notes'] ?? null,
+        ]);
+
+        return $record->load('recordedBy:id,name');
+    }
+
     public function getStatistics(): array
     {
         $topCategory = HealthRecord::query()
@@ -119,10 +169,4 @@ class HealthRecordsService
             ],
         ];
     }
-
-    public function store(array $data)
-    {
-        return HealthRecord::create($data);
-    }
-
 }

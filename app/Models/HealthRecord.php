@@ -10,6 +10,7 @@ class HealthRecord extends Model
 
     protected $fillable = [
         'sheep_id',
+        'recorded_at',
         'recorded_by',
         'category',
         'condition',

@@ -35,7 +35,7 @@ class StoreSheepRequest extends FormRequest
             'weight' => 'required|numeric|min:0',
 
             'category' => 'required|in:health,environment,nutrition,maintenance',
-            'condition' => 'required|string',
+            'condition' => 'required|string|max:255',
             'severity' => 'required|in:normal,ringan,berat',
 
             'notes' => 'nullable|string',
