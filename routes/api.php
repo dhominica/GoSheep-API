@@ -7,6 +7,7 @@ use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
 use App\Http\Controllers\API\StatisticController;
 use App\Http\Controllers\API\HealthRecordsController;
+use App\Http\Controllers\API\WeightRecordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,9 +44,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('health-records')->group(function () {
         Route::get('/', [HealthRecordsController::class, 'getHealthRecord']);
-        Route::post('/', [HealthRecordsController::class, 'store']);
         Route::get('/statistics', [HealthRecordsController::class, 'getStatistics']);
-        Route::get('/{sheep}', [HealthRecordsController::class, 'getHealthRecordDetail']);
+        Route::get('/{sheep}', [HealthRecordsController::class, 'getHealthRecordDetail'])->whereNumber('sheep');
+        Route::post('/', [HealthRecordsController::class, 'store']);
+    });
+
+    Route::prefix('sheep-weight')->group(function () {
+        Route::get('/', [WeightRecordController::class, 'getSheepWeight']);
+        Route::get('/{sheep}/records', [WeightRecordController::class, 'getWeightRecord']);
+        Route::post('/', [WeightRecordController::class, 'store']);
+        Route::get('/statistics', [WeightRecordController::class, 'getAllSheepMonthlyWeightStatistics']);
+        Route::get('/{sheep}/statistics', [WeightRecordController::class, 'getMonthlyWeightStatistics']);
     });
 
 

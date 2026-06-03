@@ -22,7 +22,8 @@ class Sheep extends Model
 
     public function latestWeight()
     {
-        return $this->hasOne(WeightRecord::class)->latestOfMany('created_at');
+        return $this->hasOne(WeightRecord::class)
+            ->orderByDesc('recorded_at');
     }
 
     public function latestHealth()
