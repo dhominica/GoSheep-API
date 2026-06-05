@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWeightRecordRequest;
 use App\Http\Resources\SheepWeightResource;
 use App\Http\Resources\WeightRecordResource;
+use App\Http\Resources\WeightResource;
 use App\Services\WeightRecordService;
 use Illuminate\Http\Request;
 
@@ -55,7 +55,7 @@ class WeightRecordController extends BaseController
         $record = $this->weightRecordService->store($request->validated());
 
         return $this->created(
-            new WeightRecordResource($record),
+            new WeightResource($record),
             'Rekam berat badan berhasil ditambahkan',
         );
     }
