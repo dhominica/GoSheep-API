@@ -33,6 +33,26 @@ class DashboardController extends Controller
             
         $healthyPercentage = $totalDomba > 0 ? round((($totalDomba - $sickSheepCount) / $totalDomba) * 100) : 100;
 
-        return view('dashboard', compact('totalPeternak', 'totalKandang', 'totalDomba', 'activities', 'capacityPercentage', 'healthyPercentage'));
+        // Calculate Average Weight per Month (Last 6 Months)
+        $weightChartData = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthStart = $date->copy()->startOfMonth();
+            $monthEnd = $date->copy()->endOfMonth();
+            
+            $avgWeight = \App\Models\WeightRecord::whereBetween('recorded_at', [$monthStart, $monthEnd])->avg('weight');
+            
+            $weightChartData->push([
+                'month' => $date->translatedFormat('M'),
+                'avg_weight' => $avgWeight ? round($avgWeight, 2) : null
+            ]);
+        }
+
+        // Remove trailing months that have no data
+        while ($weightChartData->isNotEmpty() && is_null($weightChartData->last()['avg_weight'])) {
+            $weightChartData->pop();
+        }
+
+        return view('dashboard', compact('totalPeternak', 'totalKandang', 'totalDomba', 'activities', 'capacityPercentage', 'healthyPercentage', 'weightChartData'));
     }
 }

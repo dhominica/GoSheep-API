@@ -102,16 +102,42 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit"
-                    class="w-full bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-green-900/10 active:scale-[0.98] mt-2">
-                    Masuk Sekarang
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-green-900/10 active:scale-[0.98] mt-2 flex justify-center items-center gap-2">
+                    <span id="btnText">Masuk Sekarang</span>
+                    <i data-lucide="loader-2" id="btnLoader" class="hidden w-5 h-5 animate-spin"></i>
                 </button>
             </form>
         </div>
     </div>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         lucide.createIcons();
+
+        // Loading effect on form submit
+        document.querySelector('form').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            const text = document.getElementById('btnText');
+            const loader = document.getElementById('btnLoader');
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            text.textContent = 'Memproses...';
+            loader.classList.remove('hidden');
+        });
+
+        // Error Alert
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: '{{ $errors->first() }}',
+                confirmButtonColor: '#2E7D32',
+                confirmButtonText: 'Coba Lagi'
+            });
+        @endif
     </script>
 </body>
 

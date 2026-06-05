@@ -27,7 +27,22 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 flex h-screen overflow-hidden relative" x-data="{ sidebarOpen: window.innerWidth >= 768 }">
+<body class="bg-slate-50 text-slate-800 flex h-screen overflow-hidden relative" x-data="{ sidebarOpen: window.innerWidth >= 768, pageLoading: true }" x-init="window.addEventListener('load', () => { setTimeout(() => pageLoading = false, 300); }); window.addEventListener('beforeunload', () => pageLoading = true)">
+    
+    <!-- Page Loading Overlay -->
+    <div x-show="pageLoading" x-cloak 
+         x-transition:leave="transition-opacity ease-out duration-300"
+         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-[100] bg-slate-50/80 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div class="relative w-16 h-16 mb-4">
+            <div class="absolute inset-0 border-4 border-emerald-200 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-emerald-600 rounded-full border-t-transparent animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i data-lucide="leaf" class="w-6 h-6 text-emerald-600 animate-pulse"></i>
+            </div>
+        </div>
+        <p class="text-xs font-bold text-emerald-700 animate-pulse tracking-widest uppercase">Memuat...</p>
+    </div>
     
     <!-- Decorative Background Splashes for Premium Feel -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
@@ -86,8 +101,12 @@
                 Catatan Kesehatan
             </x-sidebar-link>
 
-            <x-sidebar-link href="#" icon="git-merge" :active="request()->is('mating*')">
-                Persilangan (Mating)
+            <x-sidebar-link href="{{ route('mating-recommendations.index') }}" icon="sparkles" :active="request()->is('mating-recommendations*')">
+                Rekomendasi Kawin
+            </x-sidebar-link>
+
+            <x-sidebar-link href="{{ route('mating.index') }}" icon="git-merge" :active="request()->is('mating') || request()->is('mating/*')">
+                Riwayat Persilangan
             </x-sidebar-link>
 
             <x-sidebar-link href="{{ route('berat.index') }}" icon="scale" :active="request()->routeIs('berat.*')">
@@ -186,9 +205,9 @@
                     <div class="w-px h-6 bg-slate-200"></div>
 
                     <!-- Logout Icon Button -->
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                    <form action="{{ route('logout') }}" method="POST" class="inline" id="logoutForm">
                         @csrf
-                        <button type="submit" class="text-slate-400 hover:text-rose-500 transition-all flex items-center gap-2 group" title="Keluar Sistem">
+                        <button type="button" onclick="confirmLogout()" class="text-slate-400 hover:text-rose-500 transition-all flex items-center gap-2 group" title="Keluar Sistem">
                             <i data-lucide="log-out" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </button>
                     </form>
@@ -249,6 +268,44 @@
                 });
             });
         });
+
+        function confirmLogout() {
+            Swal.fire({
+                title: "Keluar dari Sistem?",
+                text: "Anda harus login kembali untuk masuk.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#f43f5e",
+                cancelButtonColor: "#94a3b8",
+                confirmButtonText: "Ya, Keluar!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+
+        // Global Session Alerts
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#10b981',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#f43f5e'
+            });
+        @endif
     </script>
 </body>
 </html>

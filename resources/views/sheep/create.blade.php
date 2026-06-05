@@ -2,8 +2,7 @@
     <x-slot name="title">Tambah Domba Baru</x-slot>
     <x-slot name="header">Domba Baru</x-slot>
 
-    <x-form-card action="{{ route('sheep.store') }}" title="Registrasi Domba" badgeText="Data Baru"
-        color="emerald">
+    <x-form-card action="{{ route('sheep.store') }}" title="Registrasi Domba" badgeText="Data Baru" color="emerald">
 
         <x-slot:badgeIcon>
             <i data-lucide="plus-circle" class="w-3.5 h-3.5 mt-[-1px]"></i>
@@ -51,7 +50,8 @@
 
         <!-- Birth Date Component -->
         <div class="col-span-1">
-            <x-form-input name="birth_date" type="date" label="Tanggal Lahir" placeholder="" :required="true" color="emerald">
+            <x-form-input name="birth_date" type="date" label="Tanggal Lahir" placeholder="" :required="true"
+                color="emerald">
                 <x-slot:icon><i data-lucide="calendar" class="w-5 h-5"></i></x-slot:icon>
             </x-form-input>
         </div>
@@ -77,7 +77,8 @@
                 <x-slot:icon><i data-lucide="git-merge" class="w-5 h-5"></i></x-slot:icon>
                 <option value="">Pilih Jenis</option>
                 @foreach($breeds as $breed)
-                    <option value="{{ $breed->id }}" {{ old('breed_id') == $breed->id ? 'selected' : '' }}>{{ $breed->name }}</option>
+                    <option value="{{ $breed->id }}" {{ old('breed_id') == $breed->id ? 'selected' : '' }}>{{ $breed->name }}
+                    </option>
                 @endforeach
             </x-form-select>
         </div>
@@ -88,7 +89,8 @@
                 <x-slot:icon><i data-lucide="home" class="w-5 h-5"></i></x-slot:icon>
                 <option value="">Pilih Kandang</option>
                 @foreach($cages as $cage)
-                    <option value="{{ $cage->id }}" {{ old('cage_id') == $cage->id ? 'selected' : '' }}>{{ $cage->name }}</option>
+                    <option value="{{ $cage->id }}" {{ old('cage_id') == $cage->id ? 'selected' : '' }}>{{ $cage->name }}
+                    </option>
                 @endforeach
             </x-form-select>
         </div>
@@ -99,7 +101,8 @@
                 <x-slot:icon><i data-lucide="mars" class="w-5 h-5"></i></x-slot:icon>
                 <option value="">Pilih Bapak (Opsional)</option>
                 @foreach($sires as $sire)
-                    <option value="{{ $sire->id }}" {{ old('sire_id') == $sire->id ? 'selected' : '' }}>{{ $sire->eartag }}</option>
+                    <option value="{{ $sire->id }}" {{ old('sire_id') == $sire->id ? 'selected' : '' }}>{{ $sire->eartag }}
+                    </option>
                 @endforeach
             </x-form-select>
         </div>
@@ -110,7 +113,8 @@
                 <x-slot:icon><i data-lucide="venus" class="w-5 h-5"></i></x-slot:icon>
                 <option value="">Pilih Induk (Opsional)</option>
                 @foreach($dams as $dam)
-                    <option value="{{ $dam->id }}" {{ old('dam_id') == $dam->id ? 'selected' : '' }}>{{ $dam->eartag }}</option>
+                    <option value="{{ $dam->id }}" {{ old('dam_id') == $dam->id ? 'selected' : '' }}>{{ $dam->eartag }}
+                    </option>
                 @endforeach
             </x-form-select>
         </div>
@@ -122,7 +126,8 @@
 
         <!-- Initial Weight Component -->
         <div class="col-span-1">
-            <x-form-input name="weight" type="number" step="0.01" label="Berat Awal (Kg)" placeholder="Cth: 25.5" :required="true" color="amber">
+            <x-form-input name="weight" type="number" step="0.01" label="Berat Awal (Kg)" placeholder="Cth: 25.5"
+                :required="true" color="amber">
                 <x-slot:icon><i data-lucide="scale" class="w-5 h-5"></i></x-slot:icon>
             </x-form-input>
         </div>
@@ -132,7 +137,8 @@
             <x-form-select name="category" label="Kategori Kesehatan" color="amber" :required="true">
                 <x-slot:icon><i data-lucide="heart-pulse" class="w-5 h-5"></i></x-slot:icon>
                 <option value="">Pilih Kategori</option>
-                <option value="Pemeriksaan Rutin" {{ old('category') == 'Pemeriksaan Rutin' ? 'selected' : '' }}>Pemeriksaan Rutin</option>
+                <option value="Pemeriksaan Rutin" {{ old('category') == 'Pemeriksaan Rutin' ? 'selected' : '' }}>
+                    Pemeriksaan Rutin</option>
                 <option value="Sakit" {{ old('category') == 'Sakit' ? 'selected' : '' }}>Sakit</option>
                 <option value="Cedera" {{ old('category') == 'Cedera' ? 'selected' : '' }}>Cedera</option>
                 <option value="Vaksinasi" {{ old('category') == 'Vaksinasi' ? 'selected' : '' }}>Vaksinasi</option>
@@ -141,7 +147,8 @@
 
         <!-- Health Condition Component -->
         <div class="col-span-1">
-            <x-form-input name="condition" label="Kondisi Kesehatan" placeholder="Cth: Sehat, Nafsu makan baik" :required="true" color="amber">
+            <x-form-input name="condition" label="Kondisi Kesehatan" placeholder="Cth: Sehat, Nafsu makan baik"
+                :required="true" color="amber">
                 <x-slot:icon><i data-lucide="activity" class="w-5 h-5"></i></x-slot:icon>
             </x-form-input>
         </div>
@@ -159,7 +166,8 @@
 
         <!-- Notes Component -->
         <div class="col-span-1 md:col-span-2">
-            <x-form-input name="notes" label="Catatan Tambahan (Opsional)" placeholder="Tambahkan catatan jika perlu..." color="amber">
+            <x-form-input name="notes" label="Catatan Tambahan (Opsional)" placeholder="Tambahkan catatan jika perlu..."
+                color="amber">
                 <x-slot:icon><i data-lucide="file-text" class="w-5 h-5"></i></x-slot:icon>
             </x-form-input>
         </div>

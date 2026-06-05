@@ -8,33 +8,46 @@ use Illuminate\Http\Request;
 class HealthRecordController extends Controller
 {
     /**
-     * Display a listing of health records.
+     * Display a listing of the sheep for health recording.
      */
     public function index(Request $request)
     {
-        $query = HealthRecord::with(['sheep', 'recordedBy']);
-
-        // Search feature
+        $query = \App\Models\Sheep::with(['latestHealth', 'breed'])
+            ->where('status', 'active');
+            
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('sheep', function ($sQuery) use ($search) {
-                    $sQuery->where('eartag', 'like', "%{$search}%");
-                })
-                ->orWhereHas('recordedBy', function ($rQuery) use ($search) {
-                    $rQuery->where('name', 'like', "%{$search}%");
-                })
-                ->orWhere('condition', 'like', "%{$search}%")
-                ->orWhere('category', 'like', "%{$search}%")
-                ->orWhere('notes', 'like', "%{$search}%");
-            });
+            $query->where('eartag', 'like', '%' . $request->search . '%');
         }
 
-        $perPage = $request->input('per_page', 10);
-        $healthRecords = $query->latest('recorded_at')->paginate($perPage)->withQueryString();
+        // Get all active sheep, with their latest health and breed for the cards
+        $sheeps = $query->orderBy('created_at', 'desc')
+            ->paginate(12)
+            ->withQueryString();
 
         // Translate the attributes for the view
-        $healthRecords->getCollection()->transform(function ($record) {
+        $sheeps->getCollection()->transform(function ($sheep) {
+            if ($sheep->latestHealth) {
+                $sheep->latestHealth->translated_condition = $this->translateCondition($sheep->latestHealth->condition);
+                $sheep->latestHealth->translated_severity = $this->translateSeverity($sheep->latestHealth->severity);
+            }
+            return $sheep;
+        });
+
+        return view('health-records.index', compact('sheeps'));
+    }
+
+    /**
+     * Show the form for creating a new health record and display health history.
+     */
+    public function show(\App\Models\Sheep $sheep)
+    {
+        // Load all health records for this sheep, ordered by date descending
+        $healthHistory = $sheep->healthRecords()
+            ->with('recordedBy')
+            ->orderBy('recorded_at', 'desc')
+            ->get();
+
+        $healthHistory->transform(function ($record) {
             $record->translated_category = $this->translateCategory($record->category);
             $record->translated_condition = $this->translateCondition($record->condition);
             $record->translated_severity = $this->translateSeverity($record->severity);
@@ -42,7 +55,34 @@ class HealthRecordController extends Controller
             return $record;
         });
 
-        return view('health-records.index', compact('healthRecords'));
+        return view('health-records.show', compact('sheep', 'healthHistory'));
+    }
+
+    /**
+     * Store a newly created health record in storage.
+     */
+    public function store(Request $request, \App\Models\Sheep $sheep)
+    {
+        $request->validate([
+            'category' => 'required|string',
+            'condition' => 'required|string',
+            'severity' => 'required|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        HealthRecord::create([
+            'sheep_id' => $sheep->id,
+            'category' => $request->category,
+            'condition' => $request->condition,
+            'severity' => $request->severity,
+            'source' => 'manual',
+            'notes' => $request->notes,
+            'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
+            'recorded_at' => now(),
+        ]);
+
+        return redirect()->route('health-records.show', $sheep->id)
+            ->with('success', 'Catatan kesehatan berhasil ditambahkan!');
     }
 
     /**
@@ -50,9 +90,10 @@ class HealthRecordController extends Controller
      */
     public function destroy(HealthRecord $healthRecord)
     {
+        $sheepId = $healthRecord->sheep_id;
         $healthRecord->delete();
 
-        return redirect()->route('health-records.index')->with('success', 'Catatan kesehatan berhasil dihapus.');
+        return redirect()->route('health-records.show', $sheepId)->with('success', 'Catatan kesehatan berhasil dihapus.');
     }
 
     /**
@@ -73,7 +114,7 @@ class HealthRecordController extends Controller
     /**
      * Translate Condition to Indonesian.
      */
-    private function translateCondition($condition)
+    public function translateCondition($condition)
     {
         $map = [
             'heat_stress_risk' => 'Risiko Stres Panas',
@@ -92,7 +133,7 @@ class HealthRecordController extends Controller
     /**
      * Translate Severity to Indonesian.
      */
-    private function translateSeverity($severity)
+    public function translateSeverity($severity)
     {
         $map = [
             'normal' => 'Normal',

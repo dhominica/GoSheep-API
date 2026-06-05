@@ -56,7 +56,7 @@ class AuthController extends Controller
             // Authentication passed & user is active owner
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/dashboard')->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
         return back()->withErrors([

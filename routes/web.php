@@ -34,12 +34,23 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/sheep/export', [App\Http\Controllers\SheepController::class, 'exportRequest'])->name('sheep.export');
         Route::get('/sheep/download-export', [App\Http\Controllers\SheepController::class, 'downloadExport'])->name('sheep.download');
         Route::resource('cage', App\Http\Controllers\CageController::class)->except(['show']);
-        Route::resource('health-records', App\Http\Controllers\HealthRecordController::class)->only(['index', 'destroy']);
+        Route::get('/health-records', [App\Http\Controllers\HealthRecordController::class, 'index'])->name('health-records.index');
+        Route::get('/health-records/{sheep}', [App\Http\Controllers\HealthRecordController::class, 'show'])->name('health-records.show');
+        Route::post('/health-records/{sheep}', [App\Http\Controllers\HealthRecordController::class, 'store'])->name('health-records.store');
+        Route::delete('/health-records/destroy/{healthRecord}', [App\Http\Controllers\HealthRecordController::class, 'destroy'])->name('health-records.destroy');
 
         // Riwayat Berat
         Route::get('/berat', [App\Http\Controllers\WeightRecordController::class, 'index'])->name('berat.index');
         Route::get('/berat/{sheep}', [App\Http\Controllers\WeightRecordController::class, 'show'])->name('berat.show');
         Route::post('/berat/{sheep}', [App\Http\Controllers\WeightRecordController::class, 'store'])->name('berat.store');
+        
+        // Persilangan (Mating)
+        Route::resource('mating', App\Http\Controllers\MatingRecordController::class)->parameters([
+            'mating' => 'mating'
+        ])->except(['show', 'create']);
+        
+        // Mating Recommendations
+        Route::resource('mating-recommendations', App\Http\Controllers\MatingRecommendationController::class)->only(['index']);
     });
 
     // Role: Only Owner can access Admin Users (Staff/Owner)

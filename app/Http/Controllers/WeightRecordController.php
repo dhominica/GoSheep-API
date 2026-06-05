@@ -12,13 +12,19 @@ class WeightRecordController extends Controller
     /**
      * Display a listing of the sheep for weight recording.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Sheep::with(['latestWeight', 'breed'])
+            ->where('status', 'active');
+            
+        if ($request->filled('search')) {
+            $query->where('eartag', 'like', '%' . $request->search . '%');
+        }
+
         // Get all active sheep, with their latest weight and breed for the cards
-        $sheeps = Sheep::with(['latestWeight', 'breed'])
-            ->where('status', 'active')
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+        $sheeps = $query->orderBy('created_at', 'desc')
+            ->paginate(12)
+            ->withQueryString();
 
         return view('berat.index', compact('sheeps'));
     }

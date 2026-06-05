@@ -27,46 +27,8 @@
         </div>
     </div>
 
-   <!-- Speech to Text (Demo - TEMP FEATURE) -->
-    <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- Card Control -->
-        <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-            <div class="flex items-center gap-2 mb-3">
-                <i data-lucide="mic" class="w-4 h-4 text-emerald-500"></i>
-                <h3 class="font-bold text-sm text-slate-800">Voice Input</h3>
-            </div>
-
-            <p class="text-xs text-slate-500 mb-4">
-                Klik tombol lalu mulai berbicara menggunakan bahasa Indonesia
-            </p>
-
-            <button
-                onclick="startSpeechRecognition()"
-                class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all"
-            >
-                <i data-lucide="mic" class="w-4 h-4"></i>
-                Mulai Bicara
-            </button>
-        </div>
-
-        <!-- Result Card -->
-        <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
-            <div class="flex items-center gap-2 mb-3">
-                <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
-                <h3 class="font-bold text-sm text-slate-800">Hasil Speech</h3>
-            </div>
-
-            <div id="speechCard"
-                class="text-sm text-slate-600 min-h-[60px] flex items-center">
-                <span class="text-slate-400 italic">Belum ada input suara...</span>
-            </div>
-        </div>
-
-    </div>
-
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+    <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         <x-stat-card
             title="Total Peternak"
             value="{{ number_format($totalPeternak) }}"
@@ -118,6 +80,35 @@
                 <span class="text-slate-400 font-semibold ml-1.5 text-[10px]">Waktu respon rata-rata</span>
             </x-slot:trend>
         </x-stat-card>
+    </div>
+
+    <!-- Chart Section: Rata-Rata Berat -->
+    <div class="mt-5 bg-white border border-slate-100 rounded-2xl p-5 md:p-6 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="font-extrabold text-lg text-slate-800">Rata-Rata Berat Domba</h3>
+                <p class="text-xs text-slate-400 font-medium">Tren berat badan rata-rata selama 6 bulan terakhir</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <i data-lucide="line-chart" class="w-5 h-5"></i>
+            </div>
+        </div>
+        
+        @php
+            $hasWeightData = $weightChartData->filter(fn($item) => !is_null($item['avg_weight']))->count() > 0;
+        @endphp
+
+        <div class="h-64 w-full relative">
+            @if($hasWeightData)
+                <canvas id="dashboardWeightChart"></canvas>
+            @else
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
+                    <i data-lucide="bar-chart-2" class="w-8 h-8 text-slate-300 mb-2"></i>
+                    <p class="text-sm font-bold text-slate-500">Belum ada data berat tercatat</p>
+                    <p class="text-[11px] text-slate-400 mt-1">Data grafik akan muncul setelah ada input berat badan domba.</p>
+                </div>
+            @endif
+        </div>
     </div>
 
     <!-- Main Content Area -->
@@ -253,36 +244,92 @@
     </div>
 </x-layouts.admin>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-function startSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('dashboardWeightChart');
+        if (!ctx) return;
 
-    if (!SpeechRecognition) {
-        alert("Browser tidak support Speech Recognition. Gunakan Google Chrome.");
-        return;
-    }
+        const rawData = @json($weightChartData);
+        
+        // Reverse because we built it 5 to 0 (oldest to newest)
+        // Wait, the controller loop is: for ($i = 5; $i >= 0; $i--) 
+        // 5 is oldest, 0 is newest. So pushing them sequentially makes it [oldest, ..., newest] which is correct.
+        
+        const labels = rawData.map(item => item.month);
+        const data = rawData.map(item => item.avg_weight);
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = "id-ID";
-    recognition.interimResults = false;
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
 
-    recognition.start();
-
-    recognition.onresult = function(event) {
-        const text = event.results[0][0].transcript;
-
-        document.getElementById("speechCard").innerHTML = `
-            <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
-                <p class="text-slate-800 font-medium">${text}</p>
-            </div>
-        `;
-    };
-
-    recognition.onerror = function(err) {
-        console.log(err);
-        document.getElementById("speechCard").innerHTML = `
-            <span class="text-red-500 text-sm">Error saat menangkap suara</span>
-        `;
-    };
-}
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Rata-Rata Berat (kg)',
+                    data: data,
+                    borderColor: '#10b981',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#10b981',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.4,
+                    spanGaps: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleFont: { family: 'Plus Jakarta Sans', size: 13 },
+                        bodyFont: { family: 'Plus Jakarta Sans', size: 14, weight: 'bold' },
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' kg';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#f1f5f9',
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            font: { family: 'Plus Jakarta Sans', size: 11 },
+                            color: '#64748b',
+                            callback: function(value) {
+                                return value + ' kg';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            font: { family: 'Plus Jakarta Sans', size: 11 },
+                            color: '#64748b'
+                        }
+                    }
+                }
+            }
+        });
+    });
 </script>
