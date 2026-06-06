@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ActivityFeedController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CageController;
 use App\Http\Controllers\API\MatingRecordController;
@@ -57,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{sheep}/statistics', [WeightRecordController::class, 'getMonthlyWeightStatistics']);
     });
 
+    Route::get('/activity-feed', [ActivityFeedController::class, 'index']);
 
     Route::prefix('statistics')->group(function () {
         Route::get('/overview', [StatisticController::class, 'overview']);

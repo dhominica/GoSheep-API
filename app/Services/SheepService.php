@@ -151,7 +151,7 @@ class SheepService
             $this->activityLogService->log(
                 Auth::id(),
                 $sheep,
-                'delete',
+                'deleted',
                 'sheep',
                 "Menghapus domba dengan eartag {$sheep->eartag}",
                 [
@@ -277,7 +277,7 @@ class SheepService
                 "Menambahkan domba baru dengan eartag {$sheep->eartag}",
                 [
                     'weight' => $data['weight'],
-                    'health_status' => $sheep->latestHealth->condition ?? 'normal',
+                    'condition' => $sheep->latestHealth->condition ?? 'normal',
                 ]
             );
 
