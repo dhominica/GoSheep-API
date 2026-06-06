@@ -19,13 +19,7 @@ class ActivityLogService
             throw new \InvalidArgumentException('Model tidak valid untuk logging');
         }
 
-        $finalProperties = array_merge(
-            $properties ?? [],
-            [
-                'ip' => request()->ip(),
-                'user_agent' => request()->userAgent(),
-            ]
-        );
+        $finalProperties = $properties ?? [];
 
         return ActivityLog::create([
             'user_id' => $userId,

@@ -148,6 +148,21 @@ class SheepService
 
             $sheep->delete();
 
+            $this->activityLogService->log(
+                Auth::id(),
+                $sheep,
+                'delete',
+                'sheep',
+                "Menghapus domba dengan eartag {$sheep->eartag}",
+                [
+                    'snapshot' => [
+                        'breed' => $sheep->breed->name ?? '-',
+                        'gender' => $sheep->gender,
+                        'cage' => $sheep->cage->name ?? '-'
+                    ]
+                ]
+            );
+
             return true;
         });
     }

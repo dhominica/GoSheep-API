@@ -4,9 +4,17 @@ namespace App\Services;
 
 use App\Models\HealthRecord;
 use App\Models\Sheep;
+use Illuminate\Support\Facades\Auth;
 
 class HealthRecordsService
 {
+    protected ActivityLogService $activityLogService;
+
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
+
     public function getHealthRecords($lastId = null, $limit = 10, $search = null)
     {
         $query = Sheep::query()
@@ -107,6 +115,21 @@ class HealthRecordsService
             'source'      => 'manual',
             'notes'       => $data['notes'] ?? null,
         ]);
+
+        $this->activityLogService->log(
+            Auth::id(),
+            $record,
+            'created',
+            'health_record',
+            "Mencatat rekam kesehatan untuk domba {$record->sheep->eartag}",
+            [
+                'sheep_id' => $record->sheep->id,
+                'sheep_eartag' => $record->sheep->eartag,
+                'sheep_gender' => $record->sheep->gender,
+                'severity' => $record->severity,
+                'condition' => $record->condition,
+            ]
+        );
 
         return $record->load('recordedBy:id,name');
     }
