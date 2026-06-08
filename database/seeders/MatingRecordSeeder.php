@@ -52,23 +52,12 @@ class MatingRecordSeeder extends Seeder
                     $result = 'unknown';
                 }
 
-                $actualResultDate = null;
-                if ($result !== 'unknown') {
-                    if ($result === 'pregnant') {
-                        $daysToAdd = rand(14, 21);
-                    } else {
-                        $daysToAdd = rand(1, 21);
-                    }
-                    $actualResultDate = date('Y-m-d', strtotime($matingDate . " + {$daysToAdd} days"));
-                }
-
                 $matingRecords[] = [
                     'ewe_id' => $eweId,
                     'ram_id' => $ramId,
                     'recommendation_id' => null,
                     'mating_date' => $matingDate,
                     'end_date' => $endDate,
-                    'actual_result_date' => $actualResultDate,
                     'result' => $result,
                     'created_at' => now(),
                     'updated_at' => now(),

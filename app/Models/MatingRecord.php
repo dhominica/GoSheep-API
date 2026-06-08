@@ -17,7 +17,6 @@ class MatingRecord extends Model
         'recomendation_id',
         'mating_date',
         'end_date',
-        'actual_result_date',
         'result',
     ];
 

@@ -35,7 +35,6 @@ class SheepController extends BaseController
 
      public function store(StoreSheepRequest $request)
      {
-        try {
             $sheep = $this->sheepService->createSheep(
                 $request->validated()
             );
@@ -44,10 +43,6 @@ class SheepController extends BaseController
                 new SheepResource($sheep),
                 'Domba berhasil ditambahkan'
             );
-
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), 400);
-        }
      }
 
     public function show(int $id)

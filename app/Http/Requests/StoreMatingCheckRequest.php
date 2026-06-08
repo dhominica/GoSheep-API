@@ -16,32 +16,22 @@ class StoreMatingCheckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mating_record_id' => 'required|exists:mating_records,id',
             'check_date' => 'required|date',
-            'result' => 'required|in:pregnant,failed,unknown',
+            'result' => 'required|in:pregnant,not_pregnant,failed,unknown',
+            'notes' => 'nullable|string|max:255',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422)
-        );
     }
 
     public function messages(): array
     {
         return [
-            'mating_record_id.required' => 'ID riwayat kawin wajib diisi',
-            'mating_record_id.exists' => 'Riwayat kawin tidak ditemukan',
+            'check_date.after_or_equal' => 'Tanggal pemeriksaan harus setelah tanggal mulai',
             'check_date.required' => 'Tanggal pemeriksaan wajib diisi',
             'check_date.date' => 'Format tanggal tidak valid',
             'result.required' => 'Hasil pemeriksaan wajib diisi',
-            'result.in' => 'Hasil pemeriksaan harus pregnant, failed, atau unknown',
+            'result.in' => 'Hasil pemeriksaan harus pregnant, not_pregnant, failed, atau unknown',
+            'notes.string' => 'Catatan harus berupa teks',
+            'notes.max' => 'Catatan maksimal 255 karakter',
         ];
     }
 }

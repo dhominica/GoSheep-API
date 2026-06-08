@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\MatingRecord;
 use App\Models\MatingCheck;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MatingRecordService
 {
@@ -12,16 +14,16 @@ class MatingRecordService
     {
         $query = MatingRecord::with(['ewe', 'ram']);
 
+        if ($lastId !== null) {
+            $query->where('id', '<', $lastId);
+        }
+
         if ($search) {
             $query->whereHas('ewe', function ($q) use ($search) {
                 $q->where('eartag', 'like', "%$search%");
             })->orWhereHas('ram', function ($q) use ($search) {
                 $q->where('eartag', 'like', "%$search%");
             });
-        }
-
-        if ($lastId !== null) {
-            $query->where('id', '<', $lastId);
         }
 
         $records = $query
@@ -55,28 +57,52 @@ class MatingRecordService
         ];
     }
 
-    public function addMatingCheck(array $data)
+    public function getMatingCheck(int $matingId)
     {
-        return DB::transaction(function () use ($data) {
-            $record = MatingRecord::findOrFail($data['mating_record_id']);
+        $matingRecord = MatingRecord::find($matingId);
 
+        if (!$matingRecord) {
+            throw new NotFoundHttpException(
+                'Perkawinan domba tidak ditemukan'
+            );
+        }
+
+        $matingCheck = MatingCheck::where('mating_record_id', $matingId)->get();
+
+        return $matingCheck;
+    }
+
+    public function addMatingCheck(int $matingId, array $data)
+    {
+        $matingRecord = MatingRecord::find($matingId);
+
+        if (!$matingRecord) {
+            throw new NotFoundHttpException(
+                'Perkawinan domba tidak ditemukan'
+            );
+        }
+
+        if ($data['check_date'] < $matingRecord->mating_date) {
+            throw ValidationException::withMessages([
+                'check_date' => [
+                    'Tanggal pemeriksaan harus setelah atau sama dengan tanggal perkawinan'
+                ]
+            ]);
+        }
+
+        return DB::transaction(function () use ($matingId, $data, $matingRecord) {
             $check = MatingCheck::create([
-                'mating_record_id' => $record->id,
+                'mating_record_id' => $matingId,
                 'check_date' => $data['check_date'],
+                'notes' => $data['notes'] ?? null,
             ]);
 
-            $updates = [
+            $matingRecord->update([
                 'result' => $data['result'],
                 'end_date' => $data['check_date'],
-            ];
-
-            if ($data['result'] !== 'unknown') {
-                $updates['actual_result_date'] = $data['check_date'];
-            }
-
-            $record->update($updates);
+            ]);
 
             return $check;
         });
-    }
+}
 }

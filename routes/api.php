@@ -40,7 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('mating-records')->group(function () {
         Route::get('/', [MatingRecordController::class, 'getMatingHistory']);
         Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
-        Route::post('/check', [MatingRecordController::class, 'storeCheck']);
+        Route::post('/check/{matingId}', [MatingRecordController::class, 'storeCheck']);
+        Route::get('/check/{matingId}', [MatingRecordController::class, 'getMatingCheck']);
     });
 
     Route::prefix('health-records')->group(function () {

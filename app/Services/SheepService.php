@@ -7,6 +7,7 @@ use App\Models\Sheep;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SheepService
@@ -109,7 +110,6 @@ class SheepService
         return $sheep;
     }
 
-
     public function healthStatusStats()
     {
         $sheep = Sheep::with('latestHealth')->get();
@@ -192,42 +192,38 @@ class SheepService
          if (!empty($data['sire_id'])) {
             $sire = Sheep::find($data['sire_id']);
 
-            if (!$sire) {
-                throw new \Exception('Sire tidak ditemukan');
-            }
-
             if ($sire->gender !== 'male') {
-                throw new \Exception('Sire harus berjenis kelamin jantan');
+                throw ValidationException::withMessages([
+                    'sire_id' => ['Sire harus berjenis kelamin jantan']
+                ]);
             }
          }
 
             if (!empty($data['dam_id'])) {
                 $dam = Sheep::find($data['dam_id']);
 
-                if (!$dam) {
-                    throw new \Exception('Dam tidak ditemukan');
-                }
-
                 if ($dam->gender !== 'female') {
-                    throw new \Exception('Dam harus berjenis kelamin betina');
+                    throw ValidationException::withMessages([
+                        'dam_id' => ['Dam harus berjenis kelamin betina']
+                    ]);
                 }
             }
 
             if (!empty($data['sire_id']) && !empty($data['dam_id'])) {
                 if ($data['sire_id'] == $data['dam_id']) {
-                    throw new \Exception('Sire dan Dam tidak boleh sama');
+                    throw ValidationException::withMessages([
+                        'sire_id' => ['Sire dan Dam tidak boleh sama']
+                    ]);
                 }
             }
 
             if (!empty($data['cage_id'])) {
                 $cage = Cage::find($data['cage_id']);
 
-                if (!$cage) {
-                    throw new \Exception('Kandang tidak ditemukan');
-                }
-
                 if ($cage->current_capacity >= $cage->max_capacity) {
-                    throw new \Exception('Kandang sudah penuh');
+                    throw ValidationException::withMessages([
+                        'cage_id' => ['Kandang sudah penuh']
+                    ]);
                 }
             }
 

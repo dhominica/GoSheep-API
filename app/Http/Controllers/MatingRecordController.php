@@ -63,7 +63,6 @@ class MatingRecordController extends Controller
             'mating_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:mating_date',
             'result' => 'nullable|in:pregnant,not_pregnant,failed,unknown',
-            'actual_result_date' => 'nullable|date'
         ]);
 
         $mating->update($request->all());
