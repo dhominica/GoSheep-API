@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\StoreMatingCheckRequest;
 use App\Http\Resources\MatingCheckResource;
 use App\Http\Resources\MatingRecordResource;
+use App\Http\Resources\MatingPartnerResource;
 use App\Services\MatingRecordService;
 use Illuminate\Http\Request;
 
@@ -58,5 +59,23 @@ class MatingRecordController extends BaseController
             new MatingCheckResource($check),
             'Pemeriksaan kawin berhasil dicatat dan diperbarui'
         );
+    }
+
+    public function getPartners(int $sheepId)
+    {
+        $records = $this->matingService->getMatedSheep($sheepId);
+
+        $data = $records->map(function ($record) use ($sheepId) {
+            return new MatingPartnerResource($record, $sheepId);
+        });
+
+        return $this->success($data, 'Data domba pasangan kawin berhasil diambil');
+    }
+
+    public function show(int $id)
+    {
+        $record = $this->matingService->getMatingRecord($id);
+
+        return $this->success(new MatingRecordResource($record), 'Data perkawinan domba berhasil diambil');
     }
 }

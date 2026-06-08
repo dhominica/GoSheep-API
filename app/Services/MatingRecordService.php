@@ -4,12 +4,21 @@ namespace App\Services;
 
 use App\Models\MatingRecord;
 use App\Models\MatingCheck;
+use App\Models\Sheep;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MatingRecordService
 {
+    protected ActivityLogService $activityLogService;
+
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
+
     public function getMatingRecords($lastId = null, $limit = 10, $search = null)
     {
         $query = MatingRecord::with(['ewe', 'ram']);
@@ -102,7 +111,45 @@ class MatingRecordService
                 'end_date' => $data['check_date'],
             ]);
 
+            $this->activityLogService->log(
+                Auth::id(),
+                $check,
+                'created',
+                'mating_check',
+                "Menambahkan pemeriksaan untuk perkawinan domba dengan eartag {$matingRecord->ewe->eartag} dan {$matingRecord->ram->eartag}",
+                [
+                    'mating_record_id' => $matingRecord->id,
+                    'check_date' => $check->check_date,
+                    'result' => $data['result'],
+                ]
+            );
+
             return $check;
         });
-}
+    }
+
+    public function getMatedSheep(int $sheepId)
+    {
+        $sheepExists = Sheep::where('id', $sheepId)->exists();
+        if (!$sheepExists) {
+            throw new NotFoundHttpException('Domba tidak ditemukan');
+        }
+
+        return MatingRecord::with(['ewe', 'ram'])
+            ->where('ewe_id', $sheepId)
+            ->orWhere('ram_id', $sheepId)
+            ->orderBy('mating_date', 'desc')
+            ->get();
+    }
+
+    public function getMatingRecord(int $id)
+    {
+        $matingRecord = MatingRecord::with(['ewe', 'ram'])->find($id);
+
+        if (!$matingRecord) {
+            throw new NotFoundHttpException('Perkawinan domba tidak ditemukan');
+        }
+
+        return $matingRecord;
+    }
 }

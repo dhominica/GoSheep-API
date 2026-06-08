@@ -42,9 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
         Route::post('/check/{matingId}', [MatingRecordController::class, 'storeCheck']);
         Route::get('/check/{matingId}', [MatingRecordController::class, 'getMatingCheck']);
+        Route::get('/partners/{sheepId}', [MatingRecordController::class, 'getPartners']);
+        Route::get('/{id}', [MatingRecordController::class, 'show'])->whereNumber('id');
     });
 
-    Route::prefix('health-records')->group(function () {
+Route::prefix('health-records')->group(function () {
         Route::get('/', [HealthRecordsController::class, 'getHealthRecord']);
         Route::get('/statistics', [HealthRecordsController::class, 'getStatistics']);
         Route::get('/{sheep}', [HealthRecordsController::class, 'getHealthRecordDetail'])->whereNumber('sheep');
