@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Http\Request;
 
 class AuthController extends BaseController
 {
@@ -41,5 +42,13 @@ class AuthController extends BaseController
             'token' => $result['token'],
             'user' => new UserResource($result['user']),
         ], 'Login berhasil');
+    }
+
+    public function logout(Request $request)
+    {
+        $this->authService->logout($request->user());
+
+        return $this->success(null, 'Logout Berhasil'); 
+
     }
 }

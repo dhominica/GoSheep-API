@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('scan/{earTag}', [SheepController::class, 'scan']);
     });
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+
     Route::get('/cages', [CageController::class, 'index']);
 
     Route::prefix('sheep-form')->group(function () {
