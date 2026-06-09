@@ -14,9 +14,13 @@
         <div class="space-y-6">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center flex flex-col items-center">
                 <div class="relative w-28 h-28 mb-4">
-                    <div class="w-full h-full rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-3xl border-4 border-emerald-100/50 shadow-sm">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </div>
+                    @if(Auth::user()->avatar)
+                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="w-full h-full rounded-full object-cover border-4 border-emerald-100/50 shadow-sm">
+                    @else
+                        <div class="w-full h-full rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-3xl border-4 border-emerald-100/50 shadow-sm">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    @endif
                 </div>
 
                 <h3 class="text-base font-bold text-slate-800">{{ Auth::user()->name }}</h3>
@@ -60,7 +64,7 @@
         </div>
 
         <div class="lg:col-span-2 space-y-6">
-            <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
                 
@@ -95,6 +99,15 @@
                                 <span class="text-rose-500 text-[10px] font-bold mt-1">{{ $message }}</span>
                             @enderror
                         </div>
+
+                        <div class="flex flex-col gap-1.5 md:col-span-2">
+                            <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Foto Profil (Opsional)</label>
+                            <input type="file" name="avatar" accept="image/*"
+                                class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                            @error('avatar')
+                                <span class="text-rose-500 text-[10px] font-bold mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -114,7 +127,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Kata Sandi Baru</label>
-                            <input type="password" name="password" placeholder="Minimal 8 karakter"
+                            <input type="password" name="password" placeholder="Minimal 8 karakter" autocomplete="new-password"
                                 class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-50 transition-all outline-none">
                             @error('password')
                                 <span class="text-rose-500 text-[10px] font-bold mt-1">{{ $message }}</span>
@@ -124,7 +137,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-black text-slate-450 uppercase tracking-wider">Ulangi Kata Sandi Baru</label>
-                            <input type="password" name="password_confirmation" placeholder="Ulangi sandi baru"
+                            <input type="password" name="password_confirmation" placeholder="Ulangi sandi baru" autocomplete="new-password"
                                 class="px-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-50 transition-all outline-none">
                         </div>
                     </div>

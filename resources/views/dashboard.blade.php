@@ -118,10 +118,10 @@
         <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
             <div class="flex items-center justify-between mb-5">
                 <h3 class="font-extrabold text-lg text-slate-800">Aktivitas Real-time</h3>
-                <button class="text-[11px] font-bold text-green-600 hover:text-green-700 bg-green-50 px-3 py-1.5 rounded-lg transition-colors hover:bg-green-100 flex items-center gap-1">
+                <a href="{{ route('activities.index') }}" class="text-[11px] font-bold text-green-600 hover:text-green-700 bg-green-50 px-3 py-1.5 rounded-lg transition-colors hover:bg-green-100 flex items-center gap-1">
                     Lihat Semua
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                </button>
+                </a>
             </div>
 
             <div class="space-y-3">
@@ -153,6 +153,28 @@
                             $statusBadge = 'Hapus';
                             $statusColor = 'rose';
                         }
+
+                        $actionMap = [
+                            'created' => 'Menambahkan',
+                            'updated' => 'Memperbarui',
+                            'deleted' => 'Menghapus',
+                            'tambah' => 'Menambahkan',
+                            'ubah' => 'Memperbarui',
+                            'hapus' => 'Menghapus',
+                        ];
+                        $entityMap = [
+                            'Sheep' => 'Domba',
+                            'Weight_record' => 'Catatan Timbangan',
+                            'Health_record' => 'Catatan Kesehatan',
+                            'Cage' => 'Kandang',
+                            'User' => 'Pengguna',
+                            'Peternak' => 'Peternak',
+                            'domba' => 'Domba',
+                            'kandang' => 'Kandang',
+                        ];
+
+                        $translatedAction = $actionMap[strtolower($activity->action)] ?? $activity->action;
+                        $translatedEntity = $entityMap[ucfirst($activity->entity)] ?? ucfirst($activity->entity);
                     @endphp
                     <div class="group flex items-center justify-between p-3.5 rounded-xl bg-slate-50/50 border border-slate-100 hover:border-{{ $colorClass }}-200 hover:bg-white hover:shadow-sm transition-all duration-200">
                         <div class="flex items-center gap-3.5">
@@ -160,12 +182,12 @@
                                 <i data-lucide="{{ $icon }}" class="w-4 h-4"></i>
                             </div>
                             <div>
-                                <p class="font-bold text-sm text-slate-800">{{ $activity->action }} {{ ucfirst($activity->entity) }}</p>
+                                <p class="font-bold text-sm text-slate-800">{{ $translatedAction }} {{ $translatedEntity }}</p>
                                 <p class="text-xs text-slate-500 font-medium">{{ $activity->description }}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="block text-[11px] font-bold text-slate-400">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</span>
+                            <span class="block text-[11px] font-bold text-slate-400">{{ \Carbon\Carbon::parse($activity->created_at)->locale('id')->diffForHumans() }}</span>
                             <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-{{ $statusColor }}-100 text-{{ $statusColor }}-700 text-[9px] uppercase font-bold rounded">{{ $activity->user ? $activity->user->name : 'Sistem' }}</span>
                         </div>
                     </div>
@@ -178,9 +200,9 @@
             </div>
         </div>
 
-        <!-- Right Sidebar Widgets -->
+        
         <div class="space-y-4 md:space-y-6">
-            <!-- Widget: Statistik Peternakan -->
+            
             <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
                 <h3 class="font-bold text-sm text-slate-800 mb-5 flex items-center gap-2">
                     <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i>

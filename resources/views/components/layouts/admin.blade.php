@@ -59,12 +59,11 @@
          class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden" 
          @click="sidebarOpen = false"></div>
 
-    <!-- Sidebar Layout (White Theme) -->
-    <!-- We animate the width on desktop seamlessly. On mobile it uses translation -->
+    
     <aside :class="sidebarOpen ? 'translate-x-0 w-[260px]' : '-translate-x-full md:translate-x-0 md:w-0 md:opacity-0'" 
            class="fixed md:static inset-y-0 left-0 z-50 bg-emerald-950 text-emerald-100 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[4px_0_30px_rgba(2,44,27,0.15)] md:shadow-none overflow-hidden shrink-0 group">
         
-        <!-- Logo Area Style SIAKAD -->
+        
         <div class="h-[64px] bg-white flex items-center justify-between px-5 border-b border-slate-100 shrink-0 w-[260px]">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('assets/img/logo_app.png') }}" alt="GoSheep" class="h-8 w-auto object-contain">
@@ -73,7 +72,7 @@
                     <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">MANAGEMENT SYSTEM</p>
                 </div>
             </div>
-            <!-- Close Mobile -->
+            
             <button @click="sidebarOpen = false" class="md:hidden p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-50 transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -125,7 +124,7 @@
                 Profil Saya
             </x-sidebar-link>
 
-            <!-- Split Pengguna menus based on role -->
+            
             <x-sidebar-link href="{{ route('peternak.index') }}" icon="smartphone" :active="request()->is('peternak*')">
                 Akun Peternak
             </x-sidebar-link>
@@ -140,10 +139,10 @@
         </nav>
     </aside>
 
-    <!-- Main Content -->
+    
     <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative transition-all duration-300">
         
-        <!-- Mobile Header -->
+        
         <header class="h-[64px] bg-white border-b border-slate-200 flex md:hidden items-center justify-between px-4 z-30 shrink-0 sticky top-0 shadow-sm">
             <div class="flex items-center gap-2">
                 <button @click="sidebarOpen = true" class="p-1.5 text-slate-500 hover:text-green-600 rounded-lg hover:bg-green-50 transition-colors">
@@ -154,15 +153,19 @@
                     <span class="text-lg font-extrabold text-green-700 tracking-tight">GoSheep</span>
                 </div>
             </div>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div>
+            @if(Auth::user()->avatar)
+                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover shadow-sm">
+            @else
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                </div>
+            @endif
         </header>
 
-        <!-- Desktop Header -->
+        
         <header class="h-[64px] bg-white/80 backdrop-blur-md border-b border-slate-200/60 hidden md:flex items-center justify-between px-6 z-10 shrink-0 transition-all sticky top-0">
             <div class="flex items-center gap-4">
-                <!-- Sidebar Toggle Button -->
+                
                 <button @click="sidebarOpen = !sidebarOpen" class="p-2 text-slate-400 hover:text-green-600 bg-slate-50 hover:bg-green-50 rounded-xl transition-all shadow-sm border border-slate-100">
                     <i data-lucide="sidebar" class="w-4 h-4"></i>
                 </button>
@@ -193,9 +196,13 @@
                 <!-- Admin Profile & Logout Quick Access (SIAKAD Premium Style) -->
                 <div class="flex items-center gap-3.5">
                     <a href="{{ route('profile') }}" class="flex items-center gap-2.5 group hover:opacity-90 transition-opacity">
-                        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-green-400 to-emerald-500 text-white flex items-center justify-center font-black text-xs shadow-sm group-hover:scale-105 transition-transform border border-emerald-100/50 shrink-0">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>
+                        @if(Auth::user()->avatar)
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="w-7 h-7 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform border border-emerald-100/50 shrink-0">
+                        @else
+                            <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-green-400 to-emerald-500 text-white flex items-center justify-center font-black text-xs shadow-sm group-hover:scale-105 transition-transform border border-emerald-100/50 shrink-0">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                        @endif
                         <div class="hidden sm:flex flex-col text-left leading-none">
                             <p class="text-[10px] font-bold text-slate-700 tracking-tight">{{ Auth::user()->name }}</p>
                             <p class="text-[8px] font-black text-emerald-600 uppercase tracking-wider mt-0.5">{{ Auth::user()->role }}</p>
@@ -303,6 +310,15 @@
                 icon: 'error',
                 title: 'Terjadi Kesalahan',
                 text: '{{ session('error') }}',
+                confirmButtonColor: '#f43f5e'
+            });
+        @endif
+
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Gagal',
+                text: 'Silakan periksa kembali isian form Anda.',
                 confirmButtonColor: '#f43f5e'
             });
         @endif

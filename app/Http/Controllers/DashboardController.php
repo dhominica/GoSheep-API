@@ -55,4 +55,14 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('totalPeternak', 'totalKandang', 'totalDomba', 'activities', 'capacityPercentage', 'healthyPercentage', 'weightChartData'));
     }
+
+    /**
+     * Show the activities history.
+     */
+    public function activities()
+    {
+        $activities = \App\Models\ActivityLog::with('user')->orderBy('created_at', 'desc')->paginate(15);
+        
+        return view('activities', compact('activities'));
+    }
 }
