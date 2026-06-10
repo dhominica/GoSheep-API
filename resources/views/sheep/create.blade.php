@@ -137,11 +137,11 @@
             <x-form-select name="category" label="Kategori Kesehatan" color="amber" :required="true">
                 <x-slot:icon><i data-lucide="heart-pulse" class="w-5 h-5"></i></x-slot:icon>
                 <option value="">Pilih Kategori</option>
-                <option value="Pemeriksaan Rutin" {{ old('category') == 'Pemeriksaan Rutin' ? 'selected' : '' }}>
-                    Pemeriksaan Rutin</option>
-                <option value="Sakit" {{ old('category') == 'Sakit' ? 'selected' : '' }}>Sakit</option>
-                <option value="Cedera" {{ old('category') == 'Cedera' ? 'selected' : '' }}>Cedera</option>
-                <option value="Vaksinasi" {{ old('category') == 'Vaksinasi' ? 'selected' : '' }}>Vaksinasi</option>
+                <option value="health" {{ old('category') == 'health' ? 'selected' : '' }}>
+                    Pemeriksaan Kesehatan</option>
+                <option value="environment" {{ old('category') == 'environment' ? 'selected' : '' }}>Kondisi Lingkungan</option>
+                <option value="nutrition" {{ old('category') == 'nutrition' ? 'selected' : '' }}>Pakan & Nutrisi</option>
+                <option value="maintenance" {{ old('category') == 'maintenance' ? 'selected' : '' }}>Perawatan Harian</option>
             </x-form-select>
         </div>
 
@@ -158,9 +158,9 @@
             <x-form-select name="severity" label="Tingkat Keparahan" color="amber">
                 <x-slot:icon><i data-lucide="alert-triangle" class="w-5 h-5"></i></x-slot:icon>
                 <option value="normal" {{ old('severity') == 'normal' ? 'selected' : '' }}>Normal</option>
-                <option value="low" {{ old('severity') == 'low' ? 'selected' : '' }}>Rendah</option>
-                <option value="medium" {{ old('severity') == 'medium' ? 'selected' : '' }}>Sedang</option>
-                <option value="high" {{ old('severity') == 'high' ? 'selected' : '' }}>Tinggi</option>
+                <option value="ringan" {{ old('severity') == 'ringan' ? 'selected' : '' }}>Ringan</option>
+                <option value="sedang" {{ old('severity') == 'sedang' ? 'selected' : '' }}>Sedang</option>
+                <option value="berat" {{ old('severity') == 'berat' ? 'selected' : '' }}>Berat</option>
             </x-form-select>
         </div>
 

@@ -1,0 +1,20 @@
+# Cache & file kompilasi Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Cache pytest
+.pytest_cache/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# WebDriver / file log saat test
+*.log
+chromedriver*
+geckodriver*
+
+# File konfigurasi rahasia (kalau nanti pakai)
+.env

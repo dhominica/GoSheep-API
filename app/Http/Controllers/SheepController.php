@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sheep;
 use App\Models\Breed;
 use App\Models\Cage;
+use App\Models\Sheep;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SheepController extends Controller
 {
@@ -49,39 +50,42 @@ class SheepController extends Controller
             'status' => 'required|in:active,sold,dead',
             // New validations for initial weight and health
             'weight' => 'required|numeric|min:0.1',
-            'category' => 'required|string',
+            'category' => 'required|in:health,environment,nutrition,maintenance',
             'condition' => 'required|string',
-            'severity' => 'nullable|in:normal,low,medium,high',
+            'severity' => 'nullable|in:normal,ringan,sedang,berat',
             'notes' => 'nullable|string',
         ]);
 
-        $sheep = Sheep::create($request->only([
-            'eartag',
-            'gender',
-            'birth_date',
-            'eartag_color',
-            'breed_id',
-            'sire_id',
-            'dam_id',
-            'cage_id',
-            'status'
-        ]));
+        DB::transaction(function () use ($request) {
+            $sheep = Sheep::create($request->only([
+                'eartag',
+                'gender',
+                'birth_date',
+                'eartag_color',
+                'breed_id',
+                'sire_id',
+                'dam_id',
+                'cage_id',
+                'status'
+            ]));
 
-        $sheep->weightRecords()->create([
-            'weight' => $request->weight,
-            'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
-            'recorded_at' => now(),
-        ]);
+            $sheep->weightRecords()->create([
+                'weight' => $request->weight,
+                'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
+                'recorded_at' => now(),
+            ]);
 
-        $sheep->healthRecords()->create([
-            'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
-            'recorded_at' => now(),
-            'category' => $request->category,
-            'condition' => $request->condition,
-            'severity' => $request->severity ?? 'normal',
-            'source' => 'manual',
-            'notes' => $request->notes,
-        ]);
+            $sheep->healthRecords()->create([
+                'recorded_by' => \Illuminate\Support\Facades\Auth::id(),
+                'recorded_at' => now(),
+                'category' => $request->category,
+                'condition' => $request->condition,
+                'severity' => $request->severity ?? 'normal',
+                'source' => 'manual',
+                'notes' => $request->notes,
+            ]);
+        });
+
 
         return redirect()->route('sheep.index')->with('success', 'Data domba berhasil ditambahkan.');
     }
