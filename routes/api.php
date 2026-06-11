@@ -3,12 +3,13 @@
 use App\Http\Controllers\API\ActivityFeedController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CageController;
+use App\Http\Controllers\API\HealthRecordsController;
 use App\Http\Controllers\API\MatingRecordController;
 use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
 use App\Http\Controllers\API\StatisticController;
-use App\Http\Controllers\API\HealthRecordsController;
 use App\Http\Controllers\API\WeightRecordController;
+use App\Http\Controllers\API\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,8 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('scan/{earTag}', [SheepController::class, 'scan']);
     });
 
+    Route::get('/profile', [ProfileController::class, 'index']);
+    Route::put('/profile', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
-
 
     Route::get('/cages', [CageController::class, 'index']);
 
