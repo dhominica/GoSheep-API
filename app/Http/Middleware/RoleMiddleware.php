@@ -17,7 +17,7 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check() || !in_array(Auth::user()->role, $roles)) {
-            abort(403, 'Anda tidak memiliki hak akses untuk fitur ini.');
+            return response()->view('errors.403', [], 403);
         }
 
         return $next($request);
