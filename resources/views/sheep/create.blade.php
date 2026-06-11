@@ -135,13 +135,28 @@
         <!-- Health Category Component -->
         <div class="col-span-1">
             <x-form-select name="category" label="Kategori Kesehatan" color="amber" :required="true">
-                <x-slot:icon><i data-lucide="heart-pulse" class="w-5 h-5"></i></x-slot:icon>
+                <x-slot:icon>
+                    <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                </x-slot:icon>
+
                 <option value="">Pilih Kategori</option>
-                <option value="Pemeriksaan Rutin" {{ old('category') == 'Pemeriksaan Rutin' ? 'selected' : '' }}>
-                    Pemeriksaan Rutin</option>
-                <option value="Sakit" {{ old('category') == 'Sakit' ? 'selected' : '' }}>Sakit</option>
-                <option value="Cedera" {{ old('category') == 'Cedera' ? 'selected' : '' }}>Cedera</option>
-                <option value="Vaksinasi" {{ old('category') == 'Vaksinasi' ? 'selected' : '' }}>Vaksinasi</option>
+
+                <option value="health" {{ old('category') == 'health' ? 'selected' : '' }}>
+                    Pemeriksaan Kesehatan / Sakit
+                </option>
+
+                <option value="environment" {{ old('category') == 'environment' ? 'selected' : '' }}>
+                    Lingkungan
+                </option>
+
+                <option value="nutrition" {{ old('category') == 'nutrition' ? 'selected' : '' }}>
+                    Gizi / Pakan
+                </option>
+
+                <option value="maintenance" {{ old('category') == 'maintenance' ? 'selected' : '' }}>
+                    Vaksinasi / Perawatan
+                </option>
+
             </x-form-select>
         </div>
 
