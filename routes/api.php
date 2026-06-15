@@ -5,11 +5,12 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CageController;
 use App\Http\Controllers\API\HealthRecordsController;
 use App\Http\Controllers\API\MatingRecordController;
+use App\Http\Controllers\API\PregnantSheepController;
+use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
 use App\Http\Controllers\API\StatisticController;
 use App\Http\Controllers\API\WeightRecordController;
-use App\Http\Controllers\API\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
     Route::prefix('sheep')->group(function () {
         Route::get('/health-stats', [SheepController::class, 'healthStatusStats']);
         Route::get('/', [SheepController::class, 'index']);
@@ -70,5 +71,10 @@ Route::prefix('health-records')->group(function () {
 
     Route::prefix('statistics')->group(function () {
         Route::get('/overview', [StatisticController::class, 'overview']);
+    });
+
+    Route::prefix('sheep-pregnancies')->group(function () {
+        Route::get('/', [PregnantSheepController::class, 'getPregnancies']);
+        Route::get('/summary', [PregnantSheepController::class, 'summary']);
     });
 });

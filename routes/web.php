@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Role: Owner & Staff can access Peternak, Sheep, and Cage
-    Route::middleware('role:owner,staff')->group(function () {
+    Route::middleware('role:owner')->group(function () {
         Route::resource('peternak', PeternakController::class)->except(['show']);
         Route::resource('sheep', App\Http\Controllers\SheepController::class)->except(['show']);
         Route::post('/sheep/export', [App\Http\Controllers\SheepController::class, 'exportRequest'])->name('sheep.export');
@@ -44,12 +44,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/berat', [App\Http\Controllers\WeightRecordController::class, 'index'])->name('berat.index');
         Route::get('/berat/{sheep}', [App\Http\Controllers\WeightRecordController::class, 'show'])->name('berat.show');
         Route::post('/berat/{sheep}', [App\Http\Controllers\WeightRecordController::class, 'store'])->name('berat.store');
-        
+
         // Persilangan (Mating)
         Route::resource('mating', App\Http\Controllers\MatingRecordController::class)->parameters([
             'mating' => 'mating'
         ])->except(['show', 'create']);
-        
+
         // Mating Recommendations
         Route::resource('mating-recommendations', App\Http\Controllers\MatingRecommendationController::class)->only(['index']);
     });
