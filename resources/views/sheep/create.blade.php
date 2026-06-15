@@ -135,7 +135,10 @@
         <!-- Health Category Component -->
         <div class="col-span-1">
             <x-form-select name="category" label="Kategori Kesehatan" color="amber" :required="true">
-                <x-slot:icon><i data-lucide="heart-pulse" class="w-5 h-5"></i></x-slot:icon>
+                <x-slot:icon>
+                    <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                </x-slot:icon>
+
                 <option value="">Pilih Kategori</option>
                 <option value="health" {{ old('category') == 'health' ? 'selected' : '' }}>
                     Pemeriksaan Kesehatan</option>

@@ -54,6 +54,18 @@ class SheepController extends Controller
             'condition' => 'required|string',
             'severity' => 'nullable|in:normal,ringan,sedang,berat',
             'notes' => 'nullable|string',
+        ], [
+            'eartag.required' => 'Eartag wajib diisi.',
+            'eartag.unique' => 'Eartag ini sudah terdaftar.',
+            'gender.required' => 'Jenis kelamin wajib dipilih.',
+            'birth_date.required' => 'Tanggal lahir wajib diisi.',
+            'eartag_color.required' => 'Warna eartag wajib diisi.',
+            'status.required' => 'Status wajib dipilih.',
+            'weight.required' => 'Berat badan awal wajib diisi.',
+            'weight.numeric' => 'Berat badan harus berupa angka.',
+            'weight.min' => 'Berat badan minimal 0.1 kg.',
+            'category.required' => 'Kategori kesehatan wajib dipilih.',
+            'condition.required' => 'Kondisi kesehatan wajib diisi.',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -112,6 +124,13 @@ class SheepController extends Controller
             'dam_id' => 'nullable|exists:sheep,id',
             'cage_id' => 'nullable|exists:cages,id',
             'status' => 'required|in:active,sold,dead',
+        ], [
+            'eartag.required' => 'Eartag wajib diisi.',
+            'eartag.unique' => 'Eartag ini sudah terdaftar.',
+            'gender.required' => 'Jenis kelamin wajib dipilih.',
+            'birth_date.required' => 'Tanggal lahir wajib diisi.',
+            'eartag_color.required' => 'Warna eartag wajib diisi.',
+            'status.required' => 'Status wajib dipilih.',
         ]);
 
         $sheep->update($request->all());

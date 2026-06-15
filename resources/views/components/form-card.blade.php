@@ -45,7 +45,7 @@
     <!-- Clean SIAKAD Flat White Form Container -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-6 md:p-8">
         @php $formId = 'form-card-' . uniqid(); @endphp
-        <form action="{{ $action }}" method="POST" id="{{ $formId }}" class="space-y-6">
+        <form action="{{ $action }}" method="POST" id="{{ $formId }}" class="space-y-6" novalidate>
             @csrf
             @if(in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE']))
                 @method($method)
