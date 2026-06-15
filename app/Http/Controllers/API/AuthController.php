@@ -59,11 +59,12 @@ class AuthController extends BaseController
 
         $user = \App\Models\User::where('email', $request->email)->where('role', 'peternak')->first();
 
-        if ($user) {
-            $user->update(['request_password_reset' => true]);
+        if (!$user) {
+            return $this->error('Akun tidak terdaftar atau bukan akun peternak.', 404);
         }
 
-        // Always return success to prevent email enumeration
-        return $this->success(null, 'Jika email terdaftar sebagai peternak, permintaan reset kata sandi telah dikirim ke admin.');
+        $user->update(['request_password_reset' => true]);
+
+        return $this->success(null, 'Permintaan reset kata sandi telah dikirim ke admin.');
     }
 }
