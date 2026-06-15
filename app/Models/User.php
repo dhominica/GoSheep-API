@@ -27,6 +27,7 @@ class User extends Authenticatable
         'role',
         'status',
         'avatar',
+        'request_password_reset',
     ];
 
     /**

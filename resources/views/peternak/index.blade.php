@@ -69,7 +69,18 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right font-medium">
                     <div class="flex items-center justify-end gap-1 transition-opacity">
-                        <a href="{{ route('peternak.edit', $user->id) }}" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 border border-transparent rounded-lg transition-all tooltip bg-white shadow-sm inline-block">
+                        @if($user->request_password_reset)
+                            <form action="{{ route('peternak.reset-password', $user->id) }}" method="POST" class="inline-block reset-form">
+                                @csrf
+                                <button type="submit" class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 border border-transparent rounded-lg transition-all tooltip bg-white shadow-sm" title="Reset Kata Sandi">
+                                    <i data-lucide="key" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        @endif
+                        <a href="{{ route('peternak.show', $user->id) }}" class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 border border-transparent rounded-lg transition-all tooltip bg-white shadow-sm inline-block" title="Lihat Profil">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </a>
+                        <a href="{{ route('peternak.edit', $user->id) }}" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 border border-transparent rounded-lg transition-all tooltip bg-white shadow-sm inline-block" title="Edit Peternak">
                             <i data-lucide="edit-2" class="w-4 h-4"></i>
                         </a>
                         <form action="{{ route('peternak.destroy', $user->id) }}" method="POST" class="inline-block delete-form">
@@ -84,4 +95,47 @@
             </tr>
         @endforeach
     </x-data-table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resetForms = document.querySelectorAll('.reset-form');
+            resetForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    Swal.fire({
+                      title: "Reset Kata Sandi",
+                      text: "Masukkan kata sandi baru untuk peternak ini:",
+                      input: "text",
+                      inputAttributes: {
+                        autocapitalize: "off"
+                      },
+                      inputPlaceholder: "Kata sandi baru (min 6 karakter)",
+                      icon: "info",
+                      showCancelButton: true,
+                      confirmButtonColor: "#f59e0b",
+                      cancelButtonColor: "#94a3b8",
+                      confirmButtonText: "Simpan & Reset",
+                      cancelButtonText: "Batal",
+                      inputValidator: (value) => {
+                        if (!value) {
+                          return "Anda perlu memasukkan kata sandi baru!";
+                        }
+                        if (value.length < 6) {
+                            return "Kata sandi minimal 6 karakter!";
+                        }
+                      }
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        let input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "new_password";
+                        input.value = result.value;
+                        form.appendChild(input);
+                        form.submit();
+                      }
+                    });
+                });
+            });
+        });
+    </script>
 </x-layouts.admin>

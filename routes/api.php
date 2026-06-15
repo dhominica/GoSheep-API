@@ -19,6 +19,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/request-password-reset', [AuthController::class, 'requestPasswordReset']);
 
 Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
     Route::prefix('sheep')->group(function () {
