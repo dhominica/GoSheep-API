@@ -208,7 +208,7 @@ class MatingRecordService
         $newResult = $data['result'];
 
         $oldPregnancy = Pregnancy::where('mating_record_id', $matingRecord->id)->first();
-        $oldExpectedBirthDate = $oldPregnancy?->expected_birth_date?->toDateString();
+        $oldExpectedBirthDate = $oldPregnancy?->expected_birth_date;
 
         $old = [
             'check_date' => $matingCheck->check_date,
