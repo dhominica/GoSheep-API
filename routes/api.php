@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
         Route::get('/', [MatingRecordController::class, 'getMatingHistory']);
         Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
         Route::post('/check/{matingId}', [MatingRecordController::class, 'storeCheck']);
+        Route::put('/check/{matingCheck}', [MatingRecordController::class, 'updateCheck'])->whereNumber('matingCheck');
         Route::get('/check/{matingId}', [MatingRecordController::class, 'getMatingCheck']);
         Route::get('/partners/{sheepId}', [MatingRecordController::class, 'getPartners']);
         Route::get('/{id}', [MatingRecordController::class, 'show'])->whereNumber('id');

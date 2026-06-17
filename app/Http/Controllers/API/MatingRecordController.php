@@ -7,6 +7,7 @@ use App\Http\Resources\MatingCheckResource;
 use App\Http\Resources\MatingRecordResource;
 use App\Http\Resources\MatingPartnerResource;
 use App\Services\MatingRecordService;
+use App\Models\MatingCheck;
 use Illuminate\Http\Request;
 
 class MatingRecordController extends BaseController
@@ -58,6 +59,19 @@ class MatingRecordController extends BaseController
         return $this->created(
             new MatingCheckResource($check),
             'Pemeriksaan kawin berhasil dicatat dan diperbarui'
+        );
+    }
+
+    public function updateCheck(StoreMatingCheckRequest $request, MatingCheck $matingCheck)
+    {
+        $check = $this->matingService->updateMatingCheck(
+            $matingCheck,
+            $request->validated()
+        );
+
+        return $this->updated(
+            new MatingCheckResource($check),
+            'Pemeriksaan kawin berhasil diperbarui'
         );
     }
 
