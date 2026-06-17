@@ -114,13 +114,41 @@ class WeightRecordService
             $record,
             'created',
             'weight_record',
-            "Mencatat timbangan untuk domba {$record->eartag}",
+            "Mencatat timbangan untuk domba {$record->sheep->eartag}",
             [
                 'sheep_id' => $record->sheep->id,
                 'sheep_gender' => $record->sheep->gender,
                 'sheep_eartag' => $record->sheep->eartag,
                 'weight' => $record->weight,
             ],
+        );
+
+        return $record->load('recordedBy:id,name');
+    }
+
+    public function update(WeightRecord $record, array $data): WeightRecord
+    {
+        $oldWeight = $record->weight;
+        $newWeight = $data['weight'];
+
+        $record->update([
+            'weight' => $newWeight,
+        ]);
+
+        $this->activityLogService->log(
+            Auth::id(),
+            $record,
+            'updated',
+            'weight_record',
+            "Memperbarui timbangan domba {$record->sheep->eartag}",
+            [
+                'old' => [
+                    'weight' => (float)$oldWeight,
+                ],
+                'new' => [
+                    'weight' => (float)$newWeight,
+                ],
+            ]
         );
 
         return $record->load('recordedBy:id,name');

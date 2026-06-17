@@ -65,6 +65,7 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
         Route::get('/', [WeightRecordController::class, 'getSheepWeight']);
         Route::get('/{sheep}/records', [WeightRecordController::class, 'getWeightRecord']);
         Route::post('/', [WeightRecordController::class, 'store']);
+        Route::put('/{weightRecord}', [WeightRecordController::class, 'update'])->whereNumber('weightRecord');
         Route::get('/statistics', [WeightRecordController::class, 'getAllSheepMonthlyWeightStatistics']);
         Route::get('/{sheep}/statistics', [WeightRecordController::class, 'getMonthlyWeightStatistics']);
     });
