@@ -31,4 +31,10 @@ class Pregnancy extends Model
     {
         return $this->belongsTo(Sheep::class, 'ewe_id');
     }
+
+    public function birth()
+    {
+        return $this->hasOne(Birth::class);
+    }
 }
+
