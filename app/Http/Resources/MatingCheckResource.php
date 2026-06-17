@@ -19,7 +19,7 @@ class MatingCheckResource extends JsonResource
             'mating_record_id' => $this->mating_record_id,
             'check_date' => $this->check_date,
             'notes' => $this->notes,
-            'expected_birth_date' => $this->matingRecord->pregnancy?->expected_birth_date?->toDateString(),
+            'expected_birth_date' => $this->matingRecord->pregnancy?->expected_birth_date,
             'created_at' => $this->created_at,
         ];
     }

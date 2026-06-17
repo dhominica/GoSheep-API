@@ -81,5 +81,6 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
     Route::prefix('sheep-pregnancies')->group(function () {
         Route::get('/', [PregnantSheepController::class, 'getPregnancies']);
         Route::get('/summary', [PregnantSheepController::class, 'summary']);
+        Route::put('/{pregnancy}', [PregnantSheepController::class, 'update'])->whereNumber('pregnancy');
     });
 });
