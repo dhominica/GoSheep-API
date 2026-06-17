@@ -53,11 +53,12 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
         Route::get('/{id}', [MatingRecordController::class, 'show'])->whereNumber('id');
     });
 
-Route::prefix('health-records')->group(function () {
+    Route::prefix('health-records')->group(function () {
         Route::get('/', [HealthRecordsController::class, 'getHealthRecord']);
         Route::get('/statistics', [HealthRecordsController::class, 'getStatistics']);
         Route::get('/{sheep}', [HealthRecordsController::class, 'getHealthRecordDetail'])->whereNumber('sheep');
         Route::post('/', [HealthRecordsController::class, 'store']);
+        Route::put('/{healthRecord}', [HealthRecordsController::class, 'update'])->whereNumber('healthRecord');
     });
 
     Route::prefix('sheep-weight')->group(function () {

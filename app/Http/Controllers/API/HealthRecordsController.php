@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\StoreHealthRecordRequest;
+use App\Http\Requests\UpdateHealthRecordRequest;
 use App\Http\Resources\HealthRecordResource;
 use App\Http\Resources\HealthResource;
 use App\Http\Resources\SheepHealthOverviewResource;
+use App\Http\Resources\UpdateHealthRecordResource;
+use App\Models\HealthRecord;
 use App\Services\HealthRecordsService;
 use Illuminate\Http\Request;
 
@@ -43,6 +46,16 @@ class HealthRecordsController extends BaseController
         );
     }
 
+    public function update(UpdateHealthRecordRequest $request, HealthRecord $healthRecord)
+    {
+        $record = $this->healthRecordsService->update($healthRecord, $request->validated());
+
+        return $this->updated(
+            new UpdateHealthRecordResource($record),
+            'Rekam medis berhasil diperbarui',
+        );
+    }
+
     public function getHealthRecordDetail(Request $request, int $sheepId)
     {
         $result = $this->healthRecordsService->getHealthRecordDetail(
@@ -66,3 +79,4 @@ class HealthRecordsController extends BaseController
         return $this->success($data, 'Statistik riwayat kesehatan berhasil diambil');
     }
 }
+
