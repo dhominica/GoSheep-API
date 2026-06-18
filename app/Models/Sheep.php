@@ -20,10 +20,19 @@ class Sheep extends Model
         'status',
     ];
 
+    protected $casts = [
+        'birth_date' => 'date',
+    ];
+
     public function latestWeight()
     {
         return $this->hasOne(WeightRecord::class)
             ->orderByDesc('recorded_at');
+    }
+
+    public function sheepFeature()
+    {
+        return $this->hasOne(SheepFeature::class);
     }
 
     public function latestHealth()

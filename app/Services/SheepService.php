@@ -239,12 +239,25 @@ class SheepService
                 'status' => $data['status'] ?? 'active',
             ]);
 
+            // Simpan berat utama
             $sheep->weightRecords()->create([
-                'sheep_id' => $sheep->id,
-                'weight' => $data['weight'],
+                'sheep_id'    => $sheep->id,
+                'weight'      => $data['weight'],
                 'recorded_by' => Auth::id(),
-                'recorded_at' => now(),
+                'recorded_at' => !empty($data['is_newborn'])
+                                    ? $data['birth_date']
+                                    : now(),
             ]);
+
+            // Kalau bukan newborn -> simpan berat lahir sebagai record terpisah
+            if (empty($data['is_newborn'])) {
+                $sheep->weightRecords()->create([
+                    'sheep_id'    => $sheep->id,
+                    'weight'      => $data['weight_birth'],
+                    'recorded_by' => Auth::id(),
+                    'recorded_at' => $data['birth_date'],
+                ]);
+            }
 
             $sheep->healthRecords()->create([
                 'sheep_id' => $sheep->id,

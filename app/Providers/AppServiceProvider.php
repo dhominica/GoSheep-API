@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Sheep;
+use App\Models\WeightRecord;
+use App\Observers\SheepObserver;
+use App\Observers\WeightRecordObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Sheep::observe(SheepObserver::class);
+        WeightRecord::observe(WeightRecordObserver::class);
     }
 }
