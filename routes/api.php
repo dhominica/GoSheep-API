@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ActivityFeedController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CageController;
 use App\Http\Controllers\API\HealthRecordsController;
+use App\Http\Controllers\API\InactiveSheepController;
 use App\Http\Controllers\API\MatingRecordController;
 use App\Http\Controllers\API\PregnantSheepController;
 use App\Http\Controllers\API\ProfileController;
@@ -25,7 +26,8 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
     Route::prefix('sheep')->group(function () {
         Route::get('/health-stats', [SheepController::class, 'healthStatusStats']);
         Route::get('/', [SheepController::class, 'index']);
-        Route::get('/inactive', [SheepController::class, 'inactive']);
+        Route::get('/inactive', [InactiveSheepController::class, 'index']);
+        Route::get('/inactive/stats', [InactiveSheepController::class, 'stats']);
         Route::post('/', [SheepController::class, 'store']);
         Route::get('/{id}', [SheepController::class, 'show']);
         Route::delete('/{id}', [SheepController::class, 'deleteSheep']);
