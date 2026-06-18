@@ -75,4 +75,20 @@ class SheepController extends BaseController
             'Domba berhasil ditemukan'
         );
     }
+
+    public function inactive(Request $request)
+    {
+        $result = $this->sheepService->getInactiveSheep(
+            $request->input('last_id'),
+            $request->input('limit', 10),
+            $request->input('search')
+        );
+
+        return $this->successCursorPaginated(
+            SheepResource::collection($result['data']),
+            $result['has_more'],
+            $result['next_cursor'],
+            'Data ternak nonaktif berhasil diambil'
+        );
+    }
 }

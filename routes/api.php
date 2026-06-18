@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
     Route::prefix('sheep')->group(function () {
         Route::get('/health-stats', [SheepController::class, 'healthStatusStats']);
         Route::get('/', [SheepController::class, 'index']);
+        Route::get('/inactive', [SheepController::class, 'inactive']);
         Route::post('/', [SheepController::class, 'store']);
         Route::get('/{id}', [SheepController::class, 'show']);
         Route::delete('/{id}', [SheepController::class, 'deleteSheep']);
