@@ -11,7 +11,7 @@
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Sistem Cari Jodoh Domba</h2>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Sistem Rekomendasi Perkawinan Domba</h2>
             <p class="text-xs font-semibold text-slate-400 mt-1.5">Pilih domba untuk menemukan rekomendasi pasangan
                 terbaik agar menghasilkan keturunan yang unggul dan menghindari risiko kawin sedarah.</p>
         </div>
@@ -113,10 +113,10 @@
                     @foreach($ewes as $sheep)
                         <div @click="selectSheep({{ $sheep->id }}, '{{ $sheep->eartag }}', '{{ $sheep->gender }}', '{{ $sheep->breed?->name }}', '{{ $sheep->eartag_color }}', '{{ round($sheep->age_days / 30, 1) }} bln', '{{ $sheep->breeding_status }}', {{ $sheep->is_eligible ? 'true' : 'false' }})"
                             :class="{
-                                    'border-blue-500 bg-blue-50/45 ring-1 ring-blue-500/20': selectedSheepId === {{ $sheep->id }},
-                                    'border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 cursor-pointer': {{ $sheep->is_eligible ? 'true' : 'false' }} && selectedSheepId !== {{ $sheep->id }},
-                                    'bg-slate-50/50 border-slate-100/70 opacity-60 cursor-not-allowed': !{{ $sheep->is_eligible ? 'true' : 'false' }}
-                                }"
+                                            'border-blue-500 bg-blue-50/45 ring-1 ring-blue-500/20': selectedSheepId === {{ $sheep->id }},
+                                            'border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 cursor-pointer': {{ $sheep->is_eligible ? 'true' : 'false' }} && selectedSheepId !== {{ $sheep->id }},
+                                            'bg-slate-50/50 border-slate-100/70 opacity-60 cursor-not-allowed': !{{ $sheep->is_eligible ? 'true' : 'false' }}
+                                        }"
                             class="p-3.5 border-2 rounded-2xl transition-all duration-300 flex items-center justify-between animate-fade-in">
                             <div class="flex items-center gap-3 min-w-0">
                                 <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center font-bold text-white shadow-sm border border-white shrink-0"
@@ -155,10 +155,10 @@
                     @foreach($rams as $sheep)
                         <div @click="selectSheep({{ $sheep->id }}, '{{ $sheep->eartag }}', '{{ $sheep->gender }}', '{{ $sheep->breed?->name }}', '{{ $sheep->eartag_color }}', '{{ round($sheep->age_days / 30, 1) }} bln', '{{ $sheep->breeding_status }}', {{ $sheep->is_eligible ? 'true' : 'false' }})"
                             :class="{
-                                    'border-blue-500 bg-blue-50/45 ring-1 ring-blue-500/20': selectedSheepId === {{ $sheep->id }},
-                                    'border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 cursor-pointer': {{ $sheep->is_eligible ? 'true' : 'false' }} && selectedSheepId !== {{ $sheep->id }},
-                                    'bg-slate-50/50 border-slate-100/70 opacity-60 cursor-not-allowed': !{{ $sheep->is_eligible ? 'true' : 'false' }}
-                                }"
+                                            'border-blue-500 bg-blue-50/45 ring-1 ring-blue-500/20': selectedSheepId === {{ $sheep->id }},
+                                            'border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 cursor-pointer': {{ $sheep->is_eligible ? 'true' : 'false' }} && selectedSheepId !== {{ $sheep->id }},
+                                            'bg-slate-50/50 border-slate-100/70 opacity-60 cursor-not-allowed': !{{ $sheep->is_eligible ? 'true' : 'false' }}
+                                        }"
                             class="p-3.5 border-2 rounded-2xl transition-all duration-300 flex items-center justify-between animate-fade-in">
                             <div class="flex items-center gap-3 min-w-0">
                                 <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center font-bold text-white shadow-sm border border-white shrink-0"
