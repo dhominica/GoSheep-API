@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Mating Recommendations
         Route::resource('mating-recommendations', App\Http\Controllers\MatingRecommendationController::class)->only(['index']);
+        Route::get('/mating-recommendations/{sheepId}/get', [App\Http\Controllers\MatingRecommendationController::class, 'getRecommendations'])->name('mating-recommendations.get');
     });
 
     // Role: Only Owner can access Admin Users (Staff/Owner)
