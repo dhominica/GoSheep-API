@@ -263,7 +263,6 @@ class RecommendationService
                 'growth_score'           => $candidate['growth_score'],
                 'health_score'           => $candidate['health_score'],
                 'final_score'            => $candidate['final_score'],
-                'model_version'          => config('services.gosheep_ai.model_version', '1.0'),
                 'is_valid'               => true,
             ]);
         }
