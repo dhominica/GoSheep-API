@@ -51,6 +51,9 @@ Route::middleware(['auth'])->group(function () {
             'mating' => 'mating'
         ])->except(['show', 'create']);
 
+        // Kehamilan (Pregnancy)
+        Route::resource('pregnancies', App\Http\Controllers\PregnancyController::class)->except(['show', 'create', 'store']);
+
         // Mating Recommendations
         Route::resource('mating-recommendations', App\Http\Controllers\MatingRecommendationController::class)->only(['index']);
         Route::get('/mating-recommendations/{sheepId}/get', [App\Http\Controllers\MatingRecommendationController::class, 'getRecommendations'])->name('mating-recommendations.get');

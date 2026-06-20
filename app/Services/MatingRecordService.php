@@ -208,6 +208,14 @@ class MatingRecordService
         $newResult = $data['result'];
 
         $oldPregnancy = Pregnancy::where('mating_record_id', $matingRecord->id)->first();
+        if ($oldPregnancy && in_array($oldPregnancy->status, ['birthed', 'miscarried'])) {
+            throw ValidationException::withMessages([
+                'result' => [
+                    'Pemeriksaan kawin tidak dapat diubah karena status kehamilan sudah selesai (lahir atau keguguran)'
+                ]
+            ]);
+        }
+
         $oldExpectedBirthDate = $oldPregnancy?->expected_birth_date;
 
         $old = [
