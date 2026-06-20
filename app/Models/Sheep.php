@@ -56,6 +56,16 @@ class Sheep extends Model
         return $this->belongsTo(Sheep::class, 'dam_id');
     }
 
+    public function matingRecommendationsAsEwe()
+    {
+        return $this->hasMany(MatingRecommendation::class, 'ewe_id');
+    }
+
+    public function matingRecommendationsAsRam()
+    {
+        return $this->hasMany(MatingRecommendation::class, 'ram_id');
+    }
+
     public function weightRecords()
     {
         return $this->hasMany(WeightRecord::class);

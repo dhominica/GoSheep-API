@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MatingRecommendation extends Model
 {
-    use HasFactory;
-
     protected $table = 'mating_recommendations';
 
     protected $fillable = [
@@ -27,11 +24,16 @@ class MatingRecommendation extends Model
     ];
 
     protected $casts = [
-        'ewe_ebv' => 'array',
-        'ram_ebv' => 'array',
+        'ewe_ebv'                => 'array',
+        'ram_ebv'                => 'array',
         'expected_ebv_offspring' => 'array',
-        'ahp_weights' => 'array',
-        'is_valid' => 'boolean',
+        'ahp_weights'            => 'array',
+        'inbreeding_coefficient' => 'float',
+        'genetic_score'          => 'float',
+        'health_score'           => 'float',
+        'growth_score'           => 'float',
+        'final_score'            => 'float',
+        'is_valid'               => 'boolean',
     ];
 
     public function ewe()
@@ -42,5 +44,15 @@ class MatingRecommendation extends Model
     public function ram()
     {
         return $this->belongsTo(Sheep::class, 'ram_id');
+    }
+
+    public function scopeValid($query)
+    {
+        return $query->where('is_valid', true);
+    }
+
+    public function scopeRanked($query)
+    {
+        return $query->orderByDesc('final_score');
     }
 }

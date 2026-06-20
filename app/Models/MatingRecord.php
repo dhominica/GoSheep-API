@@ -14,7 +14,7 @@ class MatingRecord extends Model
     protected $fillable = [
         'ewe_id',
         'ram_id',
-        'recomendation_id',
+        'recommendation_id',
         'mating_date',
         'end_date',
         'result',

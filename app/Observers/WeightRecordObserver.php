@@ -5,16 +5,16 @@ namespace App\Observers;
 use App\Models\SheepFeature;
 use App\Models\WeightRecord;
 use App\Services\EBVService;
+use App\Traits\CalculatesHealthScore;
 
 class WeightRecordObserver
 {
+    use CalculatesHealthScore;
+
     public function __construct(
         private EBVService $ebvService
     ) {}
 
-    /**
-     * Handle the WeightRecord "created" event.
-     */
     public function created(WeightRecord $weightRecord): void
     {
         $sheep = $weightRecord->sheep;
@@ -77,61 +77,5 @@ class WeightRecordObserver
         if ($filtered->isEmpty()) return null;
 
         return round($filtered->avg('weight'), 2);
-    }
-
-    private function calculateHealthScore($sheep): float
-    {
-        $records = $sheep->healthRecords;
-
-        if ($records->isEmpty()) return 1.0;
-
-        $severityMap = [
-            'ringan' => 1,
-            'sedang' => 2,
-            'berat'  => 3,
-            'normal' => 0,
-        ];
-
-        $totalEvents   = $records->count();
-        $totalSeverity = $records->sum(
-            fn($r) => $severityMap[$r->severity] ?? 0
-        );
-
-        return round(
-            1 - ($totalSeverity / ($totalEvents * 3 + 1e-9)),
-            4
-        );
-    }
-
-    /**
-     * Handle the WeightRecord "updated" event.
-     */
-    public function updated(WeightRecord $weightRecord): void
-    {
-        //
-    }
-
-    /**
-     * Handle the WeightRecord "deleted" event.
-     */
-    public function deleted(WeightRecord $weightRecord): void
-    {
-        //
-    }
-
-    /**
-     * Handle the WeightRecord "restored" event.
-     */
-    public function restored(WeightRecord $weightRecord): void
-    {
-        //
-    }
-
-    /**
-     * Handle the WeightRecord "force deleted" event.
-     */
-    public function forceDeleted(WeightRecord $weightRecord): void
-    {
-        //
     }
 }
