@@ -8,6 +8,9 @@ use Illuminate\Http\JsonResponse;
 
 class RecommendationController extends BaseController
 {
+    private const MIN_AGE_FEMALE = 240; // 8 bulan
+    private const MIN_AGE_MALE   = 210; // 7 bulan
+
     public function __construct(
         private RecommendationService $recommendationService
     ) {}
@@ -30,7 +33,7 @@ class RecommendationController extends BaseController
             );
         }
 
-        $minAge = $sheep->gender === 'female' ? 240 : 210;
+        $minAge = $sheep->gender === 'female' ? self::MIN_AGE_FEMALE : self::MIN_AGE_MALE;
         if ($sheep->birth_date->diffInDays(now()) < $minAge) {
             return $this->error(
                 'Domba belum cukup umur untuk breeding.',

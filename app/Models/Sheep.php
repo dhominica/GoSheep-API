@@ -91,6 +91,11 @@ class Sheep extends Model
         return $this->hasMany(Pregnancy::class, 'ewe_id');
     }
 
+    public function matingRecords()
+    {
+        return $this->hasMany(MatingRecord::class, $this->gender === 'male' ? 'ram_id' : 'ewe_id');
+    }
+
     public function currentPregnancy()
     {
         return $this->hasOne(Pregnancy::class, 'ewe_id')
