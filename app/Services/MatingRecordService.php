@@ -298,4 +298,76 @@ class MatingRecordService
 
         return $matingRecord;
     }
+
+    public function addMatingRecord(array $data)
+    {
+        $ewe = Sheep::findOrFail($data['ewe_id']);
+        $ram = Sheep::findOrFail($data['ram_id']);
+
+        if ($ewe->gender !== 'female') {
+            throw ValidationException::withMessages([
+                'ewe_id' => ['Domba terpilih untuk ewe harus berjenis kelamin betina.']
+            ]);
+        }
+
+        if ($ram->gender !== 'male') {
+            throw ValidationException::withMessages([
+                'ram_id' => ['Domba terpilih untuk ram harus berjenis kelamin jantan.']
+            ]);
+        }
+
+        // Validate eligibility of ewe
+        if ($ewe->pregnancies()->where('status', 'ongoing')->exists()) {
+            throw ValidationException::withMessages([
+                'ewe_id' => ['Domba betina sedang dalam kondisi bunting.']
+            ]);
+        }
+
+        if ($ewe->matingRecords()->where('result', 'unknown')->exists()) {
+            throw ValidationException::withMessages([
+                'ewe_id' => ['Domba betina sedang dalam proses perkawinan aktif.']
+            ]);
+        }
+
+        if (!empty($data['recommendation_id'])) {
+            $rec = DB::table('mating_recommendations')->find($data['recommendation_id']);
+            if (!$rec) {
+                throw ValidationException::withMessages([
+                    'recommendation_id' => ['Rekomendasi perkawinan tidak ditemukan.']
+                ]);
+            }
+            if ($rec->ewe_id != $data['ewe_id'] || $rec->ram_id != $data['ram_id']) {
+                throw ValidationException::withMessages([
+                    'recommendation_id' => ['Rekomendasi perkawinan tidak cocok dengan domba yang dipilih.']
+                ]);
+            }
+        }
+
+        return DB::transaction(function () use ($data, $ewe, $ram) {
+            $record = MatingRecord::create([
+                'ewe_id' => $data['ewe_id'],
+                'ram_id' => $data['ram_id'],
+                'recommendation_id' => $data['recommendation_id'] ?? null,
+                'mating_date' => $data['mating_date'],
+                'end_date' => $data['end_date'],
+                'result' => 'unknown',
+            ]);
+
+            $this->activityLogService->log(
+                Auth::id(),
+                $record,
+                'created',
+                'mating_record',
+                "Mengawinkan domba betina {$ewe->eartag} dengan domba jantan {$ram->eartag}",
+                [
+                    'ewe_id' => $ewe->id,
+                    'ram_id' => $ram->id,
+                    'mating_date' => $record->mating_date,
+                    'end_date' => $record->end_date,
+                ]
+            );
+
+            return $record;
+        });
+    }
 }

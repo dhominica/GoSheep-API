@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\StoreMatingCheckRequest;
+use App\Http\Requests\StoreMatingRecordRequest;
 use App\Http\Resources\MatingCheckResource;
 use App\Http\Resources\MatingRecordResource;
 use App\Http\Resources\MatingPartnerResource;
@@ -91,5 +92,15 @@ class MatingRecordController extends BaseController
         $record = $this->matingService->getMatingRecord($id);
 
         return $this->success(new MatingRecordResource($record), 'Data perkawinan domba berhasil diambil');
+    }
+
+    public function store(StoreMatingRecordRequest $request)
+    {
+        $record = $this->matingService->addMatingRecord($request->validated());
+
+        return $this->created(
+            new MatingRecordResource($record),
+            'Perkawinan domba berhasil dicatat'
+        );
     }
 }

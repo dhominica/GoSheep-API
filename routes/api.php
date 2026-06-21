@@ -35,9 +35,10 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
         Route::get('scan/{earTag}', [SheepController::class, 'scan']);
     });
 
-    Route::get('/recommendations/{sheepId}',
-        [RecommendationController::class, 'recommend']
-    );
+    Route::prefix('recommendations')->group(function () {
+        Route::get('/sheep', [RecommendationController::class, 'sheepList']);
+        Route::get('/{sheepId}', [RecommendationController::class, 'recommend']);
+    });
 
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
@@ -54,6 +55,7 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
 
     Route::prefix('mating-records')->group(function () {
         Route::get('/', [MatingRecordController::class, 'getMatingHistory']);
+        Route::post('/', [MatingRecordController::class, 'store']);
         Route::get('/stats', [MatingRecordController::class, 'getMatingRecStats']);
         Route::post('/check/{matingId}', [MatingRecordController::class, 'storeCheck']);
         Route::put('/check/{matingCheck}', [MatingRecordController::class, 'updateCheck'])->whereNumber('matingCheck');

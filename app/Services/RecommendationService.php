@@ -31,6 +31,64 @@ class RecommendationService
         $this->apiUrl = config('services.gosheep_ai.url');
     }
 
+    /**
+     * Tentukan status & kelayakan kawin untuk satu domba.
+     *
+     * @param  Sheep  $sheep
+     * @return Sheep
+     */
+    public function addBreedingAttributes(Sheep $sheep): Sheep
+    {
+        $ageDays = $sheep->birth_date->diffInDays(now());
+        $minAge  = $sheep->gender === 'female'
+                    ? self::MIN_AGE_FEMALE
+                    : self::MIN_AGE_MALE;
+
+        // Tentukan status & kelayakan
+        if ($ageDays < $minAge) {
+            $sheep->breeding_status = 'Belum Cukup Umur';
+            $sheep->is_eligible     = false;
+        } elseif (!$sheep->sheepFeature?->EBV_Bobot) {
+            $sheep->breeding_status = 'Data Belum Lengkap';
+            $sheep->is_eligible     = false;
+        } elseif (
+            $sheep->gender === 'female' &&
+            $sheep->pregnancies->where('status', 'ongoing')->isNotEmpty()
+        ) {
+            $sheep->breeding_status = 'Sedang Bunting';
+            $sheep->is_eligible     = false;
+        } elseif (
+            $sheep->gender === 'female' &&
+            $sheep->matingRecords->where('result', 'unknown')->isNotEmpty()
+        ) {
+            $sheep->breeding_status = 'Proses Kawin';
+            $sheep->is_eligible     = false;
+        } else {
+            $sheep->breeding_status = 'Siap Kawin';
+            $sheep->is_eligible     = true;
+        }
+
+        return $sheep;
+    }
+
+    public function getSheepList(?string $gender = null)
+    {
+        $query = Sheep::with([
+            'breed',
+            'sheepFeature',
+            'pregnancies',
+            'matingRecords',
+        ])->where('status', 'active');
+
+        if ($gender) {
+            $query->where('gender', $gender);
+        }
+
+        return $query->orderBy('eartag')->get()->map(function ($sheep) {
+            return $this->addBreedingAttributes($sheep);
+        });
+    }
+
     public function recommend(int $sheepId): array
     {
         $selected = Sheep::with('sheepFeature')->findOrFail($sheepId);
@@ -238,11 +296,11 @@ class RecommendationService
 
     private function saveRecommendations(
         Sheep $selected,
-        array $ranked,
+        array &$ranked,
         array $weights,
         bool  $isEweSelected
     ): void {
-        foreach ($ranked as $candidate) {
+        foreach ($ranked as $key => $candidate) {
             [$eweId, $ramId] = $isEweSelected
                 ? [$selected->id, $candidate['sheep']->id]
                 : [$candidate['sheep']->id, $selected->id];
@@ -251,7 +309,7 @@ class RecommendationService
                 ->where('ram_id', $ramId)
                 ->update(['is_valid' => false]);
 
-            MatingRecommendation::create([
+            $rec = MatingRecommendation::create([
                 'ewe_id'                 => $eweId,
                 'ram_id'                 => $ramId,
                 'inbreeding_coefficient' => $candidate['coi'],
@@ -265,6 +323,43 @@ class RecommendationService
                 'final_score'            => $candidate['final_score'],
                 'is_valid'               => true,
             ]);
+
+            $ranked[$key]['id'] = $rec->id;
         }
+    }
+
+    /**
+     * Validasi apakah domba layak untuk di-recommend.
+     * Return null jika layak, return string pesan error jika tidak.
+     */
+    public function validateEligibility(Sheep $sheep): ?string
+    {
+        if ($sheep->status !== 'active') {
+            return 'Domba tidak aktif.';
+        }
+
+        $minAge = $sheep->gender === 'female'
+                    ? self::MIN_AGE_FEMALE
+                    : self::MIN_AGE_MALE;
+
+        if ($sheep->birth_date->diffInDays(now()) < $minAge) {
+            return 'Domba belum cukup umur untuk breeding.';
+        }
+
+        if (!$sheep->sheepFeature?->EBV_Bobot) {
+            return 'Data fitur domba belum lengkap. Pastikan data penimbangan sudah diinput.';
+        }
+
+        if ($sheep->gender === 'female') {
+            if ($sheep->matingRecords()->where('result', 'unknown')->exists()) {
+                return 'Domba sedang dalam proses perkawinan aktif.';
+            }
+
+            if ($sheep->pregnancies()->where('status', 'ongoing')->exists()) {
+                return 'Domba sedang dalam kondisi bunting.';
+            }
+        }
+
+        return null;
     }
 }

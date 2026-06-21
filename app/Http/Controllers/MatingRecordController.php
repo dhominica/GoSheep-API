@@ -35,7 +35,7 @@ class MatingRecordController extends Controller
         MatingRecord::create([
             'ewe_id' => $request->ewe_id,
             'ram_id' => $request->ram_id,
-            'recomendation_id' => $request->recommendation_id, // Note typo in model fillable
+            'recommendation_id' => $request->recommendation_id,
             'mating_date' => $request->mating_date,
             'end_date' => $request->end_date,
             'result' => 'unknown',
