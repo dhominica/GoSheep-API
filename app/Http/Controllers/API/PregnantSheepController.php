@@ -45,4 +45,13 @@ class PregnantSheepController extends BaseController
 
          return $this->success(new PregnanciesResource($updatedPregnancy));
      }
+
+     public function getByMatingRecord(int $matingRecordId)
+     {
+         $pregnancy = Pregnancy::with(['ewe', 'matingRecord.ram', 'birth'])
+             ->where('mating_record_id', $matingRecordId)
+             ->firstOrFail();
+
+         return $this->success(new PregnanciesResource($pregnancy));
+     }
  }
