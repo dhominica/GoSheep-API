@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/profile/password', [ProfileController::class, 'changePassword']);
 
     Route::get('/cages', [CageController::class, 'index']);
 

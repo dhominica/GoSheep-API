@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\API\BaseController;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
@@ -31,5 +32,19 @@ class ProfileController extends BaseController
         $user->save();
 
         return $this->updated(new UserResource($user), 'Profile anda telah berhasil diperbaharui');
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        if (! hash::check($request->current_password, $user-password)) {
+            return $this->error('Kata sandi lama tidak sesuai', 422);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return $this->success(null, 'Kata sandi berhasil diubah');
     }
 }
