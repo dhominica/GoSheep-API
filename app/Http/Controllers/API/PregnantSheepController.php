@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Requests\UpdatePregnancyRequest;
+use App\Models\Pregnancy;
 use App\Http\Resources\PregnanciesResource;
 use App\Services\PregnantSheepService;
 use Illuminate\Http\Request;
@@ -35,5 +37,21 @@ class PregnantSheepController extends BaseController
             $result['has_more'],
             $result['next_cursor']
         );
-    }
-}
+     }
+
+     public function update(UpdatePregnancyRequest $request, Pregnancy $pregnancy)
+     {
+         $updatedPregnancy = $this->pregnantSheepService->update($pregnancy, $request->validated());
+
+         return $this->success(new PregnanciesResource($updatedPregnancy));
+     }
+
+     public function getByMatingRecord(int $matingRecordId)
+     {
+         $pregnancy = Pregnancy::with(['ewe', 'matingRecord.ram', 'birth'])
+             ->where('mating_record_id', $matingRecordId)
+             ->firstOrFail();
+
+         return $this->success(new PregnanciesResource($pregnancy));
+     }
+ }

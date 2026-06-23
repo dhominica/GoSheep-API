@@ -26,6 +26,9 @@ return new class extends Migration
             $table->decimal('ADG_0_90', 6, 4)->nullable();
             $table->decimal('ADG_90_180', 6, 4)->nullable();
             $table->decimal('health_score', 6, 4)->nullable();
+            $table->decimal('EBV_Bobot', 8, 4)->nullable();
+            $table->decimal('EBV_ADG', 8, 4)->nullable();
+            $table->decimal('EBV_Kesehatan', 8, 4)->nullable();
             $table->timestamp('computed_at');
             $table->timestamps();
         });

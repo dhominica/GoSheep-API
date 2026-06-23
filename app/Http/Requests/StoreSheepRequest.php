@@ -22,21 +22,23 @@ class StoreSheepRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'eartag' => 'required|string|max:50|unique:sheep,eartag',
-            'gender' => 'required|in:male,female',
-            'birth_date' => 'required|date',
+            'eartag'       => 'required|string|max:50|unique:sheep,eartag',
+            'gender'       => 'required|in:male,female',
+            'birth_date'   => 'required|date',
             'eartag_color' => 'required|string',
 
             'breed_id' => 'nullable|exists:breeds,id',
-            'cage_id' => 'nullable|exists:cages,id',
-            'sire_id' => 'nullable|exists:sheep,id',
-            'dam_id' => 'nullable|exists:sheep,id',
+            'cage_id'  => 'nullable|exists:cages,id',
+            'sire_id'  => 'nullable|exists:sheep,id',
+            'dam_id'   => 'nullable|exists:sheep,id',
 
-            'weight' => 'required|numeric|min:0',
+            'is_newborn'   => 'boolean',
+            'weight'       => 'required|numeric|min:0',
+            'weight_birth' => 'required_if:is_newborn,false|nullable|numeric|min:0',
 
             'category' => 'required|in:health,environment,nutrition,maintenance',
             'condition' => 'required|string|max:255',
-            'severity' => 'required|in:normal,ringan,berat',
+            'severity'  => 'required|in:normal,ringan,berat',
 
             'notes' => 'nullable|string',
         ];
@@ -65,8 +67,12 @@ class StoreSheepRequest extends FormRequest
             'dam_id.exists' => 'Dam tidak ditemukan',
 
             'weight.required' => 'Berat wajib diisi',
-            'weight.numeric' => 'Berat harus berupa angka',
-            'weight.min' => 'Berat tidak boleh kurang dari 0',
+            'weight.numeric'  => 'Berat harus berupa angka',
+            'weight.min'      => 'Berat tidak boleh kurang dari 0',
+
+            'weight_birth.required_if' => 'Berat lahir wajib diisi jika domba bukan baru lahir hari ini',
+            'weight_birth.numeric'     => 'Berat lahir harus berupa angka',
+            'weight_birth.min'         => 'Berat lahir tidak boleh kurang dari 0',
 
             'category.required' => 'Kategori kesehatan wajib dipilih',
             'category.in' => 'Kategori harus health, environment, nutrition, atau maintenance',

@@ -30,7 +30,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Role: Owner & Staff can access Peternak, Sheep, and Cage
     Route::middleware('role:owner')->group(function () {
-        Route::resource('peternak', PeternakController::class)->except(['show']);
+        Route::resource('peternak', PeternakController::class);
+        Route::post('/peternak/{peternak}/reset-password', [PeternakController::class, 'resetPasswordDefault'])->name('peternak.reset-password');
         Route::resource('sheep', App\Http\Controllers\SheepController::class)->except(['show']);
         Route::post('/sheep/export', [App\Http\Controllers\SheepController::class, 'exportRequest'])->name('sheep.export');
         Route::get('/sheep/download-export', [App\Http\Controllers\SheepController::class, 'downloadExport'])->name('sheep.download');
@@ -50,8 +51,12 @@ Route::middleware(['auth'])->group(function () {
             'mating' => 'mating'
         ])->except(['show', 'create']);
 
+        // Kehamilan (Pregnancy)
+        Route::resource('pregnancies', App\Http\Controllers\PregnancyController::class)->except(['show', 'create', 'store']);
+
         // Mating Recommendations
         Route::resource('mating-recommendations', App\Http\Controllers\MatingRecommendationController::class)->only(['index']);
+        Route::get('/mating-recommendations/{sheepId}/get', [App\Http\Controllers\MatingRecommendationController::class, 'getRecommendations'])->name('mating-recommendations.get');
     });
 
     // Role: Only Owner can access Admin Users (Staff/Owner)

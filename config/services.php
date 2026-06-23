@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'gosheep_ai' => [
+        'url' => env('GOSHEEP_AI_URL', 'http://localhost:8000'),
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\StoreWeightRecordRequest;
+use App\Http\Requests\UpdateWeightRecordRequest;
 use App\Http\Resources\SheepWeightResource;
 use App\Http\Resources\WeightRecordResource;
 use App\Http\Resources\WeightResource;
+use App\Models\WeightRecord;
 use App\Services\WeightRecordService;
 use Illuminate\Http\Request;
 
@@ -57,6 +59,16 @@ class WeightRecordController extends BaseController
         return $this->created(
             new WeightResource($record),
             'Rekam berat badan berhasil ditambahkan',
+        );
+    }
+
+    public function update(UpdateWeightRecordRequest $request, WeightRecord $weightRecord)
+    {
+        $record = $this->weightRecordService->update($weightRecord, $request->validated());
+
+        return $this->updated(
+            new WeightResource($record),
+            'Rekam berat badan berhasil diperbarui',
         );
     }
 

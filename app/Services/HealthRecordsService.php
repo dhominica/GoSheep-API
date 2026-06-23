@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\HealthRecord;
 use App\Models\Sheep;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HealthRecordsService
 {
@@ -128,6 +129,42 @@ class HealthRecordsService
                 'sheep_gender' => $record->sheep->gender,
                 'severity' => $record->severity,
                 'condition' => $record->condition,
+            ]
+        );
+
+        return $record->load('recordedBy:id,name');
+    }
+
+    public function update(HealthRecord $record, array $data): HealthRecord
+    {
+        $old = [
+            'category'  => $record->category,
+            'condition' => $record->condition,
+            'severity'  => $record->severity,
+            'notes'     => $record->notes,
+        ];
+
+        $record->update(array_filter($data, fn($v) => $v !== null));
+
+        $new = [
+            'category'  => $record->category,
+            'condition' => $record->condition,
+            'severity'  => $record->severity,
+            'notes'     => $record->notes,
+        ];
+
+        $this->activityLogService->log(
+            Auth::id(),
+            $record,
+            'updated',
+            'health_record',
+            "Memperbarui rekam kesehatan domba {$record->sheep->eartag}",
+            [
+                'sheep_id'     => $record->sheep->id,
+                'sheep_eartag' => $record->sheep->eartag,
+                'sheep_gender' => $record->sheep->gender,
+                'old'          => $old,
+                'new'          => $new,
             ]
         );
 

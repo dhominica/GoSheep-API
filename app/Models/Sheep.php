@@ -20,10 +20,19 @@ class Sheep extends Model
         'status',
     ];
 
+    protected $casts = [
+        'birth_date' => 'date',
+    ];
+
     public function latestWeight()
     {
         return $this->hasOne(WeightRecord::class)
             ->orderByDesc('recorded_at');
+    }
+
+    public function sheepFeature()
+    {
+        return $this->hasOne(SheepFeature::class);
     }
 
     public function latestHealth()
@@ -45,6 +54,16 @@ class Sheep extends Model
     public function dam()
     {
         return $this->belongsTo(Sheep::class, 'dam_id');
+    }
+
+    public function matingRecommendationsAsEwe()
+    {
+        return $this->hasMany(MatingRecommendation::class, 'ewe_id');
+    }
+
+    public function matingRecommendationsAsRam()
+    {
+        return $this->hasMany(MatingRecommendation::class, 'ram_id');
     }
 
     public function weightRecords()
@@ -70,6 +89,11 @@ class Sheep extends Model
     public function pregnancies()
     {
         return $this->hasMany(Pregnancy::class, 'ewe_id');
+    }
+
+    public function matingRecords()
+    {
+        return $this->hasMany(MatingRecord::class, $this->gender === 'male' ? 'ram_id' : 'ewe_id');
     }
 
     public function currentPregnancy()

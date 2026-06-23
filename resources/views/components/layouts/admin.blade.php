@@ -108,6 +108,10 @@
                 Riwayat Persilangan
             </x-sidebar-link>
 
+            <x-sidebar-link href="{{ route('pregnancies.index') }}" icon="baby" :active="request()->is('pregnancies') || request()->is('pregnancies/*')">
+                Data Kehamilan
+            </x-sidebar-link>
+
             <x-sidebar-link href="{{ route('berat.index') }}" icon="scale" :active="request()->routeIs('berat.*')">
                 Riwayat Berat
             </x-sidebar-link>

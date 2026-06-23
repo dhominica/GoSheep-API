@@ -81,6 +81,17 @@
                                 <p class="text-xs text-rose-500 mt-1.5 font-medium">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <!-- Expected Birth Date (Hidden by default, shown if result == pregnant) -->
+                        <div id="expected_birth_date_container" class="{{ old('result', $mating->result) == 'pregnant' ? '' : 'hidden' }}">
+                            <label for="expected_birth_date" class="block text-sm font-bold text-slate-700 mb-2">Prediksi Tanggal Lahir</label>
+                            <input type="date" name="expected_birth_date" id="expected_birth_date"
+                                value="{{ old('expected_birth_date', $mating->pregnancy->expected_birth_date ?? '') }}"
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none">
+                            @error('expected_birth_date')
+                                <p class="text-xs text-rose-500 mt-1.5 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -98,4 +109,30 @@
             </form>
         </div>
     </div>
+
+    <!-- Script to toggle Expected Birth Date -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultSelect = document.getElementById('result');
+            const expectedBirthDateContainer = document.getElementById('expected_birth_date_container');
+            const expectedBirthDateInput = document.getElementById('expected_birth_date');
+
+            function toggleExpectedBirthDate() {
+                if (resultSelect.value === 'pregnant') {
+                    expectedBirthDateContainer.classList.remove('hidden');
+                    expectedBirthDateInput.setAttribute('required', 'required');
+                } else {
+                    expectedBirthDateContainer.classList.add('hidden');
+                    expectedBirthDateInput.removeAttribute('required');
+                    expectedBirthDateInput.value = ''; // clear value if not pregnant
+                }
+            }
+
+            // initial check
+            toggleExpectedBirthDate();
+
+            // listen for changes
+            resultSelect.addEventListener('change', toggleExpectedBirthDate);
+        });
+    </script>
 </x-layouts.admin>

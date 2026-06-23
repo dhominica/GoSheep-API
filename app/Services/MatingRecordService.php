@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MatingRecord;
 use App\Models\MatingCheck;
+use App\Models\Pregnancy;
 use App\Models\Sheep;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,7 +77,10 @@ class MatingRecordService
             );
         }
 
-        $matingCheck = MatingCheck::where('mating_record_id', $matingId)->get();
+        $matingCheck = MatingCheck::where('mating_record_id', $matingId)
+            ->orderBy('check_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
 
         return $matingCheck;
     }
@@ -91,6 +95,14 @@ class MatingRecordService
             );
         }
 
+        if ($matingRecord->result !== 'unknown') {
+            throw ValidationException::withMessages([
+                'result' => [
+                    'Pemeriksaan kawin tidak dapat ditambahkan karena status perkawinan sudah ditentukan'
+                ]
+            ]);
+        }
+
         if ($data['check_date'] < $matingRecord->mating_date) {
             throw ValidationException::withMessages([
                 'check_date' => [
@@ -99,17 +111,40 @@ class MatingRecordService
             ]);
         }
 
+        if (empty($data['notes'])) {
+            $data['notes'] = match ($data['result']) {
+                'pregnant' => 'Domba menunjukkan tanda kehamilan',
+                'not_pregnant' => 'Domba tidak menunjukkan tanda kehamilan',
+                'failed' => 'Pemeriksaan perkawinan gagal atau tidak konklusif',
+                default => 'Pemeriksaan perkawinan dilakukan',
+            };
+        }
+
         return DB::transaction(function () use ($matingId, $data, $matingRecord) {
             $check = MatingCheck::create([
                 'mating_record_id' => $matingId,
                 'check_date' => $data['check_date'],
-                'notes' => $data['notes'] ?? null,
+                'notes' => $data['notes'],
             ]);
 
             $matingRecord->update([
                 'result' => $data['result'],
                 'end_date' => $data['check_date'],
             ]);
+
+            if ($data['result'] === 'pregnant') {
+                $exists = Pregnancy::where('mating_record_id', $matingRecord->id)->exists();
+                if (!$exists) {
+                    Pregnancy::create([
+                        'mating_record_id' => $matingRecord->id,
+                        'ewe_id' => $matingRecord->ewe_id,
+                        'start_date' => $matingRecord->mating_date,
+                        'expected_birth_date' => $data['expected_birth_date'] ?? null,
+                        'status' => 'ongoing',
+                        'notes' => null,
+                    ]);
+                }
+            }
 
             $this->activityLogService->log(
                 Auth::id(),
@@ -125,6 +160,117 @@ class MatingRecordService
             );
 
             return $check;
+        });
+    }
+
+    public function updateMatingCheck(MatingCheck $matingCheck, array $data)
+    {
+        $matingRecord = $matingCheck->matingRecord;
+
+        if (!$matingRecord) {
+            throw new NotFoundHttpException(
+                'Perkawinan domba tidak ditemukan'
+            );
+        }
+
+        if ($data['check_date'] < $matingRecord->mating_date) {
+            throw ValidationException::withMessages([
+                'check_date' => [
+                    'Tanggal pemeriksaan harus setelah atau sama dengan tanggal perkawinan'
+                ]
+            ]);
+        }
+
+        // Validate that this is the latest check
+        $latestCheck = MatingCheck::where('mating_record_id', $matingCheck->mating_record_id)
+            ->orderBy('check_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($latestCheck && $latestCheck->id !== $matingCheck->id) {
+            throw ValidationException::withMessages([
+                'check' => [
+                    'Hanya pemeriksaan kawin terbaru yang dapat diubah'
+                ]
+            ]);
+        }
+
+        if (empty($data['notes'])) {
+            $data['notes'] = match ($data['result']) {
+                'pregnant' => 'Domba menunjukkan tanda kehamilan',
+                'not_pregnant' => 'Domba tidak menunjukkan tanda kehamilan',
+                'failed' => 'Pemeriksaan perkawinan gagal atau tidak konklusif',
+                default => 'Pemeriksaan perkawinan dilakukan',
+            };
+        }
+
+        $oldResult = $matingRecord->result;
+        $newResult = $data['result'];
+
+        $oldPregnancy = Pregnancy::where('mating_record_id', $matingRecord->id)->first();
+        if ($oldPregnancy && in_array($oldPregnancy->status, ['birthed', 'miscarried'])) {
+            throw ValidationException::withMessages([
+                'result' => [
+                    'Pemeriksaan kawin tidak dapat diubah karena status kehamilan sudah selesai (lahir atau keguguran)'
+                ]
+            ]);
+        }
+
+        $oldExpectedBirthDate = $oldPregnancy?->expected_birth_date;
+
+        $old = [
+            'check_date' => $matingCheck->check_date,
+            'notes' => $matingCheck->notes,
+            'result' => $oldResult,
+            'expected_birth_date' => $oldExpectedBirthDate,
+        ];
+
+        return DB::transaction(function () use ($matingCheck, $matingRecord, $data, $oldResult, $newResult, $old) {
+            $matingCheck->update([
+                'check_date' => $data['check_date'],
+                'notes' => $data['notes'],
+            ]);
+
+            $matingRecord->update([
+                'result' => $newResult,
+                'end_date' => $data['check_date'],
+            ]);
+
+            if ($oldResult === 'pregnant' && $newResult !== 'pregnant') {
+                Pregnancy::where('mating_record_id', $matingRecord->id)->delete();
+            } elseif ($newResult === 'pregnant') {
+                Pregnancy::updateOrCreate(
+                    ['mating_record_id' => $matingRecord->id],
+                    [
+                        'ewe_id' => $matingRecord->ewe_id,
+                        'start_date' => $matingRecord->mating_date,
+                        'expected_birth_date' => $data['expected_birth_date'] ?? null,
+                        'status' => 'ongoing',
+                    ]
+                );
+            }
+
+            $new = [
+                'check_date' => $matingCheck->check_date,
+                'notes' => $matingCheck->notes,
+                'result' => $newResult,
+                'expected_birth_date' => $data['expected_birth_date'] ?? null,
+            ];
+
+            $this->activityLogService->log(
+                Auth::id(),
+                $matingCheck,
+                'updated',
+                'mating_check',
+                "Memperbarui pemeriksaan perkawinan domba dengan eartag {$matingRecord->ewe->eartag} dan {$matingRecord->ram->eartag}",
+                [
+                    'mating_record_id' => $matingRecord->id,
+                    'old' => $old,
+                    'new' => $new,
+                ]
+            );
+
+            return $matingCheck;
         });
     }
 
@@ -151,5 +297,77 @@ class MatingRecordService
         }
 
         return $matingRecord;
+    }
+
+    public function addMatingRecord(array $data)
+    {
+        $ewe = Sheep::findOrFail($data['ewe_id']);
+        $ram = Sheep::findOrFail($data['ram_id']);
+
+        if ($ewe->gender !== 'female') {
+            throw ValidationException::withMessages([
+                'ewe_id' => ['Domba terpilih untuk ewe harus berjenis kelamin betina.']
+            ]);
+        }
+
+        if ($ram->gender !== 'male') {
+            throw ValidationException::withMessages([
+                'ram_id' => ['Domba terpilih untuk ram harus berjenis kelamin jantan.']
+            ]);
+        }
+
+        // Validate eligibility of ewe
+        if ($ewe->pregnancies()->where('status', 'ongoing')->exists()) {
+            throw ValidationException::withMessages([
+                'ewe_id' => ['Domba betina sedang dalam kondisi bunting.']
+            ]);
+        }
+
+        if ($ewe->matingRecords()->where('result', 'unknown')->exists()) {
+            throw ValidationException::withMessages([
+                'ewe_id' => ['Domba betina sedang dalam proses perkawinan aktif.']
+            ]);
+        }
+
+        if (!empty($data['recommendation_id'])) {
+            $rec = DB::table('mating_recommendations')->find($data['recommendation_id']);
+            if (!$rec) {
+                throw ValidationException::withMessages([
+                    'recommendation_id' => ['Rekomendasi perkawinan tidak ditemukan.']
+                ]);
+            }
+            if ($rec->ewe_id != $data['ewe_id'] || $rec->ram_id != $data['ram_id']) {
+                throw ValidationException::withMessages([
+                    'recommendation_id' => ['Rekomendasi perkawinan tidak cocok dengan domba yang dipilih.']
+                ]);
+            }
+        }
+
+        return DB::transaction(function () use ($data, $ewe, $ram) {
+            $record = MatingRecord::create([
+                'ewe_id' => $data['ewe_id'],
+                'ram_id' => $data['ram_id'],
+                'recommendation_id' => $data['recommendation_id'] ?? null,
+                'mating_date' => $data['mating_date'],
+                'end_date' => $data['end_date'],
+                'result' => 'unknown',
+            ]);
+
+            $this->activityLogService->log(
+                Auth::id(),
+                $record,
+                'created',
+                'mating_record',
+                "Mengawinkan domba betina {$ewe->eartag} dengan domba jantan {$ram->eartag}",
+                [
+                    'ewe_id' => $ewe->id,
+                    'ram_id' => $ram->id,
+                    'mating_date' => $record->mating_date,
+                    'end_date' => $record->end_date,
+                ]
+            );
+
+            return $record;
+        });
     }
 }

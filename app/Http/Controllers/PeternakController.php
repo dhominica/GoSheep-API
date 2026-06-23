@@ -52,6 +52,15 @@ class PeternakController extends Controller
         return redirect()->route('peternak.index')->with('success', 'Akun Peternak berhasil ditambahkan.');
     }
 
+    public function show(User $peternak)
+    {
+        if ($peternak->role !== 'peternak') {
+            abort(403, 'Aksi ditolak.');
+        }
+
+        return view('peternak.show', compact('peternak'));
+    }
+
     public function edit(User $peternak)
     {
         if ($peternak->role !== 'peternak') {
@@ -69,21 +78,14 @@ class PeternakController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $peternak->id,
-            'password' => 'nullable|string|min:8|confirmed',
             'status' => 'required|in:active,inactive',
         ]);
 
-        $data = [
+        $peternak->update([
             'name' => $request->name,
             'email' => $request->email,
             'status' => $request->status,
-        ];
-
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-
-        $peternak->update($data);
+        ]);
 
         return redirect()->route('peternak.index')->with('success', 'Data Peternak berhasil diperbarui.');
     }
@@ -97,5 +99,23 @@ class PeternakController extends Controller
         $peternak->delete();
 
         return redirect()->route('peternak.index')->with('success', 'Akun Peternak berhasil dihapus secara permanen.');
+    }
+
+    public function resetPasswordDefault(Request $request, User $peternak)
+    {
+        if ($peternak->role !== 'peternak') {
+            abort(403, 'Aksi ditolak.');
+        }
+
+        $request->validate([
+            'new_password' => 'required|string|min:6',
+        ]);
+
+        $peternak->update([
+            'password' => Hash::make($request->new_password),
+            'request_password_reset' => false,
+        ]);
+
+        return redirect()->route('peternak.index')->with('success', 'Kata sandi berhasil direset ke sandi baru yang dimasukkan.');
     }
 }

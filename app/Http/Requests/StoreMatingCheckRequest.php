@@ -19,6 +19,7 @@ class StoreMatingCheckRequest extends FormRequest
             'check_date' => 'required|date',
             'result' => 'required|in:pregnant,not_pregnant,failed,unknown',
             'notes' => 'nullable|string|max:255',
+            'expected_birth_date' => 'required_if:result,pregnant|nullable|date',
         ];
     }
 
@@ -32,6 +33,8 @@ class StoreMatingCheckRequest extends FormRequest
             'result.in' => 'Hasil pemeriksaan harus pregnant, not_pregnant, failed, atau unknown',
             'notes.string' => 'Catatan harus berupa teks',
             'notes.max' => 'Catatan maksimal 255 karakter',
+            'expected_birth_date.required_if' => 'Tanggal perkiraan lahir wajib diisi jika hasil pemeriksaan adalah bunting',
+            'expected_birth_date.date' => 'Format tanggal perkiraan lahir tidak valid',
         ];
     }
 }
