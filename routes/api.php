@@ -9,6 +9,7 @@ use App\Http\Controllers\API\MatingRecordController;
 use App\Http\Controllers\API\PregnantSheepController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\RecommendationController;
+use App\Http\Controllers\API\ReportController;
 use App\Http\Controllers\API\SheepController;
 use App\Http\Controllers\API\SheepFormController;
 use App\Http\Controllers\API\StatisticController;
@@ -34,10 +35,14 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
         Route::delete('/{id}', [SheepController::class, 'deleteSheep']);
         Route::get('scan/{earTag}', [SheepController::class, 'scan']);
     });
-
+    
     Route::prefix('recommendations')->group(function () {
         Route::get('/sheep', [RecommendationController::class, 'sheepList']);
         Route::get('/{sheepId}', [RecommendationController::class, 'recommend']);
+    });
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/farm', [ReportController::class, 'farm']);
     });
 
     Route::get('/profile', [ProfileController::class, 'index']);
