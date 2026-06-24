@@ -185,6 +185,105 @@ class SheepService
         };
     }
 
+    public function updateSheep(int $id, array $data)
+    {
+        return DB::transaction(function () use ($id, $data) {
+            $sheep = Sheep::findOrFail($id);
+
+            if (!empty($data['sire_id'])) {
+                $sire = Sheep::find($data['sire_id']);
+
+                if ($sire->gender !== 'male') {
+                    throw ValidationException::withMessages([
+                        'sire_id' => ['Sire harus berjenis kelamin jantan']
+                    ]);
+                }
+            }
+
+            if (!empty($data['dam_id'])) {
+                $dam = Sheep::find($data['dam_id']);
+
+                if ($dam->gender !== 'female') {
+                    throw ValidationException::withMessages([
+                        'dam_id' => ['Dam harus berjenis kelamin betina']
+                    ]);
+                }
+            }
+
+            if (!empty($data['sire_id']) && !empty($data['dam_id'])) {
+                if ($data['sire_id'] == $data['dam_id']) {
+                    throw ValidationException::withMessages([
+                        'sire_id' => ['Sire dan Dam tidak boleh sama']
+                    ]);
+                }
+            }
+
+            $oldCageId = $sheep->cage_id;
+            $newCageId = $data['cage_id'] ?? null;
+
+            // Handle cage capacity changes
+            if ($oldCageId != $newCageId) {
+                // Decrement old cage
+                if ($oldCageId) {
+                    Cage::where('id', $oldCageId)->decrement('current_capacity');
+                }
+
+                // Check and increment new cage
+                if ($newCageId) {
+                    $newCage = Cage::find($newCageId);
+
+                    if ($newCage->current_capacity >= $newCage->max_capacity) {
+                        throw ValidationException::withMessages([
+                            'cage_id' => ['Kandang sudah penuh']
+                        ]);
+                    }
+
+                    $newCage->increment('current_capacity');
+                }
+            }
+
+            $sheep->update([
+                'eartag' => $data['eartag'],
+                'gender' => $data['gender'],
+                'birth_date' => $data['birth_date'],
+                'eartag_color' => $data['eartag_color'],
+                'breed_id' => $data['breed_id'] ?? null,
+                'sire_id' => $data['sire_id'] ?? null,
+                'dam_id' => $data['dam_id'] ?? null,
+                'cage_id' => $newCageId,
+                'status' => $data['status'] ?? 'active',
+            ]);
+
+            $sheep->load([
+                'breed',
+                'cage',
+                'sire:id,eartag',
+                'dam:id,eartag',
+                'latestWeight',
+                'latestHealth',
+            ]);
+
+            $sheep->status_ui = $this->mapStatusUi($sheep->latestHealth);
+
+            $this->activityLogService->log(
+                Auth::id(),
+                $sheep,
+                'updated',
+                'sheep',
+                "Mengubah data domba dengan eartag {$sheep->eartag}",
+                [
+                    'snapshot' => [
+                        'breed' => $sheep->breed->name ?? '-',
+                        'gender' => $sheep->gender,
+                        'cage' => $sheep->cage->name ?? '-'
+                    ]
+                ]
+            );
+
+            return $sheep;
+        });
+    }
+
    public function createSheep(array $data)
    {
        return DB::transaction(function () use ($data) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\StoreSheepRequest;
+use App\Http\Requests\UpdateSheepRequest;
 use App\Http\Resources\SheepDetailResource;
 use App\Http\Resources\SheepResource;
 use App\Services\SheepService;
@@ -75,5 +76,17 @@ class SheepController extends BaseController
             'Domba berhasil ditemukan'
         );
     }
-}
 
+    public function update(UpdateSheepRequest $request, int $id)
+    {
+        $sheep = $this->sheepService->updateSheep(
+            $id,
+            $request->validated()
+        );
+
+        return $this->updated(
+            new SheepDetailResource($sheep),
+            'Data domba berhasil diperbarui'
+        );
+    }
+}

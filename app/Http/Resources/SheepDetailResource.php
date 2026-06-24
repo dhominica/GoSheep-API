@@ -20,10 +20,12 @@ class SheepDetailResource extends JsonResource
             'ear_tag_color' => $this->eartag_color,
             'gender' => $this->gender,
             'breed' => $this->breed?->name,
+            'breed_id' => $this->breed_id,
             'birth_date' => $this->birth_date,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'cage' => $this->cage?->name,
+            'cage_id' => $this->cage_id,
 
             'sire' => $this->whenLoaded('sire', function () {
                 return [

@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum', 'role:peternak'])->group(function () {
         Route::post('/', [SheepController::class, 'store']);
         Route::get('/{id}', [SheepController::class, 'show']);
         Route::delete('/{id}', [SheepController::class, 'deleteSheep']);
+        Route::put('/{id}', [SheepController::class, 'update']);
         Route::get('scan/{earTag}', [SheepController::class, 'scan']);
     });
     
